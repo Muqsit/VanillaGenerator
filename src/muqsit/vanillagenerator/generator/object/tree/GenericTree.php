@@ -148,7 +148,7 @@ class GenericTree extends TerrainObject{
 		// generate the leaves
 		for($y = $blockY + $this->height - 3; $y <= $blockY + $this->height; ++$y){
 			$n = $y - ($blockY + $this->height);
-			$radius = 1 - $n / 2;
+			$radius = (int) (1 - $n / 2);
 			for($x = $blockX - $radius; $x <= $blockX + $radius; ++$x){
 				for($z = $blockZ - $radius; $z <= $blockZ + $radius; ++$z){
 					if(abs($x - $blockX) !== $radius

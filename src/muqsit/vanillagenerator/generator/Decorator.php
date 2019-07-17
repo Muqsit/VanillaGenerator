@@ -11,7 +11,7 @@ use pocketmine\world\format\Chunk;
 abstract class Decorator implements Populator{
 
 	/** @var int */
-	protected $amount = 0;
+	protected $amount = -PHP_INT_MAX;
 
 	final public function setAmount(int $amount) : void{
 		$this->amount = $amount;

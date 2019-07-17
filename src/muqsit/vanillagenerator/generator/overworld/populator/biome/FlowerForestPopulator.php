@@ -40,6 +40,7 @@ class FlowerForestPopulator extends ForestPopulator{
 	private $noiseGen;
 
 	protected function initPopulators() : void{
+		parent::initPopulators();
 		$this->treeDecorator->setAmount(6);
 		$this->flowerDecorator->setAmount(0);
 		$this->doublePlantLoweringAmount = 1;
@@ -60,7 +61,7 @@ class FlowerForestPopulator extends ForestPopulator{
 		for($i = 0; $i < 100; ++$i){
 			$x = $sourceX + $random->nextBoundedInt(16);
 			$z = $sourceZ + $random->nextBoundedInt(16);
-			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
+			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
 			$noise = ($this->noiseGen->noise($x, $z, 0.5, 0, 2.0, false) + 1.0) / 2.0;
 			$noise = $noise < 0 ? 0 : ($noise > 0.9999 ? 0.9999 : $noise);
 			$flower = self::$FLOWERS[(int) ($noise * count(self::$FLOWERS))];

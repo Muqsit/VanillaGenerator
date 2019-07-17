@@ -44,11 +44,15 @@ class PlainsPopulator extends BiomePopulator{
 	/** @var OctaveGenerator */
 	private $noiseGen;
 
+	public function __construct(){
+		parent::__construct();
+		$this->noiseGen = SimplexOctaveGenerator::fromRandomAndOctaves(new Random(2345), 1, 0, 0, 0);
+		$this->noiseGen->setScale(1 / 200.0);
+	}
+
 	protected function initPopulators() : void{
 		$this->flowerDecorator->setAmount(0);
 		$this->tallGrassDecorator->setAmount(0);
-		$this->noiseGen = SimplexOctaveGenerator::fromRandomAndOctaves(new Random(2345), 1, 0, 0, 0);
-		$this->noiseGen->setScale(1 / 200.0);
 	}
 
 	public function getBiomes() : array{

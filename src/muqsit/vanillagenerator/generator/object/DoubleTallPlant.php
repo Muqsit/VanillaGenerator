@@ -42,7 +42,7 @@ class DoubleTallPlant extends TerrainObject{
 			$topBlock = $world->getBlockAt($x, $y + 1, $z);
 			if($y < $height && $block->getId() === BlockLegacyIds::AIR && $topBlock->getId() === BlockLegacyIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getId() === BlockLegacyIds::GRASS){
 				$world->setBlockAt($x, $y, $z, $this->species);
-				$world->setBlockAt($x, $y + 1, $z, BlockFactory::get($block->getId(), BlockLegacyMetadata::DOUBLE_PLANT_FLAG_TOP));
+				$world->setBlockAt($x, $y + 1, $z, BlockFactory::get($this->species->getId(), BlockLegacyMetadata::DOUBLE_PLANT_FLAG_TOP));
 				$placed = true;
 			}
 		}
