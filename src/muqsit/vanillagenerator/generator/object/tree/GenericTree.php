@@ -9,6 +9,7 @@ use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\BlockLegacyMetadata;
+use pocketmine\block\utils\TreeType;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
@@ -50,7 +51,7 @@ class GenericTree extends TerrainObject{
 			BlockLegacyIds::VINE
 		);
 		$this->setHeight($random->nextBoundedInt(3) + 4);
-		$this->setTypes(0, 0);
+		$this->setType(TreeType::OAK());
 	}
 
 	final protected function setOverridables(int ...$overridables) : void{
@@ -64,12 +65,12 @@ class GenericTree extends TerrainObject{
 	/**
 	 * Sets the block data values for this tree's blocks.
 	 *
-	 * @param int $logType the species portion of the data value for wood blocks.
-	 * @param int $leavesType the species portion of the data value for leaf blocks.
+	 * @param TreeType $type
 	 */
-	final protected function setTypes(int $logType, int $leavesType) : void{
-		$this->logType = BlockFactory::get($logType >= 4 ? BlockLegacyIds::LOG2 : BlockLegacyIds::LOG, $logType);
-		$this->leavesType = BlockFactory::get($leavesType >= 4 ? BlockLegacyIds::LEAVES2 : BlockLegacyIds::LEAVES, $leavesType);
+	final protected function setType(TreeType $type) : void{
+		$magicNumber = $type->getMagicNumber();
+		$this->logType = BlockFactory::get($magicNumber >= 4 ? BlockLegacyIds::LOG2 : BlockLegacyIds::LOG, $magicNumber & 0x3);
+		$this->leavesType = BlockFactory::get($magicNumber >= 4 ? BlockLegacyIds::LEAVES2 : BlockLegacyIds::LEAVES, $magicNumber & 0x3);
 	}
 
 	/**

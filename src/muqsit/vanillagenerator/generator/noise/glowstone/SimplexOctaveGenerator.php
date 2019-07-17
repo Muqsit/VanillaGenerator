@@ -40,7 +40,6 @@ class SimplexOctaveGenerator extends PerlinOctaveGenerator{
 
 		// fBm
 		foreach($this->octaves as $octave){
-			/** @var SimplexNoise $noise */
 			$this->noise = $octave->getNoise($this->noise, $x, $y, $z, $this->sizeX, $this->sizeY, $this->sizeZ, $this->xScale * $freq, $this->yScale * $freq, $this->zScale * $freq, 0.55 / $amp);
 			$freq *= $lacunarity;
 			$amp *= $persistence;

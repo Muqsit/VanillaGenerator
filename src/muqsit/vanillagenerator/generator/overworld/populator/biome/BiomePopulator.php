@@ -150,6 +150,10 @@ class BiomePopulator implements Populator{
 			$this->cactusDecorator
 		);
 
+		$this->initPopulators();
+	}
+
+	protected function initPopulators() : void{
 		$this->waterLakeDecorator->setAmount(1);
 		$this->lavaLakeDecorator->setAmount(1);
 		$this->surfaceCaveDecorator->setAmount(1);

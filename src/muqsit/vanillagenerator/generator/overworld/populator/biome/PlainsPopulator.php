@@ -44,11 +44,7 @@ class PlainsPopulator extends BiomePopulator{
 	/** @var OctaveGenerator */
 	private $noiseGen;
 
-	/**
-	 * Creates a populator specialized for plains.
-	 */
-	public function __construct(){
-		parent::__construct();
+	protected function initPopulators() : void{
 		$this->flowerDecorator->setAmount(0);
 		$this->tallGrassDecorator->setAmount(0);
 		$this->noiseGen = SimplexOctaveGenerator::fromRandomAndOctaves(new Random(2345), 1, 0, 0, 0);

@@ -72,6 +72,14 @@ class GroundGenerator{
 		$this->setGroundMaterial(self::$DIRT);
 	}
 
+	final protected function setTopMaterial(Block $topMaterial) : void{
+		$this->topMaterial = $topMaterial;
+	}
+
+	final protected function setGroundMaterial(Block $groundMaterial) : void{
+		$this->groundMaterial = $groundMaterial;
+	}
+
 	/**
 	 * Generates a terrain column.
 	 *
@@ -132,14 +140,6 @@ class GroundGenerator{
 				}
 			}
 		}
-	}
-
-	final protected function setTopMaterial(Block $topMaterial) : void{
-		$this->topMaterial = $topMaterial;
-	}
-
-	final protected function setGroundMaterial(Block $groundMaterial) : void{
-		$this->groundMaterial = $groundMaterial;
 	}
 }
 

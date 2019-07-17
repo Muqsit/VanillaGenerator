@@ -58,6 +58,7 @@ class MesaGroundGenerator extends GroundGenerator{
 		$this->type = $type;
 		$this->topMaterial = self::$RED_SAND;
 		$this->groundMaterial = self::$ORANGE_STAINED_CLAY;
+		$this->colorLayer = array_fill(0, 64, 0);
 	}
 
 	private function initialize(int $seed) : void{
@@ -84,7 +85,7 @@ class MesaGroundGenerator extends GroundGenerator{
 
 		$surfaceHeight = max((int) ($surfaceNoise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
 		$colored = cos($surfaceNoise / 3.0 * M_PI) <= 0;
-		$bryceCanyonHeight = 0;
+		$bryceCanyonHeight = 0.0;
 		if($this->type === self::BRYCE){
 			$noiseX = ($x & 0xFFFFFFF0) + ($z & 0xF);
 			$noiseZ = ($z & 0xFFFFFFF0) + ($x & 0xF);
@@ -106,51 +107,49 @@ class MesaGroundGenerator extends GroundGenerator{
 		$deep = -1;
 		$groundSet = false;
 		for($y = 255; $y >= 0; --$y){
-			if($y < $bryceCanyonHeight && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
+			if($y < (int) $bryceCanyonHeight && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
 				$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::STONE));
 			}
 			if($y <= $random->nextBoundedInt(5)){
 				$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::BEDROCK));
 			}else{
-				$mat = $world->getBlockAt($x, $y, $z);
-				$matId = $mat->getId();
+				$matId = $world->getBlockAt($x, $y, $z)->getId();
 				if($matId === BlockLegacyIds::AIR){
 					$deep = -1;
-				}elseif($matId !== BlockLegacyIds::STONE){
-					continue;
-				}
-				if($deep === -1){
-					$groundSet = false;
-					if($y >= $seaLevel - 5 && $y <= $seaLevel){
-						$groundMat = $this->groundMaterial;
-					}
+				}elseif($matId === BlockLegacyIds::STONE){
+					if($deep === -1){
+						$groundSet = false;
+						if($y >= $seaLevel - 5 && $y <= $seaLevel){
+							$groundMat = $this->groundMaterial;
+						}
 
-					$deep = $surfaceHeight + max(0, $y - $seaLevel - 1);
-					if($y >= $seaLevel - 2){
-						if($this->type === self::FOREST && $y > $seaLevel + 22 + ($surfaceHeight << 1)){
-							$topMat = $colored ? self::$GRASS : self::$COARSE_DIRT;
-							$world->setBlockAt($x, $y, $z, $topMat);
-						}elseif($y > $seaLevel + 2 + $surfaceHeight){
+						$deep = $surfaceHeight + max(0, $y - $seaLevel - 1);
+						if($y >= $seaLevel - 2){
+							if($this->type === self::FOREST && $y > $seaLevel + 22 + ($surfaceHeight << 1)){
+								$topMat = $colored ? self::$GRASS : self::$COARSE_DIRT;
+								$world->setBlockAt($x, $y, $z, $topMat);
+							}elseif($y > $seaLevel + 2 + $surfaceHeight){
+								$color = $this->colorLayer[($y + (int) round(
+										$this->colorNoise->noise($chunkX, $chunkZ, 0, 0.5, 2.0, false) * 2.0))
+								% count($this->colorLayer)];
+								$this->setColoredGroundLayer($world, $x, $y, $z, $y < $seaLevel || $y > 128 ? 1 : ($colored ? $color : -1));
+							}else{
+								$world->setBlockAt($x, $y, $z, $this->topMaterial);
+								$groundSet = true;
+							}
+						}else{
+							$world->setBlockAt($x, $y, $z, $groundMat);
+						}
+					}elseif($deep > 0){
+						--$deep;
+						if($groundSet){
+							$world->setBlockAt($x, $y, $z, $this->groundMaterial);
+						}else{
 							$color = $this->colorLayer[($y + (int) round(
 									$this->colorNoise->noise($chunkX, $chunkZ, 0, 0.5, 2.0, false) * 2.0))
 							% count($this->colorLayer)];
-							$this->setColoredGroundLayer($world, $x, $y, $z, $y < $seaLevel || $y > 128 ? 1 : ($colored ? $color : -1));
-						}else{
-							$world->setBlockAt($x, $y, $z, $this->topMaterial);
-							$groundSet = true;
+							$this->setColoredGroundLayer($world, $x, $y, $z, $color);
 						}
-					}else{
-						$world->setBlockAt($x, $y, $z, $groundMat);
-					}
-				}elseif($deep > 0){
-					--$deep;
-					if($groundSet){
-						$world->setBlockAt($x, $y, $z, $this->groundMaterial);
-					}else{
-						$color = $this->colorLayer[($y + (int) round(
-								$this->colorNoise->noise($chunkX, $chunkZ, 0, 0.5, 2.0, false) * 2.0))
-						% count($this->colorLayer)];
-						$this->setColoredGroundLayer($world, $x, $y, $z, $color);
 					}
 				}
 			}
@@ -192,7 +191,7 @@ class MesaGroundGenerator extends GroundGenerator{
 			if($j >= count($this->colorLayer)){
 				break;
 			}
-			if($random->nextBoundedInt(2) === 0 || ($j < count($this->colorLayer) - 1 && $random->nextBoundedInt(2) === 0)){
+			if($random->nextBoundedInt(2) === 0 || $j < count($this->colorLayer) - 1 && $random->nextBoundedInt(2) === 0){
 				$this->colorLayer[$j - 1] = 8; // light gray
 			}else{
 				$this->colorLayer[$j] = 0; // white
