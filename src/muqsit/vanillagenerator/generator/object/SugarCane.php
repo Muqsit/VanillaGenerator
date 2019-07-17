@@ -17,7 +17,7 @@ class SugarCane extends TerrainObject{
 	private const FACES = [Facing::NORTH, Facing::EAST, Facing::SOUTH, Facing::WEST];
 
 	public function generate(ChunkManager $world, Random $random, int $x, int $y, int $z) : bool{
-		if(!$world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
+		if($world->getBlockAt($x, $y, $z)->getId() !== BlockLegacyIds::AIR){
 			return false;
 		}
 
@@ -48,7 +48,7 @@ class SugarCane extends TerrainObject{
 					return $n > 0;
 				}
 
-				$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::SUGARCANE_BLOCK));
+				$world->setBlockAt($x, $y + $n, $z, BlockFactory::get(BlockLegacyIds::SUGARCANE_BLOCK));
 			}
 		}
 		return true;

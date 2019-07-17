@@ -78,7 +78,7 @@ class Lake extends TerrainObject{
 					$blockAbove = $world->getBlockAt($sourceX + $x, $sourceY + $y + 1, $sourceZ + $z);
 					$blockType = $block->getId();
 					$blockAboveType = $blockAbove->getId();
-					if(($blockType === BlockLegacyIds::DIRT && ($blockAboveType === BlockLegacyIds::LOG || $blockAboveType === BlockLegacyIds::LOG2)) || $blockType === BlockLegacyIds::LOG || $blockType === BlockLegacyIds::LOG2){
+					if($blockType === BlockLegacyIds::DIRT && ($blockAboveType === BlockLegacyIds::LOG || $blockAboveType === BlockLegacyIds::LOG2) || $blockType === BlockLegacyIds::LOG || $blockType === BlockLegacyIds::LOG2){
 						continue;
 					}
 
@@ -126,8 +126,7 @@ class Lake extends TerrainObject{
 					if($this->isLakeBlock($lakeMap, $x, $y, $z)
 						|| ((($x >= (self::MAX_DIAMETER - 1)) || !$this->isLakeBlock($lakeMap, $x + 1, $y, $z))
 							&& (($x <= 0) || !$this->isLakeBlock($lakeMap, $x - 1, $y, $z))
-							&& (($z >= (self::MAX_DIAMETER - 1)) || !$this->isLakeBlock($lakeMap, $x, $y,
-									$z + 1))
+							&& (($z >= (self::MAX_DIAMETER - 1)) || !$this->isLakeBlock($lakeMap, $x, $y, $z + 1))
 							&& (($z <= 0) || !$this->isLakeBlock($lakeMap, $x, $y, $z - 1))
 							&& (($z >= (self::MAX_HEIGHT - 1)) || !$this->isLakeBlock($lakeMap, $x, $y + 1, $z))
 							&& (($z <= 0) || !$this->isLakeBlock($lakeMap, $x, $y - 1, $z)))){
@@ -137,7 +136,7 @@ class Lake extends TerrainObject{
 					if($y >= self::MAX_HEIGHT / 2 && (($block instanceof Liquid) || $block->getId() === BlockLegacyIds::ICE)){
 						return false; // there's already some liquids above
 					}
-					if($y < self::MAX_HEIGHT / 2 && !$block->isSolid() && $block->getIdInfo() === $this->type->getIdInfo()){
+					if($y < self::MAX_HEIGHT / 2 && !$block->isSolid() && $block->getId() !== $this->type->getId()){
 						return false;
 						// bottom must be solid and do not overlap with another liquid type
 					}
