@@ -20,8 +20,7 @@ class TallGrass extends TerrainObject{
 
 	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
 		do{
-			$thisBlock = $world->getBlockAt($sourceX, $sourceY, $sourceZ);
-			$thisBlockId = $thisBlock->getId();
+			$thisBlockId = $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId();
 			--$sourceY;
 		}while(($thisBlockId === BlockLegacyIds::AIR || $thisBlockId === BlockLegacyIds::LEAVES) && $sourceY > 0);
 		++$sourceY;
@@ -32,10 +31,11 @@ class TallGrass extends TerrainObject{
 			$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
 			$y = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
-			$block = $world->getBlockAt($x, $y, $z);
+			$blockType = $world->getBlockAt($x, $y, $z)->getId();
 			$blockTypeBelow = $world->getBlockAt($x, $y - 1, $z)->getId();
-			if($y < $height && $block->getId() === BlockLegacyIds::AIR && ($blockTypeBelow === BlockLegacyIds::GRASS || $blockTypeBelow === BlockLegacyIds::DIRT)){
+			if($y < $height && $blockType === BlockLegacyIds::AIR && ($blockTypeBelow === BlockLegacyIds::GRASS || $blockTypeBelow === BlockLegacyIds::DIRT)){
 				$world->setBlockAt($x, $y, $z, $this->grassType);
+				$succeeded = true;
 			}
 		}
 		return $succeeded;

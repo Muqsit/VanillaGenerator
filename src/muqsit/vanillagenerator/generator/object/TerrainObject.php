@@ -45,7 +45,7 @@ abstract class TerrainObject{
 					$world->setBlockAt($x, $y + 1, $z, BlockFactory::get(BlockLegacyIds::AIR));
 				}
 			}
-			$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::AIR));
+			$world->setBlockAt($x, $y + 1, $z, BlockFactory::get(BlockLegacyIds::AIR));
 			return true;
 		}
 
