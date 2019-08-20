@@ -32,7 +32,7 @@ class MesaGroundGenerator extends GroundGenerator{
 	private $type;
 
 	/** @var int[] */
-	private $colorLayer = [];
+	private $colorLayer;
 
 	/** @var Block */
 	private $topMaterial;

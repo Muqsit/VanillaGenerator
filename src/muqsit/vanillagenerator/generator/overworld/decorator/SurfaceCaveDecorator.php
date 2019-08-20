@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
-use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\math\Vector3;
@@ -27,7 +26,6 @@ class SurfaceCaveDecorator extends Decorator{
 		$startCx = $random->nextBoundedInt(16);
 		$startCz = $random->nextBoundedInt(16);
 		$startY = $chunk->getHeightMap($startCx, $startCz);
-		$startBlock = $world->getBlockAt($cx + $startCx, $startY, $cz + $startCz);
 		if($startY > 128){
 			return;
 		}
@@ -40,7 +38,8 @@ class SurfaceCaveDecorator extends Decorator{
 		}
 		$sectionCount = count($angles) / 2;
 		$nodes = [];
-		$currentNode = new Vector3($startBlock->x, $startBlock->y, $startBlock->z);
+		$startBlockPos = new Vector3($cx + $startCx, $startY, $cz + $startCz);
+		$currentNode = $startBlockPos->asVector3();
 		$nodes[] = $currentNode->asVector3();
 		$length = 5;
 		for($i = 0; $i < $sectionCount; ++$i){
@@ -56,12 +55,11 @@ class SurfaceCaveDecorator extends Decorator{
 				continue;
 			}
 
-			$block = $world->getBlockAt($node->x, $node->y, $node->z);
-			$this->caveAroundRay($world, $block, $random);
+			$this->caveAroundRay($world, $node, $random);
 		}
 	}
 
-	private function caveAroundRay(ChunkManager $world, Block $block, Random $random) : void{
+	private function caveAroundRay(ChunkManager $world, Vector3 $block, Random $random) : void{
 		$radius = $random->nextBoundedInt(2) + 2;
 		$blockX = $block->x;
 		$blockY = $block->y;
