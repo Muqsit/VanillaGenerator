@@ -172,7 +172,7 @@ class MegaJungleTree extends GenericTree{
 			$random->nextBoundedInt(3) !== 0 &&
 			$world->getBlockAt($absoluteX, $absoluteY, $absoluteZ)->getId() === BlockLegacyIds::AIR
 		){
-			$this->transaction->addBlockAt($absoluteX, $absoluteY, $absoluteZ, BlockUtils::vineFromFace($facingDirection));
+			$this->transaction->addBlockAt($absoluteX, $absoluteY, $absoluteZ, BlockUtils::VINE($facingDirection));
 		}
 	}
 

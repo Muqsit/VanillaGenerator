@@ -69,25 +69,25 @@ class CocoaTree extends JungleTree{
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunkX - 1, $trunkY + $y, $trunkZ)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX - 1, $trunkY + $y, $trunkZ, BlockUtils::vineFromFace(Facing::EAST));
+				$this->transaction->addBlockAt($trunkX - 1, $trunkY + $y, $trunkZ, BlockUtils::VINE(Facing::EAST));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunkX + 1, $trunkY + $y, $trunkZ)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX + 1, $trunkY + $y, $trunkZ, BlockUtils::vineFromFace(Facing::WEST));
+				$this->transaction->addBlockAt($trunkX + 1, $trunkY + $y, $trunkZ, BlockUtils::VINE(Facing::WEST));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunkX, $trunkY + $y, $trunkZ - 1)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX, $trunkY + $y, $trunkZ - 1, BlockUtils::vineFromFace(Facing::SOUTH));
+				$this->transaction->addBlockAt($trunkX, $trunkY + $y, $trunkZ - 1, BlockUtils::VINE(Facing::SOUTH));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunkX, $trunkY + $y, $trunkZ + 1)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX, $trunkY + $y, $trunkZ + 1, BlockUtils::vineFromFace(Facing::NORTH));
+				$this->transaction->addBlockAt($trunkX, $trunkY + $y, $trunkZ + 1, BlockUtils::VINE(Facing::NORTH));
 			}
 		}
 	}
@@ -97,7 +97,7 @@ class CocoaTree extends JungleTree{
 			if($world->getBlockAt($x, $y - $i, $z)->getId() !== BlockLegacyIds::AIR){
 				break;
 			}
-			$this->transaction->addBlockAt($x, $y - $i, $z, BlockUtils::vineFromFace($face));
+			$this->transaction->addBlockAt($x, $y - $i, $z, BlockUtils::VINE($face));
 		}
 	}
 
@@ -108,7 +108,7 @@ class CocoaTree extends JungleTree{
 					if($random->nextBoundedInt(count(self::COCOA_FACES) - $y) === 0){ // higher it is, more chances there is
 						$size = self::COCOA_SIZE[$random->nextBoundedInt(count(self::COCOA_SIZE))];
 						$block = (new Vector3($sourceX, $sourceY + $this->height - 5 + $y, $sourceZ))->getSide($cocoaFace);
-						$this->transaction->addBlockAt($block->x, $block->y, $block->z, BlockUtils::cocoaFromFace($cocoaFace));
+						$this->transaction->addBlockAt($block->x, $block->y, $block->z, BlockUtils::COCOA($cocoaFace, $size));
 					}
 				}
 			}

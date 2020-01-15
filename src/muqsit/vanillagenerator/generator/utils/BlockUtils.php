@@ -13,7 +13,7 @@ use pocketmine\math\Facing;
 
 final class BlockUtils{
 
-	public static function vineFromFace(int $face) : Block{
+	public static function VINE(int $face) : Block{
 		static $meta = [
 			Facing::NORTH => BlockLegacyMetadata::VINE_FLAG_NORTH,
 			Facing::SOUTH => BlockLegacyMetadata::VINE_FLAG_SOUTH,
@@ -24,7 +24,7 @@ final class BlockUtils{
 		return BlockFactory::get(BlockLegacyIds::VINE, $meta[$face]);
 	}
 
-	public static function cocoaFromFace(int $face) : Block{
-		return BlockFactory::get(BlockLegacyIds::COCOA, BlockDataSerializer::writeLegacyHorizontalFacing(Facing::opposite($face)));
+	public static function COCOA(int $face, int $age = 0) : Block{
+		return BlockFactory::get(BlockLegacyIds::COCOA, BlockDataSerializer::writeLegacyHorizontalFacing(Facing::opposite($face)) | ($age << 2));
 	}
 }
