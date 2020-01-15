@@ -8,8 +8,12 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\BiomePopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\BirchForestMountainsPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\BirchForestPopulator;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\DesertMountainsPopulator;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\DesertPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\FlowerForestPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\ForestPopulator;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\JungleEdgePopulator;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\JunglePopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\PlainsPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\RoofedForestPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\SunflowerPlainsPopulator;
@@ -36,11 +40,11 @@ class OverworldPopulator implements Populator{
 		$this->registerBiomePopulator(new BirchForestMountainsPopulator());
 		$this->registerBiomePopulator(new RoofedForestPopulator());
 		$this->registerBiomePopulator(new FlowerForestPopulator());
-		/*
 		$this->registerBiomePopulator(new DesertPopulator());
 		$this->registerBiomePopulator(new DesertMountainsPopulator());
 		$this->registerBiomePopulator(new JunglePopulator());
 		$this->registerBiomePopulator(new JungleEdgePopulator());
+		/*
 		$this->registerBiomePopulator(new SwamplandPopulator());
 		$this->registerBiomePopulator(new TaigaPopulator());
 		$this->registerBiomePopulator(new MegaTaigaPopulator());

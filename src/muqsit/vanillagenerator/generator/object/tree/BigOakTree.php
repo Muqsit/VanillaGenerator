@@ -79,21 +79,23 @@ class BigOakTree extends GenericTree{
 
 		// generate the branches
 		foreach($leafNodes as $node){
-			if((float) $node->branchY - $blockY >= $this->height * 0.2){
+			if((float) ($node->branchY - $blockY) >= $this->height * 0.2){
 				$base = new Vector3($blockX, $node->branchY, $blockZ);
 				$leafNode = new Vector3($node->x, $node->y, $node->z);
 				$branch = $leafNode->subtract($base);
 				$maxDistance = max(abs($branch->getFloorY()), max(abs($branch->getFloorX()), abs($branch->getFloorZ())));
-				$dx = (float) $branch->x / $maxDistance;
-				$dy = (float) $branch->y / $maxDistance;
-				$dz = (float) $branch->z / $maxDistance;
-				for($i = 0; $i <= $maxDistance; ++$i){
-					$branch = $base->add(0.5 + $i * $dx, 0.5 + $i * $dy, 0.5 + $i * $dz);
-					$x = abs($branch->getFloorX() - $base->getFloorX());
-					$z = abs($branch->getFloorZ() - $base->getFloorZ());
-					$max = max($x, $z);
-					$direction = $max > 0 ? ($max === $x ? 4 : 8) : 0; // EAST / SOUTH
-					$this->transaction->addBlockAt($branch->getFloorX(), $branch->getFloorY(), $branch->getFloorZ(), BlockFactory::get($this->logType->getId(), $this->logType->getMeta() | $direction));
+				if($maxDistance > 0){
+					$dx = (float) $branch->x / $maxDistance;
+					$dy = (float) $branch->y / $maxDistance;
+					$dz = (float) $branch->z / $maxDistance;
+					for($i = 0; $i <= $maxDistance; ++$i){
+						$branch = $base->add(0.5 + $i * $dx, 0.5 + $i * $dy, 0.5 + $i * $dz);
+						$x = abs($branch->getFloorX() - $base->getFloorX());
+						$z = abs($branch->getFloorZ() - $base->getFloorZ());
+						$max = max($x, $z);
+						$direction = $max > 0 ? ($max === $x ? 4 : 8) : 0; // EAST / SOUTH
+						$this->transaction->addBlockAt($branch->getFloorX(), $branch->getFloorY(), $branch->getFloorZ(), BlockFactory::get($this->logType->getId(), $this->logType->getMeta() | $direction));
+					}
 				}
 			}
 		}
@@ -105,15 +107,17 @@ class BigOakTree extends GenericTree{
 		$n = 0;
 		$target = $to->subtract($from);
 		$maxDistance = max(abs($target->getFloorY()), max(abs($target->getFloorX()), abs($target->getFloorZ())));
-		$dx = (float) $target->x / $maxDistance;
-		$dy = (float) $target->y / $maxDistance;
-		$dz = (float) $target->z / $maxDistance;
-		$height = $world->getWorldHeight();
-		for($i = 0; $i <= $maxDistance; ++$i, ++$n){
-			$target = $from->add(0.5 + $i * $dx, 0.5 + $i * $dy, 0.5 + $i * $dz);
-			$target_floorY = $target->getFloorY();
-			if($target_floorY < 0 || $target_floorY > $height || !isset($this->overridables[$world->getBlockAt($target->getFloorX(), $target->getFloorY(), $target->getFloorZ())->getId()])){
-				return $n;
+		if($maxDistance > 0){
+			$dx = (float) $target->x / $maxDistance;
+			$dy = (float) $target->y / $maxDistance;
+			$dz = (float) $target->z / $maxDistance;
+			$height = $world->getWorldHeight();
+			for($i = 0; $i <= $maxDistance; ++$i, ++$n){
+				$target = $from->add(0.5 + $i * $dx, 0.5 + $i * $dy, 0.5 + $i * $dz);
+				$target_floorY = $target->getFloorY();
+				if($target_floorY < 0 || $target_floorY > $height || !isset($this->overridables[$world->getBlockAt($target->getFloorX(), $target->getFloorY(), $target->getFloorZ())->getId()])){
+					return $n;
+				}
 			}
 		}
 		return -1;
@@ -125,13 +129,13 @@ class BigOakTree extends GenericTree{
 		$trunkTopY = $blockY + $this->trunkHeight;
 		$leafNodes[] = new LeafNode($blockX, $y, $blockZ, $trunkTopY);
 
-		$nodeCount = (int) (1.382 + ((static::LEAF_DENSITY * (double) $this->height / 13.0) ** 2.0));
+		$nodeCount = (int) (1.382 + ((static::LEAF_DENSITY * (double) ($this->height / 13.0)) ** 2.0));
 		$nodeCount = $nodeCount < 1 ? 1 : $nodeCount;
 
 		for($l = --$y - $blockY; $l >= 0; --$l, --$y){
 			$h = $this->height / 2.0;
-			$v = $h - $l;
-			$f = $l < (float) $this->height * 0.3 ? -1.0 : (
+			$v = (float) ($h - $l);
+			$f = $l < (float) ($this->height * 0.3) ? -1.0 : (
 			$v === $h ? $h * 0.5 : (
 			$h <= abs($v) ? 0.0 : (float) sqrt($h * $h - $v * $v) * 0.5
 			)

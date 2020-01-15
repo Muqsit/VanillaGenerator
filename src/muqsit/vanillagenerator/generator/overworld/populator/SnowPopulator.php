@@ -6,8 +6,8 @@ namespace muqsit\vanillagenerator\generator\overworld\populator;
 
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use muqsit\vanillagenerator\generator\Populator;
-use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -38,14 +38,14 @@ class SnowPopulator implements Populator{
 						case BlockLegacyIds::STILL_LAVA:
 							break;
 						case BlockLegacyIds::DIRT:
-							$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::GRASS));
+							$world->setBlockAt($x, $y, $z, VanillaBlocks::GRASS());
 							if($blockAbove->getId() === BlockLegacyIds::AIR){
-								$world->setBlockAt($x, $y + 1, $z, BlockFactory::get(BlockLegacyIds::SNOW_LAYER));
+								$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::SNOW_LAYER());
 							}
 							break;
 						default:
 							if($blockAbove->getId() === BlockLegacyIds::AIR){
-								$world->setBlockAt($x, $y + 1, $z, BlockFactory::get(BlockLegacyIds::SNOW_LAYER));
+								$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::SNOW_LAYER());
 							}
 							break;
 					}

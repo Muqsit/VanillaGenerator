@@ -8,8 +8,8 @@ use muqsit\vanillagenerator\generator\object\TerrainObject;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
-use pocketmine\block\BlockLegacyMetadata;
 use pocketmine\block\utils\TreeType;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
@@ -167,7 +167,7 @@ class GenericTree extends TerrainObject{
 		}
 
 		// block below trunk is always dirt
-		$dirt = BlockFactory::get(BlockLegacyIds::DIRT, BlockLegacyMetadata::DIRT_NORMAL);
+		$dirt = VanillaBlocks::DIRT();
 		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ, $dirt);
 		return true;
 	}

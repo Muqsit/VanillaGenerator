@@ -13,6 +13,7 @@ use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\BlockLegacyMetadata;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -34,9 +35,9 @@ class ForestPopulator extends BiomePopulator{
 		];
 
 		self::$DOUBLE_PLANTS = [
-			BlockFactory::get(BlockLegacyIds::DOUBLE_PLANT, BlockLegacyMetadata::DOUBLE_PLANT_LILAC),
-			BlockFactory::get(BlockLegacyIds::DOUBLE_PLANT, BlockLegacyMetadata::DOUBLE_PLANT_ROSE_BUSH),
-			BlockFactory::get(BlockLegacyIds::DOUBLE_PLANT, BlockLegacyMetadata::DOUBLE_PLANT_PEONY)
+			VanillaBlocks::LILAC(),
+			VanillaBlocks::ROSE_BUSH(),
+			VanillaBlocks::PEONY()
 		];
 	}
 

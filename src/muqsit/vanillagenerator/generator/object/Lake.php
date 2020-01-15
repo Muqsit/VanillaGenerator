@@ -10,6 +10,7 @@ use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Liquid;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -83,7 +84,7 @@ class Lake extends TerrainObject{
 					}
 
 					if($y >= (int) self::MAX_HEIGHT / 2){
-						$type = BlockFactory::get(BlockLegacyIds::AIR);
+						$type = VanillaBlocks::AIR();
 						if(TerrainObject::killPlantAbove($world, $sourceX + $x, $sourceY + $y, $sourceZ + $z)){
 							break;
 						}
@@ -93,7 +94,7 @@ class Lake extends TerrainObject{
 						}
 					}elseif($y === self::MAX_HEIGHT / 2 - 1){
 						if($type === BlockLegacyIds::STILL_WATER && BiomeClimateManager::isCold($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $sourceX + $x, $y, $sourceZ + $z)){
-							$type = BlockFactory::get(BlockLegacyIds::ICE);
+							$type = VanillaBlocks::ICE();
 						}
 					}
 					$world->setBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z, $type);
@@ -111,7 +112,7 @@ class Lake extends TerrainObject{
 					$block = $world->getBlockAt($sourceX + $x, $sourceY + $y - 1, $sourceZ + $z);
 					$blockAbove = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z);
 					if($block->getId() === BlockLegacyIds::DIRT && $blockAbove->isTransparent() && $blockAbove->getLightLevel() > 0){
-						$world->setBlockAt($sourceX + $x, $sourceY + $y - 1, $sourceZ + $z, BlockFactory::get($mycelBiome ? BlockLegacyIds::MYCELIUM : BlockLegacyIds::GRASS));
+						$world->setBlockAt($sourceX + $x, $sourceY + $y - 1, $sourceZ + $z, $mycelBiome ? VanillaBlocks::MYCELIUM() : VanillaBlocks::GRASS());
 					}
 				}
 			}

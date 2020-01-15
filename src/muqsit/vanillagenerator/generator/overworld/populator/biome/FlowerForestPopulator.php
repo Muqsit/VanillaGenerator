@@ -12,6 +12,7 @@ use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\BlockLegacyMetadata;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -23,16 +24,16 @@ class FlowerForestPopulator extends ForestPopulator{
 
 	public static function init() : void{
 		self::$FLOWERS = [
-			BlockFactory::get(BlockLegacyIds::POPPY),
-			BlockFactory::get(BlockLegacyIds::POPPY),
-			BlockFactory::get(BlockLegacyIds::DANDELION),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_ALLIUM),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_AZURE_BLUET),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_RED_TULIP),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_ORANGE_TULIP),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_WHITE_TULIP),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_PINK_TULIP),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_OXEYE_DAISY)
+			VanillaBlocks::POPPY(),
+			VanillaBlocks::POPPY(),
+			VanillaBlocks::DANDELION(),
+			VanillaBlocks::ALLIUM(),
+			VanillaBlocks::AZURE_BLUET(),
+			VanillaBlocks::RED_TULIP(),
+			VanillaBlocks::ORANGE_TULIP(),
+			VanillaBlocks::WHITE_TULIP(),
+			VanillaBlocks::PINK_TULIP(),
+			VanillaBlocks::OXEYE_DAISY()
 		];
 	}
 

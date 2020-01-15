@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator\generator\object;
 
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
@@ -39,7 +40,7 @@ class Cactus extends TerrainObject{
 						}
 					}
 
-					$world->setBlockAt($x, $n, $z, BlockFactory::get(BlockLegacyIds::CACTUS));
+					$world->setBlockAt($x, $n, $z, VanillaBlocks::CACTUS());
 				}
 			}
 		}

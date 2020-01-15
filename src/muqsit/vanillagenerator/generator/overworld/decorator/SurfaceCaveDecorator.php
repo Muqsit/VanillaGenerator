@@ -8,6 +8,7 @@ use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -69,7 +70,7 @@ class SurfaceCaveDecorator extends Decorator{
 				for($z = $blockZ - $radius; $z <= $blockZ + $radius; ++$z){
 					$distanceSquared = ($blockX - $x) * ($blockX - $x) + ($blockY - $y) * ($blockY - $y) + ($blockZ - $z) * ($blockZ - $z);
 					if($distanceSquared < $radius * $radius){
-						$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::AIR));
+						$world->setBlockAt($x, $y, $z, VanillaBlocks::AIR());
 					}
 				}
 			}

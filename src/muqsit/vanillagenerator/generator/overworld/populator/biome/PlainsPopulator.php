@@ -14,6 +14,7 @@ use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\BlockLegacyMetadata;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -28,16 +29,16 @@ class PlainsPopulator extends BiomePopulator{
 
 	public static function init() : void{
 		self::$PLAINS_FLOWERS = [
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_POPPY),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_AZURE_BLUET),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_OXEYE_DAISY),
+			VanillaBlocks::POPPY(),
+			VanillaBlocks::AZURE_BLUET(),
+			VanillaBlocks::OXEYE_DAISY()
 		];
 
 		self::$PLAINS_TULIPS = [
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_RED_TULIP),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_ORANGE_TULIP),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_WHITE_TULIP),
-			BlockFactory::get(BlockLegacyIds::RED_FLOWER, BlockLegacyMetadata::FLOWER_PINK_TULIP)
+			VanillaBlocks::RED_TULIP(),
+			VanillaBlocks::ORANGE_TULIP(),
+			VanillaBlocks::WHITE_TULIP(),
+			VanillaBlocks::PINK_TULIP()
 		];
 	}
 
@@ -72,7 +73,7 @@ class PlainsPopulator extends BiomePopulator{
 				$x = $sourceX + $random->nextBoundedInt(16);
 				$z = $sourceZ + $random->nextBoundedInt(16);
 				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
-				(new DoubleTallPlant(BlockFactory::get(BlockLegacyIds::DOUBLE_PLANT, BlockLegacyMetadata::DOUBLE_PLANT_TALLGRASS)))->generate($world, $random, $x, $y, $z);
+				(new DoubleTallPlant(VanillaBlocks::DOUBLE_TALLGRASS()))->generate($world, $random, $x, $y, $z);
 			}
 		}
 
@@ -81,7 +82,7 @@ class PlainsPopulator extends BiomePopulator{
 		}elseif($random->nextBoundedInt(3) > 0){
 			$flower = self::$PLAINS_FLOWERS[$random->nextBoundedInt(count(self::$PLAINS_FLOWERS))];
 		}else{
-			$flower = BlockFactory::get(BlockLegacyIds::DANDELION);
+			$flower = VanillaBlocks::DANDELION();
 		}
 
 		for($i = 0; $i < $flowerAmount; ++$i){
@@ -95,7 +96,7 @@ class PlainsPopulator extends BiomePopulator{
 			$x = $sourceX + $random->nextBoundedInt(16);
 			$z = $sourceZ + $random->nextBoundedInt(16);
 			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) << 1);
-			(new TallGrass(BlockFactory::get(BlockLegacyIds::TALL_GRASS, BlockLegacyMetadata::TALLGRASS_NORMAL)))->generate($world, $random, $x, $y, $z);
+			(new TallGrass(VanillaBlocks::TALL_GRASS()))->generate($world, $random, $x, $y, $z);
 		}
 
 		parent::populateOnGround($world, $random, $chunk);

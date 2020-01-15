@@ -23,6 +23,7 @@ use muqsit\vanillagenerator\generator\overworld\decorator\UnderwaterDecorator;
 use muqsit\vanillagenerator\generator\Populator;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -42,8 +43,8 @@ class BiomePopulator implements Populator{
 		];
 
 		self::$FLOWERS = [
-			new FlowerDecoration(BlockFactory::get(BlockLegacyIds::DANDELION), 2),
-			new FlowerDecoration(BlockFactory::get(BlockLegacyIds::RED_FLOWER), 1)
+			new FlowerDecoration(VanillaBlocks::DANDELION(), 2),
+			new FlowerDecoration(VanillaBlocks::POPPY(), 1)
 		];
 	}
 
@@ -112,16 +113,16 @@ class BiomePopulator implements Populator{
 		$this->waterLakeDecorator = new LakeDecorator(BlockFactory::get(BlockLegacyIds::STILL_WATER), 4);
 		$this->lavaLakeDecorator = new LakeDecorator(BlockFactory::get(BlockLegacyIds::STILL_LAVA), 8, 8);
 		$this->orePopulator = new OrePopulator();
-		$this->sandPatchDecorator = new UnderwaterDecorator(BlockFactory::get(BlockLegacyIds::SAND));
-		$this->clayPatchDecorator = new UnderwaterDecorator(BlockFactory::get(BlockLegacyIds::CLAY_BLOCK));
-		$this->gravelPatchDecorator = new UnderwaterDecorator(BlockFactory::get(BlockLegacyIds::GRAVEL));
+		$this->sandPatchDecorator = new UnderwaterDecorator(VanillaBlocks::SAND());
+		$this->clayPatchDecorator = new UnderwaterDecorator(VanillaBlocks::CLAY());
+		$this->gravelPatchDecorator = new UnderwaterDecorator(VanillaBlocks::GRAVEL());
 		$this->doublePlantDecorator = new DoublePlantDecorator();
 		$this->treeDecorator = new TreeDecorator();
 		$this->flowerDecorator = new FlowerDecorator();
 		$this->tallGrassDecorator = new TallGrassDecorator();
 		$this->deadBushDecorator = new DeadBushDecorator();
-		$this->brownMushroomDecorator = new MushroomDecorator(BlockFactory::get(BlockLegacyIds::BROWN_MUSHROOM));
-		$this->redMushroomDecorator = new MushroomDecorator(BlockFactory::get(BlockLegacyIds::RED_MUSHROOM));
+		$this->brownMushroomDecorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
+		$this->redMushroomDecorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
 		$this->sugarCaneDecorator = new SugarCaneDecorator();
 		$this->pumpkinDecorator = new PumpkinDecorator();
 		$this->cactusDecorator = new CactusDecorator();
@@ -159,13 +160,13 @@ class BiomePopulator implements Populator{
 		$this->surfaceCaveDecorator->setAmount(1);
 		$this->sandPatchDecorator->setAmount(3);
 		$this->sandPatchDecorator->setRadii(7, 2);
-		$this->sandPatchDecorator->setOverridableBlocks(BlockFactory::get(BlockLegacyIds::DIRT), BlockFactory::get(BlockLegacyIds::GRASS));
+		$this->sandPatchDecorator->setOverridableBlocks(VanillaBlocks::DIRT(), VanillaBlocks::GRASS());
 		$this->clayPatchDecorator->setAmount(1);
 		$this->clayPatchDecorator->setRadii(4, 1);
-		$this->clayPatchDecorator->setOverridableBlocks(BlockFactory::get(BlockLegacyIds::DIRT));
+		$this->clayPatchDecorator->setOverridableBlocks(VanillaBlocks::DIRT());
 		$this->gravelPatchDecorator->setAmount(1);
 		$this->gravelPatchDecorator->setRadii(6, 2);
-		$this->gravelPatchDecorator->setOverridableBlocks(BlockFactory::get(BlockLegacyIds::DIRT), BlockFactory::get(BlockLegacyIds::GRASS));
+		$this->gravelPatchDecorator->setOverridableBlocks(VanillaBlocks::DIRT(), VanillaBlocks::GRASS());
 
 		$this->doublePlantDecorator->setAmount(0);
 		$this->treeDecorator->setAmount(PHP_INT_MIN);

@@ -24,6 +24,7 @@ use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -202,14 +203,14 @@ class OverworldGenerator extends VanillaGenerator{
 								// the target is densityOffset + 0, since the default target is
 								// 0, so don't get too confused by the naming :)
 								if($afill === 1 || $afill === 10 || $afill === 13 || $afill === 16){
-									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STILL_WATER));
+									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::WATER());
 								}elseif($afill === 2 || $afill === 9 || $afill === 12 || $afill === 15){
-									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STONE));
+									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
 								}
 
 								if(($dens > $densityOffset && $fill > -1) || ($dens <= $densityOffset && $fill < 0)){
 									if($afill === 0 || $afill === 3 || $afill === 6 || $afill === 9 || $afill === 12){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STONE));
+										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
 									}elseif($afill === 2 || $afill === 7 || $afill === 10 || $afill === 16){
 										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STILL_WATER));
 									}
@@ -218,7 +219,7 @@ class OverworldGenerator extends VanillaGenerator{
 										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STILL_WATER));
 									}elseif($afill === 1 || $afill === 6 || $afill === 9
 										|| $afill === 15){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STONE));
+										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
 									}
 								}
 

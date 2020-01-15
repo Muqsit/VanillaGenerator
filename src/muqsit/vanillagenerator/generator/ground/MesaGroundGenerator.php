@@ -8,6 +8,7 @@ use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -24,8 +25,8 @@ class MesaGroundGenerator extends GroundGenerator{
 	protected static $ORANGE_STAINED_CLAY;
 
 	public static function init() : void{
-		self::$RED_SAND = BlockFactory::get(BlockLegacyIds::SAND, 1);
-		self::$ORANGE_STAINED_CLAY = BlockFactory::get(BlockLegacyIds::STAINED_CLAY, 1);
+		self::$RED_SAND = VanillaBlocks::RED_SAND();
+		self::$ORANGE_STAINED_CLAY = VanillaBlocks::ORANGE_STAINED_CLAY();
 	}
 
 	/** @var int */
@@ -108,10 +109,10 @@ class MesaGroundGenerator extends GroundGenerator{
 		$groundSet = false;
 		for($y = 255; $y >= 0; --$y){
 			if($y < (int) $bryceCanyonHeight && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
-				$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::STONE));
+				$world->setBlockAt($x, $y, $z, VanillaBlocks::STONE());
 			}
 			if($y <= $random->nextBoundedInt(5)){
-				$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::BEDROCK));
+				$world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
 			}else{
 				$matId = $world->getBlockAt($x, $y, $z)->getId();
 				if($matId === BlockLegacyIds::AIR){
@@ -157,7 +158,7 @@ class MesaGroundGenerator extends GroundGenerator{
 	}
 
 	private function setColoredGroundLayer(ChunkManager $world, int $x, int $y, int $z, int $color) : void{
-		$world->setBlockAt($x, $y, $z, $color >= 0 ? BlockFactory::get(BlockLegacyIds::STAINED_CLAY, $color) : BlockFactory::get(BlockLegacyIds::HARDENED_CLAY));
+		$world->setBlockAt($x, $y, $z, $color >= 0 ? BlockFactory::get(BlockLegacyIds::STAINED_CLAY, $color) : VanillaBlocks::HARDENED_CLAY());
 	}
 
 	private function setRandomLayerColor(Random $random, int $minLayerCount, int $minLayerHeight, int $color) : void{

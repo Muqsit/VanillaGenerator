@@ -8,7 +8,7 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
-use pocketmine\block\BlockLegacyMetadata;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -48,17 +48,17 @@ class GroundGenerator{
 	protected static $SNOW;
 
 	public static function init() : void{
-		self::$AIR = BlockFactory::get(BlockLegacyIds::AIR);
-		self::$STONE = BlockFactory::get(BlockLegacyIds::STONE);
-		self::$SANDSTONE = BlockFactory::get(BlockLegacyIds::SANDSTONE);
-		self::$GRASS = BlockFactory::get(BlockLegacyIds::GRASS);
-		self::$DIRT = BlockFactory::get(BlockLegacyIds::DIRT);
-		self::$COARSE_DIRT = BlockFactory::get(BlockLegacyIds::DIRT, BlockLegacyMetadata::DIRT_COARSE);
-		self::$PODZOL = BlockFactory::get(BlockLegacyIds::PODZOL);
-		self::$GRAVEL = BlockFactory::get(BlockLegacyIds::GRAVEL);
-		self::$MYCEL = BlockFactory::get(BlockLegacyIds::MYCELIUM);
-		self::$SAND = BlockFactory::get(BlockLegacyIds::SAND);
-		self::$SNOW = BlockFactory::get(BlockLegacyIds::SNOW_BLOCK);
+		self::$AIR = VanillaBlocks::AIR();
+		self::$STONE = VanillaBlocks::STONE();
+		self::$SANDSTONE = VanillaBlocks::SANDSTONE();
+		self::$GRASS = VanillaBlocks::GRASS();
+		self::$DIRT = VanillaBlocks::DIRT();
+		self::$COARSE_DIRT = VanillaBlocks::COARSE_DIRT();
+		self::$PODZOL = VanillaBlocks::PODZOL();
+		self::$GRAVEL = VanillaBlocks::GRAVEL();
+		self::$MYCEL = VanillaBlocks::MYCELIUM();
+		self::$SAND = VanillaBlocks::SAND();
+		self::$SNOW = VanillaBlocks::SNOW();
 	}
 
 	/** @var Block */
@@ -103,7 +103,7 @@ class GroundGenerator{
 		$deep = -1;
 		for($y = 255; $y >= 0; --$y){
 			if($y <= $random->nextBoundedInt(5)){
-				$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::BEDROCK));
+				$world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
 			}else{
 				$mat = $world->getBlockAt($x, $y, $z);
 				$matId = $mat->getId();
@@ -122,7 +122,7 @@ class GroundGenerator{
 						}elseif($y < $seaLevel - 8 - $surfaceHeight){
 							$topMat = self::$AIR;
 							$groundMat = self::$STONE;
-							$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::GRAVEL));
+							$world->setBlockAt($x, $y, $z, self::$GRAVEL);
 						}else{
 							$world->setBlockAt($x, $y, $z, $groundMat);
 						}
@@ -136,7 +136,7 @@ class GroundGenerator{
 						}
 					}
 				}elseif($matId === BlockLegacyIds::STILL_WATER && $y === $seaLevel - 2 && BiomeClimateManager::isCold($biome, $chunkX, $y, $chunkZ)){
-					$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::ICE));
+					$world->setBlockAt($x, $y, $z, VanillaBlocks::ICE());
 				}
 			}
 		}

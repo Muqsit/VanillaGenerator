@@ -8,6 +8,7 @@ use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\BlockLegacyMetadata;
 use pocketmine\block\DoublePlant;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -42,10 +43,10 @@ abstract class TerrainObject{
 			if(($mat === BlockLegacyIds::DOUBLE_PLANT) && $blockAbove instanceof DoublePlant){
 				$dataAbove = $blockAbove->getMeta();
 				if(($dataAbove & BlockLegacyMetadata::DOUBLE_PLANT_FLAG_TOP) !== 0){
-					$world->setBlockAt($x, $y + 1, $z, BlockFactory::get(BlockLegacyIds::AIR));
+					$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::AIR());
 				}
 			}
-			$world->setBlockAt($x, $y + 1, $z, BlockFactory::get(BlockLegacyIds::AIR));
+			$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::AIR());
 			return true;
 		}
 

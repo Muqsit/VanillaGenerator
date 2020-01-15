@@ -7,6 +7,7 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 use muqsit\vanillagenerator\generator\Decorator;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -34,7 +35,7 @@ class DeadBushDecorator extends Decorator{
 				$blockBelow = $world->getBlockAt($x, $y - 1, $z)->getId();
 				foreach(self::SOIL_TYPES as $soil){
 					if($soil === $blockBelow){
-						$world->setBlockAt($x, $y, $z, BlockFactory::get(BlockLegacyIds::DEAD_BUSH));
+						$world->setBlockAt($x, $y, $z, VanillaBlocks::DEAD_BUSH());
 						break;
 					}
 				}

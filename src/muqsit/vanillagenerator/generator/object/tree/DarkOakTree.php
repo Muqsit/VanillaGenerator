@@ -9,6 +9,7 @@ use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\BlockLegacyMetadata;
 use pocketmine\block\utils\TreeType;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
@@ -144,7 +145,7 @@ class DarkOakTree extends GenericTree{
 		}
 
 		// block below trunk is always dirt (SELF, SOUTH, EAST, SOUTH EAST)
-		$dirt = BlockFactory::get(BlockLegacyIds::DIRT, BlockLegacyMetadata::DIRT_NORMAL);
+		$dirt = VanillaBlocks::DIRT();
 		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ, $dirt);
 		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ + 1, $dirt);
 		$this->transaction->addBlockAt($blockX + 1, $blockY - 1, $blockZ, $dirt);
