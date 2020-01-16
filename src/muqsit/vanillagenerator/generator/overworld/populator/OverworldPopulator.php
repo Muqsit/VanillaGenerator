@@ -17,6 +17,7 @@ use muqsit\vanillagenerator\generator\overworld\populator\biome\JunglePopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\PlainsPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\RoofedForestPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\SunflowerPlainsPopulator;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\SwamplandPopulator;
 use muqsit\vanillagenerator\generator\Populator;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -44,8 +45,8 @@ class OverworldPopulator implements Populator{
 		$this->registerBiomePopulator(new DesertMountainsPopulator());
 		$this->registerBiomePopulator(new JunglePopulator());
 		$this->registerBiomePopulator(new JungleEdgePopulator());
-		/*
 		$this->registerBiomePopulator(new SwamplandPopulator());
+		/*
 		$this->registerBiomePopulator(new TaigaPopulator());
 		$this->registerBiomePopulator(new MegaTaigaPopulator());
 		$this->registerBiomePopulator(new MegaSpruceTaigaPopulator());
