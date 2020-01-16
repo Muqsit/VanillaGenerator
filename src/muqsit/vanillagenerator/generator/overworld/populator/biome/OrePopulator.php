@@ -38,7 +38,7 @@ class OrePopulator implements Populator{
 		$this->addOre(new OreType(VanillaBlocks::LAPIS_LAZULI_ORE(), 16, 16, 6), 1);
 	}
 
-	private function addOre(OreType $type, int $value) : void{
+	protected function addOre(OreType $type, int $value) : void{
 		$this->ores[] = [$type, $value];
 	}
 
