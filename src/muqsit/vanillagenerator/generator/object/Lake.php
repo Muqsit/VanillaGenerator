@@ -79,7 +79,7 @@ class Lake extends TerrainObject{
 					$blockAbove = $world->getBlockAt($sourceX + $x, $sourceY + $y + 1, $sourceZ + $z);
 					$blockType = $block->getId();
 					$blockAboveType = $blockAbove->getId();
-					if($blockType === BlockLegacyIds::DIRT && ($blockAboveType === BlockLegacyIds::LOG || $blockAboveType === BlockLegacyIds::LOG2) || $blockType === BlockLegacyIds::LOG || $blockType === BlockLegacyIds::LOG2){
+					if(($blockType === BlockLegacyIds::DIRT && ($blockAboveType === BlockLegacyIds::LOG || $blockAboveType === BlockLegacyIds::LOG2)) || $blockType === BlockLegacyIds::LOG || $blockType === BlockLegacyIds::LOG2){
 						continue;
 					}
 
@@ -93,7 +93,7 @@ class Lake extends TerrainObject{
 							$type = $blockType;
 						}
 					}elseif($y === self::MAX_HEIGHT / 2 - 1){
-						if($type === BlockLegacyIds::STILL_WATER && BiomeClimateManager::isCold($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $sourceX + $x, $y, $sourceZ + $z)){
+						if($type->getId() === BlockLegacyIds::STILL_WATER && BiomeClimateManager::isCold($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $sourceX + $x, $y, $sourceZ + $z)){
 							$type = VanillaBlocks::ICE();
 						}
 					}

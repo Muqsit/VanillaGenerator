@@ -27,7 +27,7 @@ class Cactus extends TerrainObject{
 	 * @return bool
 	 */
 	public function generate(ChunkManager $world, Random $random, int $x, int $y, int $z) : bool{
-		if($world->getBlockAt($x, $y, $z) === BlockLegacyIds::AIR){
+		if($world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
 			$height = $random->nextBoundedInt($random->nextBoundedInt(3) + 1) + 1;
 			for($n = $y; $n < $y + $height; ++$n){
 				$vec = new Vector3($x, $n, $z);

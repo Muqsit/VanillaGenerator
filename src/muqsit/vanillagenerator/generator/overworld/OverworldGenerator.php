@@ -27,6 +27,7 @@ use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\format\Chunk;
 
 class OverworldGenerator extends VanillaGenerator{
 
@@ -115,6 +116,10 @@ class OverworldGenerator extends VanillaGenerator{
 		$sizeZ = $octaveGenerator->getSizeZ();
 
 		$surfaceNoise = $octaveGenerator->getFractalBrownianMotion($cx, 0.0, $cz, 0.5, 0.5);
+
+		/** @var Chunk $chunk */
+		$chunk = $this->world->getChunk($chunkX, $chunkZ);
+
 		for($x = 0; $x < $sizeX; ++$x){
 			for($z = 0; $z < $sizeZ; ++$z){
 				if(isset(self::$GROUND_MAP[$id = $grid->getBiome($x, $z)])){
@@ -122,6 +127,7 @@ class OverworldGenerator extends VanillaGenerator{
 				}else{
 					$this->groundGen->generateTerrainColumn($this->world, $this->random, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
 				}
+				$chunk->setBiomeId($x, $z, $id);
 			}
 		}
 	}
