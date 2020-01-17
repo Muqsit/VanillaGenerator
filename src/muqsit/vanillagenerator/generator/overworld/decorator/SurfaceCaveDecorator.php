@@ -6,8 +6,6 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
-use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;

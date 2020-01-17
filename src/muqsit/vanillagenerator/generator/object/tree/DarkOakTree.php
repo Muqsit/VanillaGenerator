@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object\tree;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
-use pocketmine\block\BlockLegacyMetadata;
 use pocketmine\block\utils\TreeType;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;

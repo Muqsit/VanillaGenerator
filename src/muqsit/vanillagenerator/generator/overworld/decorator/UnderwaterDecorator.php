@@ -7,7 +7,6 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\BlockPatch;
 use pocketmine\block\Block;
-use pocketmine\block\BlockIdentifier;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;

@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\ground;
 
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
