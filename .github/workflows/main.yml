@@ -1,0 +1,12 @@
+name: PHPStan
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: nxtlvlsoftware/pmmp-phpstan-action@master
