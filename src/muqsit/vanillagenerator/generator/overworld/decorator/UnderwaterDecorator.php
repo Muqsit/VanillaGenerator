@@ -24,7 +24,7 @@ class UnderwaterDecorator extends Decorator{
 	/** @var int */
 	private $vertRadius;
 
-	/** @var BlockIdentifier[] */
+	/** @var int[] */
 	private $overridables;
 
 	public function __construct(Block $type){
@@ -46,7 +46,7 @@ class UnderwaterDecorator extends Decorator{
 
 	final public function setOverridableBlocks(Block ...$overridables) : UnderwaterDecorator{
 		foreach($overridables as $overridable){
-			$this->overridables[] = $overridable->getIdInfo();
+			$this->overridables[] = $overridable->getFullId();
 		}
 		return $this;
 	}

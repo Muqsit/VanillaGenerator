@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockIdentifier;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -22,7 +21,7 @@ class BlockPatch extends TerrainObject{
 	/** @var int */
 	private $vertRadius;
 
-	/** @var BlockIdentifier[] */
+	/** @var int[] */
 	private $overridables;
 
 	/**
@@ -30,13 +29,13 @@ class BlockPatch extends TerrainObject{
 	 * @param Block $type the ground cover block type
 	 * @param int $horizRadius the maximum radius on the horizontal plane
 	 * @param int $vertRadius the depth above and below the center
-	 * @param BlockIdentifier ...$overridables
+	 * @param int ...$overridables_full_id
 	 */
-	public function __construct(Block $type, int $horizRadius, int $vertRadius, BlockIdentifier ...$overridables){
+	public function __construct(Block $type, int $horizRadius, int $vertRadius, int ...$overridables_full_id){
 		$this->type = $type;
 		$this->horizRadius = $horizRadius;
 		$this->vertRadius = $vertRadius;
-		$this->overridables = $overridables;
+		$this->overridables = $overridables_full_id;
 	}
 
 	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
@@ -50,7 +49,7 @@ class BlockPatch extends TerrainObject{
 				}
 				for($y = $sourceY - $this->vertRadius; $y <= $sourceY + $this->vertRadius; ++$y){
 					$block = $world->getBlockAt($x, $y, $z);
-					if(!in_array($block->getIdInfo(), $this->overridables, true)){
+					if(!in_array($block->getFullId(), $this->overridables, true)){
 						continue;
 					}
 					if(TerrainObject::killPlantAbove($world, $x, $y, $z)){

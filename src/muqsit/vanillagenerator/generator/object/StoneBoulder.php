@@ -28,7 +28,7 @@ class StoneBoulder extends TerrainObject{
 				break;
 			}
 		}
-		if(!$groundReached || !$world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId() === BlockLegacyIds::AIR){
+		if(!$groundReached || $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId() !== BlockLegacyIds::AIR){
 			return false;
 		}
 		for($i = 0; $i < 3; ++$i){

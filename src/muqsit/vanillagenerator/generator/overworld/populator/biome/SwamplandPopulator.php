@@ -20,7 +20,7 @@ class SwamplandPopulator extends BiomePopulator{
 	/** @var TreeDecoration[] */
 	protected static $TREES;
 
-	/** @var TreeDecoration[] */
+	/** @var FlowerDecoration[] */
 	protected static $FLOWERS;
 
 	protected static function initTrees() : void{

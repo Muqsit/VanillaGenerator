@@ -15,7 +15,17 @@ use pocketmine\world\format\Chunk;
 
 class IceDecorator extends Decorator{
 
-	private const OVERRIDABLES = [BlockLegacyIds::DIRT, BlockLegacyIds::GRASS, BlockLegacyIds::SNOW_BLOCK, BlockLegacyIds::ICE];
+	/** @var int[] */
+	private static $OVERRIDABLES;
+
+	public static function init() : void{
+		self::$OVERRIDABLES = [
+			VanillaBlocks::DIRT()->getFullId(),
+			VanillaBlocks::GRASS()->getFullId(),
+			VanillaBlocks::SNOW()->getFullId(),
+			VanillaBlocks::ICE()->getFullId()
+		];
+	}
 
 	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
 		$sourceX = $chunk->getX() << 4;
@@ -24,12 +34,12 @@ class IceDecorator extends Decorator{
 		for($i = 0; $i < 3; ++$i){
 			$x = $sourceX + $random->nextBoundedInt(16);
 			$z = $sourceZ + $random->nextBoundedInt(16);
-			$y = $world->getHighestBlockAt($x & 0x0f, $z & 0x0f) - 1;
+			$y = $chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) - 1;
 			while($y > 2 && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
 				--$y;
 			}
 			if($world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::SNOW_BLOCK){
-				(new BlockPatch(VanillaBlocks::PACKED_ICE(), 4, 1, ...self::OVERRIDABLES))->generate($world, $random, $x, $y, $z);
+				(new BlockPatch(VanillaBlocks::PACKED_ICE(), 4, 1, ...self::$OVERRIDABLES))->generate($world, $random, $x, $y, $z);
 			}
 		}
 
@@ -49,3 +59,5 @@ class IceDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
 	}
 }
+
+IceDecorator::init();
