@@ -46,7 +46,7 @@ class IceDecorator extends Decorator{
 		for($i = 0; $i < 2; ++$i){
 			$x = $sourceX + $random->nextBoundedInt(16);
 			$z = $sourceZ + $random->nextBoundedInt(16);
-			$y = $world->getHighestBlockAt($x & 0x0f, $z & 0x0f);
+			$y = $chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f);
 			while($y > 2 && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
 				--$y;
 			}
