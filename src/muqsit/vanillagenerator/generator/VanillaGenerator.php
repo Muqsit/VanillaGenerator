@@ -54,8 +54,7 @@ abstract class VanillaGenerator extends Generator{
 		array_push($this->populators, ...$populators);
 	}
 
-	protected function createWorldOctaves(array &$octaves) : void{
-	}
+	abstract protected function createWorldOctaves(array &$octaves) : void;
 
 	public function generateChunk(int $chunkX, int $chunkZ) : void{
 		$biomes = new VanillaBiomeGrid();
