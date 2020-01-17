@@ -145,7 +145,7 @@ class MegaJungleTree extends GenericTree{
 		}
 	}
 
-	protected function generateDirtBelowTrunk($blockX, $blockY, $blockZ) : void{
+	protected function generateDirtBelowTrunk(int $blockX, int $blockY, int $blockZ) : void{
 		// SELF, SOUTH, EAST, SOUTH EAST
 		$dirt = VanillaBlocks::DIRT();
 		$this->transaction->addBlockAt($blockX + 0, $blockY + -1, $blockZ, $dirt);

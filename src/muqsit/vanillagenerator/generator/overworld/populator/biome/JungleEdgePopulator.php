@@ -11,8 +11,10 @@ use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 
 class JungleEdgePopulator extends JunglePopulator{
 
-	public static function init() : void{
-		parent::init();
+	/** @var TreeDecoration[] */
+	protected static $TREES;
+
+	protected static function initTrees() : void{
 		self::$TREES = [
 			new TreeDecoration(BigOakTree::class, 10),
 			new TreeDecoration(CocoaTree::class, 45)

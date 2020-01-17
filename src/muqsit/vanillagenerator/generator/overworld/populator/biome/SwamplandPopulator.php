@@ -15,34 +15,42 @@ use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 
-class SwamplandPopulator extends BiomePopulator {
-	
-	public static function init() : void{
+class SwamplandPopulator extends BiomePopulator{
+
+	/** @var TreeDecoration[] */
+	protected static $TREES;
+
+	/** @var TreeDecoration[] */
+	protected static $FLOWERS;
+
+	protected static function initTrees() : void{
 		self::$TREES = [
 			new TreeDecoration(SwampTree::class, 1)
 		];
-		
+	}
+
+	protected static function initFlowers() : void{
 		self::$FLOWERS = [
 			new FlowerDecoration(VanillaBlocks::BLUE_ORCHID(), 1)
 		];
 	}
-	
+
 	/** @var MushroomDecorator */
 	private $swamplandBrownMushroomDecorator;
-	
+
 	/** @var MushroomDecorator */
 	private $swamplandRedMushroomDecorator;
-	
+
 	/** @var WaterLilyDecorator */
 	private $waterlilyDecorator;
-	
+
 	public function __construct(){
 		$this->swamplandBrownMushroomDecorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
 		$this->swamplandRedMushroomDecorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
 		$this->waterlilyDecorator = new WaterLilyDecorator();
 		parent::__construct();
 	}
-	
+
 	protected function initPopulators() : void{
 		$this->sandPatchDecorator->setAmount(0);
 		$this->gravelPatchDecorator->setAmount(0);
@@ -69,4 +77,5 @@ class SwamplandPopulator extends BiomePopulator {
 		$this->waterlilyDecorator->populate($world, $random, $chunk);
 	}
 }
+
 SwamplandPopulator::init();

@@ -11,9 +11,6 @@ use muqsit\vanillagenerator\generator\object\Flower;
 use muqsit\vanillagenerator\generator\object\TallGrass;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockLegacyIds;
-use pocketmine\block\BlockLegacyMetadata;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -28,6 +25,8 @@ class PlainsPopulator extends BiomePopulator{
 	protected static $PLAINS_TULIPS;
 
 	public static function init() : void{
+		parent::init();
+
 		self::$PLAINS_FLOWERS = [
 			VanillaBlocks::POPPY(),
 			VanillaBlocks::AZURE_BLUET(),

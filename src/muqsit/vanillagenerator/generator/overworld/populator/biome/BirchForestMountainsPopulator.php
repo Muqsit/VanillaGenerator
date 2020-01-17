@@ -16,7 +16,7 @@ class BirchForestMountainsPopulator extends ForestPopulator{
 	/** @var TreeDecoration[] */
 	protected static $TREES;
 
-	public static function init() : void{
+	protected static function initTrees() : void{
 		self::$TREES = [
 			new TreeDecoration(BirchTree::class, 1),
 			new TreeDecoration(TallBirchTree::class, 1)

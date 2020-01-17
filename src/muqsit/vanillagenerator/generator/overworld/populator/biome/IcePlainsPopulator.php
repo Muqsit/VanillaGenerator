@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\overworld\populator\biome;
 
-use muqsit\vanillagenerator\generator\object\tree\BirchTree;
+use muqsit\vanillagenerator\generator\object\tree\RedwoodTree;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 
-class BirchForestPopulator extends ForestPopulator{
-
-	private const BIOMES = [BiomeIds::BIRCH_FOREST, BiomeIds::BIRCH_FOREST_HILLS];
-
+class IcePlainsPopulator extends BiomePopulator{
+	
 	/** @var TreeDecoration[] */
 	protected static $TREES;
-
+	
 	protected static function initTrees() : void{
 		self::$TREES = [
-			new TreeDecoration(BirchTree::class, 1)
+			new TreeDecoration(RedwoodTree::class, 1)
 		];
 	}
 
+	public function getBiomes() : ?array{
+		return [BiomeIds::ICE_FLATS, BiomeIds::ICE_MOUNTAINS];
+	}
+	
 	protected function initPopulators() : void{
+		$this->treeDecorator->setAmount(0);
 		$this->treeDecorator->setTrees(...self::$TREES);
-	}
-
-	public function getBiomes() : array{
-		return self::BIOMES;
-	}
+		$this->flowerDecorator->setAmount(0);
+    }
 }
 
-BirchForestPopulator::init();
+IcePlainsPopulator::init();

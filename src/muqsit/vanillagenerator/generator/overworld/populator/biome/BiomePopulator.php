@@ -37,11 +37,18 @@ class BiomePopulator implements Populator{
 	protected static $FLOWERS;
 
 	public static function init() : void{
+		static::initTrees();
+		static::initFlowers();
+	}
+
+	protected static function initTrees() : void{
 		self::$TREES = [
 			new TreeDecoration(BigOakTree::class, 1),
 			new TreeDecoration(GenericTree::class, 9)
 		];
+	}
 
+	protected static function initFlowers() : void{
 		self::$FLOWERS = [
 			new FlowerDecoration(VanillaBlocks::DANDELION(), 2),
 			new FlowerDecoration(VanillaBlocks::POPPY(), 1)

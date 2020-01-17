@@ -14,6 +14,7 @@ class SunflowerPlainsPopulator extends PlainsPopulator{
 	private static $DOUBLE_PLANTS;
 
 	public static function init() : void{
+		parent::init();
 		self::$DOUBLE_PLANTS = [
 			new DoublePlantDecoration(VanillaBlocks::SUNFLOWER(), 1)
 		];

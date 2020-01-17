@@ -29,15 +29,18 @@ class ForestPopulator extends BiomePopulator{
 	private static $DOUBLE_PLANTS;
 
 	public static function init() : void{
-		self::$TREES = [
-			new TreeDecoration(GenericTree::class, 4),
-			new TreeDecoration(BirchTree::class, 1)
-		];
-
+		parent::init();
 		self::$DOUBLE_PLANTS = [
 			VanillaBlocks::LILAC(),
 			VanillaBlocks::ROSE_BUSH(),
 			VanillaBlocks::PEONY()
+		];
+	}
+
+	protected static function initTrees() : void{
+		self::$TREES = [
+			new TreeDecoration(GenericTree::class, 4),
+			new TreeDecoration(BirchTree::class, 1)
 		];
 	}
 
