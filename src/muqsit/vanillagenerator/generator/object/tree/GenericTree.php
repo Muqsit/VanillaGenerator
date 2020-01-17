@@ -77,7 +77,7 @@ class GenericTree extends TerrainObject{
 	 * Checks whether this tree fits under the upper world limit.
 	 * @param int $baseHeight the height of the base of the trunk
 	 *
-	 * @return true if this tree can grow without exceeding block height 255; false otherwise.
+	 * @return bool whether this tree can grow without exceeding block height 255; false otherwise.
 	 */
 	public function canHeightFit(int $baseHeight) : bool{
 		return $baseHeight >= 1 && $baseHeight + $this->height + 1 <= World::Y_MAX;
@@ -86,7 +86,7 @@ class GenericTree extends TerrainObject{
 	/**
 	 * Checks whether this tree can grow on top of the given block.
 	 * @param Block $soil the block we're growing on
-	 * @return true if this tree can grow on the type of block below it; false otherwise
+	 * @return bool whether this tree can grow on the type of block below it; false otherwise
 	 */
 	public function canPlaceOn(Block $soil) : bool{
 		$type = $soil->getId();
@@ -180,7 +180,7 @@ class GenericTree extends TerrainObject{
 	 * @param int $baseY the Y coordinate of the base of the trunk
 	 * @param int $baseZ the Z coordinate of the base of the trunk
 	 * @param ChunkManager $world the world to grow in
-	 * @return true if any of the checks prevent us from generating, false otherwise
+	 * @return bool whether any of the checks prevent us from generating, false otherwise
 	 */
 	protected function cannotGenerateAt(int $baseX, int $baseY, int $baseZ, ChunkManager $world) : bool{
 		return !$this->canHeightFit($baseY)

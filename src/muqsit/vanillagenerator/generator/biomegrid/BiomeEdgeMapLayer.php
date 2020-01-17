@@ -34,7 +34,7 @@ class BiomeEdgeMapLayer extends MapLayer{
 		BiomeIds::SWAMPLAND => BiomeIds::JUNGLE_EDGE
 	];
 
-	/** @var int[][] */
+	/** @var int[][]|int[][][]|null[][] */
 	private static $EDGES;
 
 	public static function init() : void{

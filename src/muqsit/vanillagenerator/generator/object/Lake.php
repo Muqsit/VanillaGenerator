@@ -7,7 +7,6 @@ namespace muqsit\vanillagenerator\generator\object;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Liquid;
 use pocketmine\block\VanillaBlocks;
@@ -83,7 +82,7 @@ class Lake extends TerrainObject{
 						continue;
 					}
 
-					if($y >= (int) self::MAX_HEIGHT / 2){
+					if($y >= (int) (self::MAX_HEIGHT / 2)){
 						$type = VanillaBlocks::AIR();
 						if(TerrainObject::killPlantAbove($world, $sourceX + $x, $sourceY + $y, $sourceZ + $z)){
 							break;
@@ -92,7 +91,7 @@ class Lake extends TerrainObject{
 						if($this->type->getId() === BlockLegacyIds::STILL_WATER && ($blockType === BlockLegacyIds::ICE || $blockType === BlockLegacyIds::PACKED_ICE)){
 							$type = $blockType;
 						}
-					}elseif($y === self::MAX_HEIGHT / 2 - 1){
+					}elseif($y === (int) (self::MAX_HEIGHT / 2 - 1)){
 						if($type->getId() === BlockLegacyIds::STILL_WATER && BiomeClimateManager::isCold($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $sourceX + $x, $y, $sourceZ + $z)){
 							$type = VanillaBlocks::ICE();
 						}
