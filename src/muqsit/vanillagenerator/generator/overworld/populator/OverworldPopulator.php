@@ -20,6 +20,8 @@ use muqsit\vanillagenerator\generator\overworld\populator\biome\MegaSpruceTaigaP
 use muqsit\vanillagenerator\generator\overworld\populator\biome\MegaTaigaPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\PlainsPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\RoofedForestPopulator;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\SavannaMountainsPopulator;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\SavannaPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\SunflowerPlainsPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\SwamplandPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\biome\TaigaPopulator;
@@ -56,9 +58,9 @@ class OverworldPopulator implements Populator{
 		$this->registerBiomePopulator(new MegaSpruceTaigaPopulator());
 		$this->registerBiomePopulator(new IcePlainsPopulator());
 		$this->registerBiomePopulator(new IcePlainsSpikesPopulator());
-		/*
 		$this->registerBiomePopulator(new SavannaPopulator());
 		$this->registerBiomePopulator(new SavannaMountainsPopulator());
+		/*
 		$this->registerBiomePopulator(new ExtremeHillsPopulator());
 		$this->registerBiomePopulator(new ExtremeHillsPlusPopulator());
 		$this->registerBiomePopulator(new MesaPopulator());
