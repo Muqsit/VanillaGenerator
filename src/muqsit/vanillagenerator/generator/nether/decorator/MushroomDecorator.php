@@ -23,9 +23,11 @@ class MushroomDecorator extends Decorator{
 	}
 
 	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
+		$height = $world->getWorldHeight();
+
 		$sourceX = ($chunk->getX() << 4) + $random->nextBoundedInt(16);
 		$sourceZ = ($chunk->getZ() << 4) + $random->nextBoundedInt(16);
-		$sourceY = $random->nextBoundedInt(128);
+		$sourceY = $random->nextBoundedInt($height);
 
 		for($i = 0; $i < 64; ++$i){
 			$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
@@ -35,7 +37,7 @@ class MushroomDecorator extends Decorator{
 			$block = $world->getBlockAt($x, $y, $z);
 			$blockBelow = $world->getBlockAt($x, $y - 1, $z);
 			if(
-				$y < 128 &&
+				$y < $height &&
 				$block->getId() === BlockLegacyIds::AIR &&
 				in_array($blockBelow->getId(), self::MATERIALS, true)
 			){

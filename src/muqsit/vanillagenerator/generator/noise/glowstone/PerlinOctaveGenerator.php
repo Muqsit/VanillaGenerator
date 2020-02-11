@@ -76,6 +76,18 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 		return $this->sizeZ;
 	}
 
+	public function setSizeX(int $sizeX) : void{
+		$this->sizeX = $sizeX;
+	}
+
+	public function setSizeY(int $sizeY) : void{
+		$this->sizeY = $sizeY;
+	}
+
+	public function setSizeZ(int $sizeZ) : void{
+		$this->sizeZ = $sizeZ;
+	}
+
 	/**
 	 * Generates multiple layers of noise.
 	 *

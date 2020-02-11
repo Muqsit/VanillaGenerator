@@ -9,10 +9,25 @@ use muqsit\vanillagenerator\generator\noise\bukkit\OctaveGenerator;
 use muqsit\vanillagenerator\generator\overworld\WorldType;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\generator\Generator;
+use pocketmine\world\SimpleChunkManager;
+use pocketmine\world\World;
+use ReflectionProperty;
 
 abstract class VanillaGenerator extends Generator{
 
 	protected const WORLD_DEPTH = 128;
+
+	private static function modifyChunkManager(SimpleChunkManager $world, self $generator) : SimpleChunkManager{
+		static $_worldHeight = null;
+		if($_worldHeight === null){
+			/** @noinspection PhpUnhandledExceptionInspection */
+			$_worldHeight = new ReflectionProperty($world, "worldHeight");
+			$_worldHeight->setAccessible(true);
+		}
+
+		$_worldHeight->setValue($world, $generator->getWorldHeight());
+		return $world;
+	}
 
 	/** @var OctaveGenerator[] */
 	private $octaveCache = [];
@@ -24,7 +39,8 @@ abstract class VanillaGenerator extends Generator{
 	private $biomeGrid;
 
 	public function __construct(ChunkManager $world, int $seed, array $options = []){
-		parent::__construct($world, $seed, $options);
+		assert($world instanceof SimpleChunkManager);
+		parent::__construct(self::modifyChunkManager($world, $this), $seed, $options);
 		$this->biomeGrid = MapLayer::initialize($seed, Environment::OVERWORLD, WorldType::NORMAL);
 	}
 
@@ -84,5 +100,9 @@ abstract class VanillaGenerator extends Generator{
 		foreach($this->populators as $populator){
 			$populator->populate($this->world, $this->random, $this->world->getChunk($chunkX, $chunkZ));
 		}
+	}
+
+	public function getWorldHeight() : int{
+		return World::Y_MAX;
 	}
 }

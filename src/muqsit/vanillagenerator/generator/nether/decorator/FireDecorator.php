@@ -15,10 +15,14 @@ class FireDecorator extends Decorator{
 
 	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
 		$amount = 1 + $random->nextBoundedInt(1 + $random->nextBoundedInt(10));
+
+		$height = $world->getWorldHeight();
+		$sourceYMargin = 8 * ($height >> 7);
+
 		for($j = 0; $j < $amount; ++$j){
 			$sourceX = ($chunk->getX() << 4) + $random->nextBoundedInt(16);
 			$sourceZ = ($chunk->getZ() << 4) + $random->nextBoundedInt(16);
-			$sourceY = 4 + $random->nextBoundedInt(120);
+			$sourceY = 4 + $random->nextBoundedInt($sourceYMargin);
 
 			for($i = 0; $i < 64; ++$i){
 				$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
@@ -28,7 +32,7 @@ class FireDecorator extends Decorator{
 				$block = $world->getBlockAt($x, $y, $z);
 				$blockBelow = $world->getBlockAt($x, $y - 1, $z);
 				if(
-					$y < 128 &&
+					$y < $height &&
 					$block->getId() === BlockLegacyIds::AIR &&
 					$blockBelow->getId() === BlockLegacyIds::NETHERRACK
 				){

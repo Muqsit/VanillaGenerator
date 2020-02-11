@@ -12,6 +12,7 @@ use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
+use pocketmine\world\World;
 
 class NetherPopulator implements Populator{
 
@@ -39,8 +40,8 @@ class NetherPopulator implements Populator{
 	/** @var MushroomDecorator */
 	private $redMushroomDecorator;
 
-	public function __construct(){
-		$this->orePopulator = new OrePopulator();
+	public function __construct(int $worldHeight = World::Y_MAX){
+		$this->orePopulator = new OrePopulator($worldHeight);
 		$this->inGroundPopulators[] = $this->orePopulator;
 
 		$this->fireDecorator = new FireDecorator();

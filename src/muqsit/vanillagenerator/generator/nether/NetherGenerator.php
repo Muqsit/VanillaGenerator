@@ -13,6 +13,7 @@ use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\format\Chunk;
 
 class NetherGenerator extends VanillaGenerator{
 
@@ -30,7 +31,11 @@ class NetherGenerator extends VanillaGenerator{
 
 	public function __construct(ChunkManager $world, int $seed, array $options = []){
 		parent::__construct($world, $seed, $options);
-		$this->addPopulators(new NetherPopulator());
+		$this->addPopulators(new NetherPopulator($world->getWorldHeight()));
+	}
+
+	public function getWorldHeight() : int{
+		return 128;
 	}
 
 	protected function generateChunkData(int $chunkX, int $chunkZ, VanillaBiomeGrid $biomes) : void{
@@ -41,8 +46,13 @@ class NetherGenerator extends VanillaGenerator{
 		$surfaceNoise = $this->getWorldOctaves()["surface"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
 		$soulsandNoise = $this->getWorldOctaves()["soulsand"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
 		$gravelNoise = $this->getWorldOctaves()["gravel"]->getFractalBrownianMotion($cx, 0, $cz, 0.5, 2.0);
+
+		/** @var Chunk $chunk */
+		$chunk = $this->world->getChunk($chunkX, $chunkZ);
+
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){
+				$chunk->setBiomeId($x, $z, $id = $biomes->getBiome($x, $z));
 				$this->generateTerrainColumn($cx + $x, $cz + $z, $surfaceNoise[$x | $z << 4], $soulsandNoise[$x | $z << 4], $gravelNoise[$x | $z << 4]);
 			}
 		}
@@ -52,40 +62,40 @@ class NetherGenerator extends VanillaGenerator{
 		$seed = new Random($this->random->getSeed());
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 1, 5);
-		$gen->setXScale(self::HEIGHT_NOISE_SCALE_X);
-		$gen->setZScale(self::HEIGHT_NOISE_SCALE_Z);
+		$gen->setXScale(static::HEIGHT_NOISE_SCALE_X);
+		$gen->setZScale(static::HEIGHT_NOISE_SCALE_Z);
 		$octaves["height"] = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 17, 5);
-		$gen->setXScale(self::COORDINATE_SCALE);
-		$gen->setYScale(self::HEIGHT_SCALE);
-		$gen->setZScale(self::COORDINATE_SCALE);
+		$gen->setXScale(static::COORDINATE_SCALE);
+		$gen->setYScale(static::HEIGHT_SCALE);
+		$gen->setZScale(static::COORDINATE_SCALE);
 		$octaves["roughness"] = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 17, 5);
-		$gen->setXScale(self::COORDINATE_SCALE);
-		$gen->setYScale(self::HEIGHT_SCALE);
-		$gen->setZScale(self::COORDINATE_SCALE);
+		$gen->setXScale(static::COORDINATE_SCALE);
+		$gen->setYScale(static::HEIGHT_SCALE);
+		$gen->setZScale(static::COORDINATE_SCALE);
 		$octaves["roughness2"] = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 17, 5);
-		$gen->setXScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_X);
-		$gen->setYScale(self::HEIGHT_SCALE / self::DETAIL_NOISE_SCALE_Y);
-		$gen->setZScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_Z);
+		$gen->setXScale(static::COORDINATE_SCALE / static::DETAIL_NOISE_SCALE_X);
+		$gen->setYScale(static::HEIGHT_SCALE / static::DETAIL_NOISE_SCALE_Y);
+		$gen->setZScale(static::COORDINATE_SCALE / static::DETAIL_NOISE_SCALE_Z);
 		$octaves["detail"] = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 16, 1);
-		$gen->setScale(self::SURFACE_SCALE);
+		$gen->setScale(static::SURFACE_SCALE);
 		$octaves["surface"] = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 16, 1);
-		$gen->setXScale(self::SURFACE_SCALE / 2.0);
-		$gen->setYScale(self::SURFACE_SCALE / 2.0);
+		$gen->setXScale(static::SURFACE_SCALE / 2.0);
+		$gen->setYScale(static::SURFACE_SCALE / 2.0);
 		$octaves["soulsand"] = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 1, 16);
-		$gen->setXScale(self::SURFACE_SCALE / 2.0);
-		$gen->setZScale(self::SURFACE_SCALE / 2.0);
+		$gen->setXScale(static::SURFACE_SCALE / 2.0);
+		$gen->setZScale(static::SURFACE_SCALE / 2.0);
 		$octaves["gravel"] = $gen;
 	}
 
@@ -147,10 +157,12 @@ class NetherGenerator extends VanillaGenerator{
 		$roughnessNoise2 = $octaves["roughness2"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
 		$detailNoise = $octaves["detail"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
 
+		$k_max = $octaves["detail"]->getSizeY();
+
 		$nv = [];
-		for($i = 0; $i < 17; ++$i){
-			$nv[$i] = cos($i * M_PI * 6.0 / 17.0) * 2.0;
-			$nh = $i > 17 / 2 ? 17 - 1 - $i : $i;
+		for($i = 0; $i < $k_max; ++$i){
+			$nv[$i] = cos($i * M_PI * 6.0 / $k_max) * 2.0;
+			$nh = $i > $k_max / 2 ? $k_max - 1 - $i : $i;
 			if($nh < 4.0){
 				$nh = 4.0 - $nh;
 				$nv[$i] -= $nh * $nh * $nh * 10.0;
@@ -174,8 +186,8 @@ class NetherGenerator extends VanillaGenerator{
 					$noiseH = min($noiseH, 1) / 6.0;
 				}
 
-				$noiseH = $noiseH * 17 / 16.0;
-				for($k = 0; $k < 17; ++$k){
+				$noiseH = $noiseH * $k_max / 16.0;
+				for($k = 0; $k < $k_max; ++$k){
 					$noiseR = $roughnessNoise[$index] / 512.0;
 					$noiseR2 = $roughnessNoise2[$index] / 512.0;
 					$noiseD = ($detailNoise[$index] / 10.0 + 1.0) / 2.0;
@@ -184,8 +196,9 @@ class NetherGenerator extends VanillaGenerator{
 					$dens = $noiseD < 0 ? $noiseR : ($noiseD > 1 ? $noiseR2 : $noiseR + ($noiseR2 - $noiseR) * $noiseD);
 					$dens -= $nh;
 					++$index;
-					if($k > 13){
-						$lowering = ($k - 13) / 3.0;
+					$k_cap = $k_max - 4;
+					if($k > $k_cap){
+						$lowering = ($k - $k_cap) / 3.0;
 						$dens = $dens * (1.0 - $lowering) + $lowering * -10.0;
 					}
 					$this->density[$i][$j][$k] = $dens;
@@ -203,8 +216,10 @@ class NetherGenerator extends VanillaGenerator{
 
 		$surfaceHeight = (int) ($surfaceNoise / 3.0 + 3.0 + $this->random->nextFloat() * 0.25);
 		$deep = -1;
-		for($y = 127; $y >= 0; --$y){
-			if($y <= $this->random->nextBoundedInt(5) || $y >= 127 - $this->random->nextBoundedInt(5)){
+		$worldHeight = $this->getWorldHeight();
+		$worldHeightM1 = $worldHeight - 1;
+		for($y = $worldHeightM1; $y >= 0; --$y){
+			if($y <= $this->random->nextBoundedInt(5) || $y >= $worldHeightM1 - $this->random->nextBoundedInt(5)){
 				$this->world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
 				continue;
 			}
