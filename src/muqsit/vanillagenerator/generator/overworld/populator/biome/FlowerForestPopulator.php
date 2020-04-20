@@ -46,7 +46,7 @@ class FlowerForestPopulator extends ForestPopulator{
 		$this->noiseGen->setScale(1 / 48.0);
 	}
 
-	public function getBiomes() : array{
+	public function getBiomes() : ?array{
 		return [BiomeIds::MUTATED_FOREST];
 	}
 

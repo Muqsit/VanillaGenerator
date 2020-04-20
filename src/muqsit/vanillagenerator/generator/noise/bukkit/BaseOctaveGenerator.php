@@ -18,6 +18,9 @@ abstract class BaseOctaveGenerator{
 	/** @var float */
 	protected $zScale = 1.0;
 
+	/**
+	 * @param NoiseGenerator[] $octaves
+	 */
 	protected function __construct(array $octaves){
 		$this->octaves = $octaves;
 	}

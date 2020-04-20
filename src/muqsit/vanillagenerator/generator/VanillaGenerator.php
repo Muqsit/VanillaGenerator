@@ -70,6 +70,9 @@ abstract class VanillaGenerator extends Generator{
 		array_push($this->populators, ...$populators);
 	}
 
+	/**
+	 * @param OctaveGenerator[] $octaves
+	 */
 	abstract protected function createWorldOctaves(array &$octaves) : void;
 
 	public function generateChunk(int $chunkX, int $chunkZ) : void{
@@ -84,14 +87,20 @@ abstract class VanillaGenerator extends Generator{
 
 	abstract protected function generateChunkData(int $chunkX, int $chunkZ, VanillaBiomeGrid $biomes) : void;
 
+	/**
+	 * @return OctaveGenerator[]
+	 */
 	protected function getWorldOctaves() : array{
-		if(empty($this->octaveCache)){
+		if(count($this->octaveCache) === 0){
 			$this->createWorldOctaves($this->octaveCache);
 		}
 
 		return $this->octaveCache;
 	}
 
+	/**
+	 * @return Populator[]
+	 */
 	public function getDefaultPopulators() : array{
 		return $this->populators;
 	}

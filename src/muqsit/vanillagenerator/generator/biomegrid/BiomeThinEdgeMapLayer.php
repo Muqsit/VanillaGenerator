@@ -29,7 +29,7 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 		BiomeIds::MUTATED_JUNGLE_EDGE => BiomeIds::JUNGLE_EDGE
 	];
 
-	/** @var int[][] */
+	/** @var mixed[][] */
 	private static $EDGES;
 
 	public static function init() : void{

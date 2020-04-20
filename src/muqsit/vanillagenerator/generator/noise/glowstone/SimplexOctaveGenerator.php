@@ -8,6 +8,11 @@ use pocketmine\utils\Random;
 
 class SimplexOctaveGenerator extends PerlinOctaveGenerator{
 
+	/**
+	 * @param Random $rand
+	 * @param int $octaves
+	 * @return SimplexNoise[]
+	 */
 	protected static function createOctaves(Random $rand, int $octaves) : array{
 		$result = [];
 
@@ -39,6 +44,7 @@ class SimplexOctaveGenerator extends PerlinOctaveGenerator{
 		$amp = 1.0;
 
 		// fBm
+		/** @var SimplexNoise $octave */
 		foreach($this->octaves as $octave){
 			$this->noise = $octave->getNoise($this->noise, $x, $y, $z, $this->sizeX, $this->sizeY, $this->sizeZ, $this->xScale * $freq, $this->yScale * $freq, $this->zScale * $freq, 0.55 / $amp);
 			$freq *= $lacunarity;

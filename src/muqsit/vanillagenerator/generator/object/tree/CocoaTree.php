@@ -92,7 +92,7 @@ class CocoaTree extends JungleTree{
 		}
 	}
 
-	private function addHangingVine($x, $y, $z, int $face, ChunkManager $world) : void{
+	private function addHangingVine(int $x, int $y, int $z, int $face, ChunkManager $world) : void{
 		for($i = 0; $i < 5; ++$i){
 			if($world->getBlockAt($x, $y - $i, $z)->getId() !== BlockLegacyIds::AIR){
 				break;

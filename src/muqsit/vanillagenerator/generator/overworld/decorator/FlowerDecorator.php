@@ -25,11 +25,13 @@ class FlowerDecorator extends Decorator{
 			$totalWeight += $decoration->getWeight();
 		}
 
-		$weight = $random->nextBoundedInt($totalWeight);
-		foreach($decorations as $decoration){
-			$weight -= $decoration->getWeight();
-			if($weight < 0){
-				return $decoration->getBlock();
+		if($totalWeight > 0){
+			$weight = $random->nextBoundedInt($totalWeight);
+			foreach($decorations as $decoration){
+				$weight -= $decoration->getWeight();
+				if($weight < 0){
+					return $decoration->getBlock();
+				}
 			}
 		}
 

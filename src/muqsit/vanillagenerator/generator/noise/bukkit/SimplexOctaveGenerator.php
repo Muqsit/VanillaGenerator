@@ -11,7 +11,7 @@ class SimplexOctaveGenerator extends BaseOctaveGenerator{
 	/**
 	 * @param Random $rand
 	 * @param int $octaves
-	 * @return NoiseGenerator[]
+	 * @return SimplexNoiseGenerator[]
 	 */
 	private static function createOctaves(Random $rand, int $octaves) : array{
 		$result = [];
@@ -119,6 +119,7 @@ class SimplexOctaveGenerator extends BaseOctaveGenerator{
 		$z *= $this->zScale;
 		$w *= $this->wScale;
 
+		/** @var SimplexNoiseGenerator $octave */
 		foreach($this->octaves as $octave){
 			$result += $octave->noise($x * $freq, $y * $freq, $z * $freq, $w * $freq) * $amp;
 			$max += $amp;

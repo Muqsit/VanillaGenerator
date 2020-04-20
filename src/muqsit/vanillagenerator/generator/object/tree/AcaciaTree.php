@@ -55,7 +55,7 @@ class AcaciaTree extends GenericTree{
 				--$twistCount;
 			}
 
-			$material = $world->getBlockAt($centerX, $blockY + $y, $centerZ);
+			$material = $world->getBlockAt($centerX, $blockY + $y, $centerZ)->getId();
 			if($material === BlockLegacyIds::AIR || $material === BlockLegacyIds::LEAVES){
 				$trunkTopY = $blockY + $y;
 				$this->transaction->addBlockAt($centerX, $blockY + $y, $centerZ, $this->logType);
@@ -64,14 +64,16 @@ class AcaciaTree extends GenericTree{
 
 		// generates leaves
 		for($x = -3; $x <= 3; ++$x){
+			$abs_x = abs($x);
 			for($z = -3; $z <= 3; ++$z){
-				if(abs($x) < 3 || abs($z) < 3){
+				$abs_z = abs($z);
+				if($abs_x < 3 || $abs_z < 3){
 					$this->setLeaves($centerX + $x, $trunkTopY, $centerZ + $z, $world);
 				}
-				if(abs($x) < 2 && abs($z) < 2){
+				if($abs_x < 2 && $abs_z < 2){
 					$this->setLeaves($centerX + $x, $trunkTopY + 1, $centerZ + $z, $world);
 				}
-				if((abs($x) === 2 && abs($z) === 0) || (abs($x) === 0 && abs($z) === 2)){
+				if(($abs_x === 2 && $abs_z === 0) || ($abs_x === 0 && $abs_z === 2)){
 					$this->setLeaves($centerX + $x, $trunkTopY + 1, $centerZ + $z, $world);
 				}
 			}

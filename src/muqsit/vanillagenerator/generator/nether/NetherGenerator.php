@@ -26,7 +26,7 @@ class NetherGenerator extends VanillaGenerator{
 	protected const DETAIL_NOISE_SCALE_Z = 80.0;
 	protected const SURFACE_SCALE = 0.0625;
 
-	/** @@var float[][][] */
+	/** @var float[][][] */
 	private $density = [];
 
 	public function __construct(ChunkManager $world, int $seed, array $options = []){
@@ -43,9 +43,12 @@ class NetherGenerator extends VanillaGenerator{
 		$cx = $chunkX << 4;
 		$cz = $chunkZ << 4;
 
-		$surfaceNoise = $this->getWorldOctaves()["surface"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
-		$soulsandNoise = $this->getWorldOctaves()["soulsand"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
-		$gravelNoise = $this->getWorldOctaves()["gravel"]->getFractalBrownianMotion($cx, 0, $cz, 0.5, 2.0);
+		/** @var PerlinOctaveGenerator[] $octaves */
+		$octaves = $this->getWorldOctaves();
+
+		$surfaceNoise = $octaves["surface"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
+		$soulsandNoise = $octaves["soulsand"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
+		$gravelNoise = $octaves["gravel"]->getFractalBrownianMotion($cx, 0, $cz, 0.5, 2.0);
 
 		/** @var Chunk $chunk */
 		$chunk = $this->world->getChunk($chunkX, $chunkZ);

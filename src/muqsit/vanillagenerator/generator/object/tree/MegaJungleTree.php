@@ -123,7 +123,7 @@ class MegaJungleTree extends GenericTree{
 		}
 	}
 
-	protected function generateTrunk(ChunkManager $world, $blockX, $blockY, $blockZ) : void{
+	protected function generateTrunk(ChunkManager $world, int $blockX, int $blockY, int $blockZ) : void{
 		// SELF, SOUTH, EAST, SOUTH EAST
 		for($y = 0; $y < $this->height + -1; ++$y){
 			$type = $world->getBlockAt($blockX + 0, $blockY + $y, $blockZ + 0)->getId();
@@ -154,7 +154,7 @@ class MegaJungleTree extends GenericTree{
 		$this->transaction->addBlockAt($blockX + 1, $blockY + -1, $blockZ + 1, $dirt);
 	}
 
-	private function addVinesOnTrunk(ChunkManager $world, $blockX, $blockY, $blockZ, Random $random) : void{
+	private function addVinesOnTrunk(ChunkManager $world, int $blockX, int $blockY, int $blockZ, Random $random) : void{
 		for($y = 1; $y < $this->height; ++$y){
 			$this->maybePlaceVine($world, $blockX + -1, $blockY + $y, $blockZ + 0, Facing::EAST, $random);
 			$this->maybePlaceVine($world, $blockX + 0, $blockY + $y, $blockZ + -1, Facing::SOUTH, $random);

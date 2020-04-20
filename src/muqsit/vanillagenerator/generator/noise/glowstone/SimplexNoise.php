@@ -52,6 +52,17 @@ class SimplexNoise extends PerlinNoise{
 		return $g->x * $x + $g->y * $y + $g->z * $z;
 	}
 
+	/**
+	 * @param float[] $noise
+	 * @param float $x
+	 * @param float $z
+	 * @param int $sizeX
+	 * @param int $sizeY
+	 * @param float $scaleX
+	 * @param float $scaleY
+	 * @param float $amplitude
+	 * @return float[]
+	 */
 	protected function get2dNoise(array $noise, float $x, float $z, int $sizeX, int $sizeY, float $scaleX, float $scaleY, float $amplitude) : array{
 		$index = 0;
 		for($i = 0; $i < $sizeY; ++$i){
@@ -69,6 +80,20 @@ class SimplexNoise extends PerlinNoise{
 		return $noise;
 	}
 
+	/**
+	 * @param float[] $noise
+	 * @param float $x
+	 * @param float $y
+	 * @param float $z
+	 * @param int $sizeX
+	 * @param int $sizeY
+	 * @param int $sizeZ
+	 * @param float $scaleX
+	 * @param float $scaleY
+	 * @param float $scaleZ
+	 * @param float $amplitude
+	 * @return float[]
+	 */
 	protected function get3dNoise(array $noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
 		$index = 0;
 		for($i = 0; $i < $sizeZ; ++$i){

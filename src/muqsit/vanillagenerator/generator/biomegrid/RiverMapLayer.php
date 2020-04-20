@@ -45,6 +45,13 @@ class RiverMapLayer extends MapLayer{
 		return $this->mergeRivers($x, $z, $sizeX, $sizeZ);
 	}
 
+	/**
+	 * @param int $x
+	 * @param int $z
+	 * @param int $sizeX
+	 * @param int $sizeZ
+	 * @return int[]
+	 */
 	private function generateRivers(int $x, int $z, int $sizeX, int $sizeZ) : array{
 		$gridX = $x - 1;
 		$gridZ = $z - 1;
@@ -71,6 +78,13 @@ class RiverMapLayer extends MapLayer{
 		return $finalValues;
 	}
 
+	/**
+	 * @param int $x
+	 * @param int $z
+	 * @param int $sizeX
+	 * @param int $sizeZ
+	 * @return int[]
+	 */
 	private function mergeRivers(int $x, int $z, int $sizeX, int $sizeZ) : array{
 		$values = $this->belowLayer->generateValues($x, $z, $sizeX, $sizeZ);
 		$mergeValues = $this->mergeLayer->generateValues($x, $z, $sizeX, $sizeZ);

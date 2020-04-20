@@ -11,6 +11,12 @@ use pocketmine\utils\Random;
 
 abstract class MapLayer{
 
+	/**
+	 * @param int $seed
+	 * @param int $environment
+	 * @param string $worldType
+	 * @return MapLayer[]|null[]
+	 */
 	public static function initialize(int $seed, int $environment, string $worldType) : array{
 		if($environment === Environment::OVERWORLD && $worldType === WorldType::FLAT){
 			return [new ConstantBiomeMapLayer($seed, BiomeIds::PLAINS), null];

@@ -25,7 +25,7 @@ class SunflowerPlainsPopulator extends PlainsPopulator{
 		$this->doublePlantDecorator->setDoublePlants(...self::$DOUBLE_PLANTS);
 	}
 
-	public function getBiomes() : array{
+	public function getBiomes() : ?array{
 		return [BiomeIds::MUTATED_PLAINS];
 	}
 }

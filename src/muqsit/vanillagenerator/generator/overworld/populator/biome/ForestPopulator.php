@@ -51,7 +51,7 @@ class ForestPopulator extends BiomePopulator{
 		$this->tallGrassDecorator->setAmount(2);
 	}
 
-	public function getBiomes() : array{
+	public function getBiomes() : ?array{
 		return self::BIOMES;
 	}
 

@@ -39,6 +39,13 @@ class WhittakerMapLayer extends MapLayer{
 		return $this->modifyValues($x, $z, $sizeX, $sizeZ);
 	}
 
+	/**
+	 * @param int $x
+	 * @param int $z
+	 * @param int $sizeX
+	 * @param int $sizeZ
+	 * @return int[]
+	 */
 	private function swapValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
 		$gridX = $x - 1;
 		$gridZ = $z - 1;
@@ -71,6 +78,13 @@ class WhittakerMapLayer extends MapLayer{
 		return $finalValues;
 	}
 
+	/**
+	 * @param int $x
+	 * @param int $z
+	 * @param int $sizeX
+	 * @param int $sizeZ
+	 * @return int[]
+	 */
 	private function modifyValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
 		$values = $this->belowLayer->generateValues($x, $z, $sizeX, $sizeZ);
 		$finalValues = [];
@@ -102,6 +116,11 @@ class Climate{
 	/** @var int */
 	public $finalValue;
 
+	/**
+	 * @param int $value
+	 * @param int[] $crossTypes
+	 * @param int $finalValue
+	 */
 	public function __construct(int $value, array $crossTypes, int $finalValue){
 		$this->value = $value;
 		$this->crossTypes = $crossTypes;

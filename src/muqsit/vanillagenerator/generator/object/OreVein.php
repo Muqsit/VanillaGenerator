@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
+use pocketmine\block\Block;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -25,7 +26,7 @@ class OreVein extends TerrainObject{
 		return $squaredNormalizedX;
 	}
 
-	/** Block $type */
+	/** @var Block */
 	private $type;
 
 	/** @var int */
@@ -37,7 +38,7 @@ class OreVein extends TerrainObject{
 	/**
 	 * Creates the instance for a given ore type.
 	 *
-	 * @param oreType the ore type
+	 * @param OreType $oreType the ore type
 	 */
 	public function __construct(OreType $oreType){
 		$this->type = $oreType->getType();

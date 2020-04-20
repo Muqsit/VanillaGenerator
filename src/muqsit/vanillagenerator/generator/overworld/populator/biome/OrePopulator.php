@@ -14,7 +14,7 @@ use pocketmine\world\format\Chunk;
 
 class OrePopulator implements Populator{
 
-	/** array[] */
+	/** @var OreType[][]|int[][] */
 	private $ores = [];
 
 	/**

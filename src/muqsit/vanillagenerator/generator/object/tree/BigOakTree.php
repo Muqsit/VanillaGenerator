@@ -123,6 +123,14 @@ class BigOakTree extends GenericTree{
 		return -1;
 	}
 
+	/**
+	 * @param int $blockX
+	 * @param int $blockY
+	 * @param int $blockZ
+	 * @param ChunkManager $world
+	 * @param Random $random
+	 * @return LeafNode[]
+	 */
 	private function generateLeafNodes(int $blockX, int $blockY, int $blockZ, ChunkManager $world, Random $random) : array{
 		$leafNodes = [];
 		$y = $blockY + $this->height = $this->maxLeafDistance;

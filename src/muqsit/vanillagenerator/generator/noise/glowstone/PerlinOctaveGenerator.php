@@ -10,6 +10,11 @@ use pocketmine\utils\Random;
 
 class PerlinOctaveGenerator extends OctaveGenerator{
 
+	/**
+	 * @param Random $rand
+	 * @param int $octaves
+	 * @return PerlinNoise[]
+	 */
 	protected static function createOctaves(Random $rand, int $octaves) : array{
 		$result = [];
 
@@ -96,7 +101,7 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 	 * @param float $z the starting Z coordinate
 	 * @param float $lacunarity layer n's frequency as a fraction of layer {@code n - 1}'s frequency
 	 * @param float $persistence layer n's amplitude as a multiple of layer {@code n - 1}'s amplitude
-	 * @return array the noise array
+	 * @return float[] the noise array
 	 */
 	public function getFractalBrownianMotion(float $x, float $y, float $z, float $lacunarity, float $persistence) : array{
 		foreach($this->noise as $k => $_){

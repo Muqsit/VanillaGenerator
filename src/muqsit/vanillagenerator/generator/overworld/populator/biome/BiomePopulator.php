@@ -194,7 +194,7 @@ class BiomePopulator implements Populator{
 	 * Returns an array of biome ids or null if this populator targets all
 	 * biomes.
 	 *
-	 * @return array|null
+	 * @return int[]|null
 	 */
 	public function getBiomes() : ?array{
 		return null;

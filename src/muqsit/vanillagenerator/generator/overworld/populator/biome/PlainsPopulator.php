@@ -55,7 +55,7 @@ class PlainsPopulator extends BiomePopulator{
 		$this->tallGrassDecorator->setAmount(0);
 	}
 
-	public function getBiomes() : array{
+	public function getBiomes() : ?array{
 		return [BiomeIds::PLAINS];
 	}
 
