@@ -33,6 +33,7 @@ class DoubleTallPlant extends TerrainObject{
 	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
 		$placed = false;
 		$height = $world->getWorldHeight();
+		$block_factory = BlockFactory::getInstance();
 		for($i = 0; $i < 64; ++$i){
 			$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
 			$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
@@ -42,7 +43,7 @@ class DoubleTallPlant extends TerrainObject{
 			$topBlock = $world->getBlockAt($x, $y + 1, $z);
 			if($y < $height && $block->getId() === BlockLegacyIds::AIR && $topBlock->getId() === BlockLegacyIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getId() === BlockLegacyIds::GRASS){
 				$world->setBlockAt($x, $y, $z, $this->species);
-				$world->setBlockAt($x, $y + 1, $z, BlockFactory::get($this->species->getId(), BlockLegacyMetadata::DOUBLE_PLANT_FLAG_TOP));
+				$world->setBlockAt($x, $y + 1, $z, $block_factory->get($this->species->getId(), BlockLegacyMetadata::DOUBLE_PLANT_FLAG_TOP));
 				$placed = true;
 			}
 		}

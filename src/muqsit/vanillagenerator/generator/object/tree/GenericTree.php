@@ -69,8 +69,9 @@ class GenericTree extends TerrainObject{
 	 */
 	final protected function setType(TreeType $type) : void{
 		$magicNumber = $type->getMagicNumber();
-		$this->logType = BlockFactory::get($magicNumber >= 4 ? BlockLegacyIds::LOG2 : BlockLegacyIds::LOG, $magicNumber & 0x3);
-		$this->leavesType = BlockFactory::get($magicNumber >= 4 ? BlockLegacyIds::LEAVES2 : BlockLegacyIds::LEAVES, $magicNumber & 0x3);
+		$block_factory = BlockFactory::getInstance();
+		$this->logType = $block_factory->get($magicNumber >= 4 ? BlockLegacyIds::LOG2 : BlockLegacyIds::LOG, $magicNumber & 0x3);
+		$this->leavesType = $block_factory->get($magicNumber >= 4 ? BlockLegacyIds::LEAVES2 : BlockLegacyIds::LEAVES, $magicNumber & 0x3);
 	}
 
 	/**

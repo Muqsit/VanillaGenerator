@@ -158,7 +158,7 @@ class MesaGroundGenerator extends GroundGenerator{
 	}
 
 	private function setColoredGroundLayer(ChunkManager $world, int $x, int $y, int $z, int $color) : void{
-		$world->setBlockAt($x, $y, $z, $color >= 0 ? BlockFactory::get(BlockLegacyIds::STAINED_CLAY, $color) : VanillaBlocks::HARDENED_CLAY());
+		$world->setBlockAt($x, $y, $z, $color >= 0 ? BlockFactory::getInstance()->get(BlockLegacyIds::STAINED_CLAY, $color) : VanillaBlocks::HARDENED_CLAY());
 	}
 
 	private function setRandomLayerColor(Random $random, int $minLayerCount, int $minLayerHeight, int $color) : void{

@@ -77,6 +77,8 @@ class BigOakTree extends GenericTree{
 			$this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ, $this->logType);
 		}
 
+		$block_factory = BlockFactory::getInstance();
+
 		// generate the branches
 		foreach($leafNodes as $node){
 			if((float) ($node->branchY - $blockY) >= $this->height * 0.2){
@@ -94,7 +96,7 @@ class BigOakTree extends GenericTree{
 						$z = abs($branch->getFloorZ() - $base->getFloorZ());
 						$max = max($x, $z);
 						$direction = $max > 0 ? ($max === $x ? 4 : 8) : 0; // EAST / SOUTH
-						$this->transaction->addBlockAt($branch->getFloorX(), $branch->getFloorY(), $branch->getFloorZ(), BlockFactory::get($this->logType->getId(), $this->logType->getMeta() | $direction));
+						$this->transaction->addBlockAt($branch->getFloorX(), $branch->getFloorY(), $branch->getFloorZ(), $block_factory->get($this->logType->getId(), $this->logType->getMeta() | $direction));
 					}
 				}
 			}

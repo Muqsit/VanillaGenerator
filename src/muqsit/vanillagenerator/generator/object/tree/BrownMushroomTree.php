@@ -73,8 +73,10 @@ class BrownMushroomTree extends GenericTree{
 			return false;
 		}
 
+		$block_factory = BlockFactory::getInstance();
+
 		// generate the stem
-		$stem = BlockFactory::get($this->type, 10);
+		$stem = $block_factory->get($this->type, 10);
 		for($y = 0; $y < $this->height; ++$y){
 			$this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ, $stem); // stem texture
 		}
@@ -144,7 +146,7 @@ class BrownMushroomTree extends GenericTree{
 
 					// a $data of 5 below the top layer means air
 					if($data !== 5 || $y >= $blockY + $this->height){
-						$this->transaction->addBlockAt($x, $y, $z, BlockFactory::get($this->type, $data));
+						$this->transaction->addBlockAt($x, $y, $z, $block_factory->get($this->type, $data));
 					}
 				}
 			}

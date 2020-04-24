@@ -21,10 +21,10 @@ final class BlockUtils{
 			Facing::WEST => BlockLegacyMetadata::VINE_FLAG_WEST
 		];
 
-		return BlockFactory::get(BlockLegacyIds::VINE, $meta[$face]);
+		return BlockFactory::getInstance()->get(BlockLegacyIds::VINE, $meta[$face]);
 	}
 
 	public static function COCOA(int $face, int $age = 0) : Block{
-		return BlockFactory::get(BlockLegacyIds::COCOA, BlockDataSerializer::writeLegacyHorizontalFacing(Facing::opposite($face)) | ($age << 2));
+		return BlockFactory::getInstance()->get(BlockLegacyIds::COCOA, BlockDataSerializer::writeLegacyHorizontalFacing(Facing::opposite($face)) | ($age << 2));
 	}
 }

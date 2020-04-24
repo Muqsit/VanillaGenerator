@@ -108,6 +108,8 @@ class NetherGenerator extends VanillaGenerator{
 		$x = $chunkX << 4;
 		$z = $chunkZ << 4;
 
+		$block_factory = BlockFactory::getInstance();
+
 		for ($i = 0; $i < 5 - 1; ++$i) {
 			for ($j = 0; $j < 5 - 1; ++$j) {
 				for ($k = 0; $k < 17 - 1; ++$k) {
@@ -131,7 +133,7 @@ class NetherGenerator extends VanillaGenerator{
 								if ($dens > 0) {
 									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::NETHERRACK());
 								} else if ($l + ($k << 3) < 32) {
-									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STILL_LAVA));
+									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), $block_factory->get(BlockLegacyIds::STILL_LAVA));
 								}
 								// interpolation along z
 								$dens += ($d10 - $d9) / 4;

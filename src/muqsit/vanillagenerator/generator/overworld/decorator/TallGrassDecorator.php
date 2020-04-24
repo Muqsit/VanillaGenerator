@@ -38,6 +38,6 @@ class TallGrassDecorator extends Decorator{
 		if($this->fernDensity > 0 && $random->nextFloat() < $this->fernDensity){
 			$species = BlockLegacyMetadata::TALLGRASS_FERN;
 		}
-		(new TallGrass(BlockFactory::get(BlockLegacyIds::TALL_GRASS, $species)))->generate($world, $random, $sourceX, $sourceY, $sourceZ);
+		(new TallGrass(BlockFactory::getInstance()->get(BlockLegacyIds::TALL_GRASS, $species)))->generate($world, $random, $sourceX, $sourceY, $sourceZ);
 	}
 }
