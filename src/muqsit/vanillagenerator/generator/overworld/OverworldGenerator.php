@@ -179,6 +179,8 @@ class OverworldGenerator extends VanillaGenerator{
 		$x = $chunkX << 4;
 		$z = $chunkZ << 4;
 
+		$block_factory = BlockFactory::getInstance();
+
 		for($i = 0; $i < 5 - 1; ++$i){
 			for($j = 0; $j < 5 - 1; ++$j){
 				for($k = 0; $k < 33 - 1; ++$k){
@@ -218,11 +220,11 @@ class OverworldGenerator extends VanillaGenerator{
 									if($afill === 0 || $afill === 3 || $afill === 6 || $afill === 9 || $afill === 12){
 										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
 									}elseif($afill === 2 || $afill === 7 || $afill === 10 || $afill === 16){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STILL_WATER));
+										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), $block_factory->get(BlockLegacyIds::STILL_WATER));
 									}
 								}elseif(($l + ($k << 3) < $seaLevel - 1 && $seaFill === 0) || ($l + ($k << 3) >= $seaLevel - 1 && $seaFill === 1)){
 									if($afill === 0 || $afill === 3 || $afill === 7 || $afill === 10 || $afill === 13){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), BlockFactory::get(BlockLegacyIds::STILL_WATER));
+										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), $block_factory->get(BlockLegacyIds::STILL_WATER));
 									}elseif($afill === 1 || $afill === 6 || $afill === 9
 										|| $afill === 15){
 										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
