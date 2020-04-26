@@ -14,61 +14,14 @@ use pocketmine\world\ChunkManager;
 class GroundGenerator{
 
 	/** @var Block */
-	protected static $AIR;
-
-	/** @var Block */
-	protected static $STONE;
-
-	/** @var Block */
-	protected static $SANDSTONE;
-
-	/** @var Block */
-	protected static $GRASS;
-
-	/** @var Block */
-	protected static $DIRT;
-
-	/** @var Block */
-	protected static $COARSE_DIRT;
-
-	/** @var Block */
-	protected static $PODZOL;
-
-	/** @var Block */
-	protected static $GRAVEL;
-
-	/** @var Block */
-	protected static $MYCEL;
-
-	/** @var Block */
-	protected static $SAND;
-
-	/** @var Block */
-	protected static $SNOW;
-
-	public static function init() : void{
-		self::$AIR = VanillaBlocks::AIR();
-		self::$STONE = VanillaBlocks::STONE();
-		self::$SANDSTONE = VanillaBlocks::SANDSTONE();
-		self::$GRASS = VanillaBlocks::GRASS();
-		self::$DIRT = VanillaBlocks::DIRT();
-		self::$COARSE_DIRT = VanillaBlocks::COARSE_DIRT();
-		self::$PODZOL = VanillaBlocks::PODZOL();
-		self::$GRAVEL = VanillaBlocks::GRAVEL();
-		self::$MYCEL = VanillaBlocks::MYCELIUM();
-		self::$SAND = VanillaBlocks::SAND();
-		self::$SNOW = VanillaBlocks::SNOW();
-	}
-
-	/** @var Block */
 	private $topMaterial;
 
 	/** @var Block */
 	private $groundMaterial;
 
 	public function __construct(){
-		$this->setTopMaterial(self::$GRASS);
-		$this->setGroundMaterial(self::$DIRT);
+		$this->setTopMaterial(VanillaBlocks::GRASS());
+		$this->setGroundMaterial(VanillaBlocks::DIRT());
 	}
 
 	final protected function setTopMaterial(Block $topMaterial) : void{
@@ -100,6 +53,12 @@ class GroundGenerator{
 
 		$surfaceHeight = max((int) ($surfaceNoise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
 		$deep = -1;
+
+		$air = VanillaBlocks::AIR();
+		$stone = VanillaBlocks::STONE();
+		$sandstone = VanillaBlocks::SANDSTONE();
+		$gravel = VanillaBlocks::GRAVEL();
+
 		for($y = 255; $y >= 0; --$y){
 			if($y <= $random->nextBoundedInt(5)){
 				$world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
@@ -119,9 +78,9 @@ class GroundGenerator{
 						if($y >= $seaLevel - 2){
 							$world->setBlockAt($x, $y, $z, $topMat);
 						}elseif($y < $seaLevel - 8 - $surfaceHeight){
-							$topMat = self::$AIR;
-							$groundMat = self::$STONE;
-							$world->setBlockAt($x, $y, $z, self::$GRAVEL);
+							$topMat = $air;
+							$groundMat = $stone;
+							$world->setBlockAt($x, $y, $z, $gravel);
 						}else{
 							$world->setBlockAt($x, $y, $z, $groundMat);
 						}
@@ -131,7 +90,7 @@ class GroundGenerator{
 
 						if($deep === 0 && $groundMat->getId() === BlockLegacyIds::SAND){
 							$deep = $random->nextBoundedInt(4) + max(0, $y - $seaLevel - 1);
-							$groundMat = self::$SANDSTONE;
+							$groundMat = $sandstone;
 						}
 					}
 				}elseif($matId === BlockLegacyIds::STILL_WATER && $y === $seaLevel - 2 && BiomeClimateManager::isCold($biome, $chunkX, $y, $chunkZ)){
@@ -141,5 +100,3 @@ class GroundGenerator{
 		}
 	}
 }
-
-GroundGenerator::init();

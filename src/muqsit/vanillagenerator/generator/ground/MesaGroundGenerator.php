@@ -18,17 +18,6 @@ class MesaGroundGenerator extends GroundGenerator{
 	public const BRYCE = 1;
 	public const FOREST = 2;
 
-	/** @var Block */
-	protected static $RED_SAND;
-
-	/** @var Block */
-	protected static $ORANGE_STAINED_CLAY;
-
-	public static function init() : void{
-		self::$RED_SAND = VanillaBlocks::RED_SAND();
-		self::$ORANGE_STAINED_CLAY = VanillaBlocks::ORANGE_STAINED_CLAY();
-	}
-
 	/** @var int */
 	private $type;
 
@@ -57,8 +46,8 @@ class MesaGroundGenerator extends GroundGenerator{
 	/** @noinspection PhpMissingParentConstructorInspection */
 	public function __construct(int $type = self::NORMAL){
 		$this->type = $type;
-		$this->topMaterial = self::$RED_SAND;
-		$this->groundMaterial = self::$ORANGE_STAINED_CLAY;
+		$this->topMaterial = VanillaBlocks::RED_SAND();
+		$this->groundMaterial = VanillaBlocks::ORANGE_STAINED_CLAY();
 		$this->colorLayer = array_fill(0, 64, 0);
 	}
 
@@ -107,6 +96,10 @@ class MesaGroundGenerator extends GroundGenerator{
 
 		$deep = -1;
 		$groundSet = false;
+
+		$grass = VanillaBlocks::GRASS();
+		$coarse_dirt = VanillaBlocks::COARSE_DIRT();
+
 		for($y = 255; $y >= 0; --$y){
 			if($y < (int) $bryceCanyonHeight && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
 				$world->setBlockAt($x, $y, $z, VanillaBlocks::STONE());
@@ -127,7 +120,7 @@ class MesaGroundGenerator extends GroundGenerator{
 						$deep = $surfaceHeight + max(0, $y - $seaLevel - 1);
 						if($y >= $seaLevel - 2){
 							if($this->type === self::FOREST && $y > $seaLevel + 22 + ($surfaceHeight << 1)){
-								$topMat = $colored ? self::$GRASS : self::$COARSE_DIRT;
+								$topMat = $colored ? $grass : $coarse_dirt;
 								$world->setBlockAt($x, $y, $z, $topMat);
 							}elseif($y > $seaLevel + 2 + $surfaceHeight){
 								$color = $this->colorLayer[($y + (int) round(
@@ -200,5 +193,3 @@ class MesaGroundGenerator extends GroundGenerator{
 		}
 	}
 }
-
-MesaGroundGenerator::init();

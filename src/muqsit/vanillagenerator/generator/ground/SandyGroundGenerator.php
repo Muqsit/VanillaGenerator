@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\ground;
 
+use pocketmine\block\VanillaBlocks;
+
 class SandyGroundGenerator extends GroundGenerator{
 
 	/** @noinspection PhpMissingParentConstructorInspection */
 	public function __construct(){
-		$this->setTopMaterial(self::$SAND);
-		$this->setGroundMaterial(self::$SAND);
+		$this->setTopMaterial(VanillaBlocks::SAND());
+		$this->setGroundMaterial(VanillaBlocks::SAND());
 	}
 }
