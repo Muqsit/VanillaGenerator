@@ -185,7 +185,7 @@ class MesaGroundGenerator extends GroundGenerator{
 			if($j >= count($this->colorLayer)){
 				break;
 			}
-			if($random->nextBoundedInt(2) === 0 || ($j < count($this->colorLayer) - 1 && $random->nextBoundedInt(2) === 0)){
+			if($random->nextBoundedInt(2) === 0 || (($j < count($this->colorLayer) - 1) && ($random->nextBoundedInt(2) === 0))){
 				$this->colorLayer[$j - 1] = 8; // light gray
 			}else{
 				$this->colorLayer[$j] = 0; // white

@@ -25,7 +25,7 @@ class BirchForestPopulator extends ForestPopulator{
 		$this->treeDecorator->setTrees(...self::$TREES);
 	}
 
-	public function getBiomes() : array{
+	public function getBiomes() : ?array{
 		return self::BIOMES;
 	}
 }

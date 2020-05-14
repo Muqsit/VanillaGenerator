@@ -35,7 +35,7 @@ class RoofedForestPopulator extends ForestPopulator{
 		$this->tallGrassDecorator->setAmount(4);
 	}
 
-	public function getBiomes() : array{
+	public function getBiomes() : ?array{
 		return self::BIOMES;
 	}
 }
