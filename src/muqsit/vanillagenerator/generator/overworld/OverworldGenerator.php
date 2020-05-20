@@ -358,7 +358,7 @@ class OverworldGenerator extends VanillaGenerator{
 
 				$noiseH = $heightNoise[$indexHeight++] / 8000.0;
 				if($noiseH < 0){
-					$noiseH = abs($noiseH) * 0.3;
+					$noiseH = -$noiseH * 0.3;
 				}
 
 				$noiseH = $noiseH * 3.0 - 2.0;

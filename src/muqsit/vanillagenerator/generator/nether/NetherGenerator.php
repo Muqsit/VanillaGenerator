@@ -201,7 +201,7 @@ class NetherGenerator extends VanillaGenerator{
 
 				$noiseH = $heightNoise[$indexHeight++] / 8000.0;
 				if($noiseH < 0){
-					$noiseH = abs($noiseH);
+					$noiseH = -$noiseH;
 				}
 				$noiseH = $noiseH * 3.0 - 3.0;
 				if($noiseH < 0){

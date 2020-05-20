@@ -73,9 +73,10 @@ class Lake extends TerrainObject{
 		$biome = $chunk->getBiomeId(($sourceX + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f, ($sourceZ + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f);
 		$mycelBiome = self::$MYCEL_BIOMES->contains($biome);
 
-		for($x = 0; $x < (int) self::MAX_DIAMETER; ++$x){
-			for($z = 0; $z < (int) self::MAX_DIAMETER; ++$z){
-				for($y = 0; $y < (int) self::MAX_HEIGHT; ++$y){
+		$max_diameter = (int) self::MAX_DIAMETER;
+		for($x = 0; $x < $max_diameter; ++$x){
+			for($z = 0; $z < $max_diameter; ++$z){
+				for($y = 0; $y < $max_diameter; ++$y){
 					if(!$this->isLakeBlock($lakeMap, $x, $y, $z)){
 						continue;
 					}
@@ -95,7 +96,7 @@ class Lake extends TerrainObject{
 							break;
 						}
 
-						if($this->type->getId() === BlockLegacyIds::STILL_WATER && ($blockType === BlockLegacyIds::ICE || $blockType === BlockLegacyIds::PACKED_ICE)){
+						if(($blockType === BlockLegacyIds::ICE || $blockType === BlockLegacyIds::PACKED_ICE) && $this->type->getId() === BlockLegacyIds::STILL_WATER){
 							$type = $blockType;
 						}
 					}elseif($y === (int) (self::MAX_HEIGHT / 2 - 1)){

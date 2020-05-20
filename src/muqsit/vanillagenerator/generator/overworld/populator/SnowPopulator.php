@@ -27,7 +27,7 @@ class SnowPopulator implements Populator{
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){
 				$y = $chunk->getHighestBlockAt($x, $z) - 1;
-				if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $sourceX + $x, $y, $sourceZ + $z)){
+				if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x, $z), $sourceX + $x, $y, $sourceZ + $z)){
 					switch($block_factory->fromFullBlock($chunk->getFullBlock($x, $y, $z))->getId()){
 						case BlockLegacyIds::WATER:
 						case BlockLegacyIds::STILL_WATER:

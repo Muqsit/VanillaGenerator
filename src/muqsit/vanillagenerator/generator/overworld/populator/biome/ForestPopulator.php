@@ -9,7 +9,7 @@ use muqsit\vanillagenerator\generator\object\tree\BirchTree;
 use muqsit\vanillagenerator\generator\object\tree\GenericTree;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
-use pocketmine\block\Block;
+use pocketmine\block\DoublePlant;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -22,7 +22,7 @@ class ForestPopulator extends BiomePopulator{
 	/** @var TreeDecoration[] */
 	protected static $TREES;
 
-	/** @var Block[] */
+	/** @var DoublePlant[] */
 	private static $DOUBLE_PLANTS;
 
 	public static function init() : void{
@@ -62,11 +62,11 @@ class ForestPopulator extends BiomePopulator{
 		$i = 0;
 		while($i < $amount){
 			for($j = 0; $j < 5; ++$j, ++$i){
-				$x = $sourceX + $random->nextBoundedInt(16);
-				$z = $sourceZ + $random->nextBoundedInt(16);
-				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
+				$x = $random->nextBoundedInt(16);
+				$z = $random->nextBoundedInt(16);
+				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 				$species = self::$DOUBLE_PLANTS[$random->nextBoundedInt(count(self::$DOUBLE_PLANTS))];
-				if((new DoubleTallPlant($species))->generate($world, $random, $x, $y, $z)){
+				if((new DoubleTallPlant($species))->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z)){
 					++$i;
 					break;
 				}

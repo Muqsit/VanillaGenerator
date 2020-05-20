@@ -69,10 +69,10 @@ class PlainsPopulator extends BiomePopulator{
 			$flowerAmount = 4;
 			$tallGrassAmount = 10;
 			for($i = 0; $i < 7; ++$i){
-				$x = $sourceX + $random->nextBoundedInt(16);
-				$z = $sourceZ + $random->nextBoundedInt(16);
-				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
-				(new DoubleTallPlant(VanillaBlocks::DOUBLE_TALLGRASS()))->generate($world, $random, $x, $y, $z);
+				$x = $random->nextBoundedInt(16);
+				$z = $random->nextBoundedInt(16);
+				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
+				(new DoubleTallPlant(VanillaBlocks::DOUBLE_TALLGRASS()))->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z);
 			}
 		}
 
@@ -85,17 +85,17 @@ class PlainsPopulator extends BiomePopulator{
 		}
 
 		for($i = 0; $i < $flowerAmount; ++$i){
-			$x = $sourceX + $random->nextBoundedInt(16);
-			$z = $sourceZ + $random->nextBoundedInt(16);
-			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
-			(new Flower($flower))->generate($world, $random, $x, $y, $z);
+			$x = $random->nextBoundedInt(16);
+			$z = $random->nextBoundedInt(16);
+			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
+			(new Flower($flower))->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z);
 		}
 
 		for($i = 0; $i < $tallGrassAmount; ++$i){
-			$x = $sourceX + $random->nextBoundedInt(16);
-			$z = $sourceZ + $random->nextBoundedInt(16);
-			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) << 1);
-			(new TallGrass(VanillaBlocks::TALL_GRASS()))->generate($world, $random, $x, $y, $z);
+			$x = $random->nextBoundedInt(16);
+			$z = $random->nextBoundedInt(16);
+			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) << 1);
+			(new TallGrass(VanillaBlocks::TALL_GRASS()))->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z);
 		}
 
 		parent::populateOnGround($world, $random, $chunk);

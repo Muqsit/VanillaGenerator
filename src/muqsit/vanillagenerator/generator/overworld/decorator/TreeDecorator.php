@@ -56,9 +56,9 @@ class TreeDecorator extends Decorator{
 	}
 
 	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = ($chunk->getX() << 4) + $random->nextBoundedInt(16);
-		$sourceZ = ($chunk->getZ() << 4) + $random->nextBoundedInt(16);
-		$sourceY = $chunk->getHighestBlockAt($sourceX & 0x0f, $sourceZ & 0x0f);
+		$x = $random->nextBoundedInt(16);
+		$z = $random->nextBoundedInt(16);
+		$sourceY = $chunk->getHighestBlockAt($x, $z);
 
 		$class = self::getRandomTree($random, $this->trees);
 		if($class !== null){
@@ -69,7 +69,7 @@ class TreeDecorator extends Decorator{
 			}catch(Exception $ex){
 				$tree = new GenericTree($random, $txn);
 			}
-			if($tree->generate($world, $random, $sourceX, $sourceY, $sourceZ)){
+			if($tree->generate($world, $random, ($chunk->getX() << 4) + $x, $sourceY, ($chunk->getZ() << 4) + $z)){
 				$txn->apply();
 			}
 		}
