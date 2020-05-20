@@ -22,7 +22,7 @@ class SavannaPopulator extends BiomePopulator{
 	public static function init() : void{
 		parent::init();
 		self::$DOUBLE_PLANTS = [
-			new DoublePlantDecoration(VanillaBlocks::TALL_GRASS(), 1)
+			new DoublePlantDecoration(VanillaBlocks::DOUBLE_TALLGRASS(), 1)
 		];
 	}
 

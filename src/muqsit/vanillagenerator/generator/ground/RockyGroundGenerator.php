@@ -8,10 +8,7 @@ use pocketmine\block\VanillaBlocks;
 
 class RockyGroundGenerator extends GroundGenerator{
 
-	/** @noinspection MagicMethodsValidityInspection */
-	/** @noinspection PhpMissingParentConstructorInspection */
 	public function __construct(){
-		$this->setTopMaterial(VanillaBlocks::STONE());
-		$this->setGroundMaterial(VanillaBlocks::STONE());
+		parent::__construct(VanillaBlocks::STONE(), VanillaBlocks::STONE());
 	}
 }

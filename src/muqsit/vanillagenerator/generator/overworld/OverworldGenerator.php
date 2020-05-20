@@ -20,6 +20,7 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeHeightManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use muqsit\vanillagenerator\generator\overworld\populator\OverworldPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\SnowPopulator;
+use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
 use pocketmine\block\BlockFactory;
@@ -31,11 +32,30 @@ use pocketmine\world\format\Chunk;
 
 class OverworldGenerator extends VanillaGenerator{
 
-	/** @var float[][] */
+	/** @var float[] */
 	private static $ELEVATION_WEIGHT = [];
 
 	/** @var GroundGenerator[] */
 	private static $GROUND_MAP = [];
+
+	/**
+	 * @param int $x 0-4
+	 * @param int $z 0-4
+	 * @return int
+	 */
+	private static function elevationWeightHash(int $x, int $z) : int{
+		return ($x << 3) | $z;
+	}
+
+	/**
+	 * @param int $i 0-4
+	 * @param int $j 0-4
+	 * @param int $k 0-32
+	 * @return int
+	 */
+	private static function densityHash(int $i, int $j, int $k) : int{
+		return ($k << 6) | ($j << 3) | $i;
+	}
 
 	public static function init() : void{
 		self::setBiomeSpecificGround(new SandyGroundGenerator(), BiomeIds::BEACH, BiomeIds::COLD_BEACH, BiomeIds::DESERT, BiomeIds::DESERT_HILLS, BiomeIds::MUTATED_DESERT);
@@ -60,7 +80,7 @@ class OverworldGenerator extends VanillaGenerator{
 				$sqX *= $sqX;
 				$sqZ = $z - 2;
 				$sqZ *= $sqZ;
-				self::$ELEVATION_WEIGHT[$x][$z] = 10.0 / sqrt($sqX + $sqZ + 0.2);
+				self::$ELEVATION_WEIGHT[self::elevationWeightHash($x, $z)] = 10.0 / sqrt($sqX + $sqZ + 0.2);
 			}
 		}
 	}
@@ -89,9 +109,6 @@ class OverworldGenerator extends VanillaGenerator{
 	protected const DENSITY_FILL_SEA_MODE = 0;
 	protected const DENSITY_FILL_OFFSET = 0.0;
 
-	/** @var float[][][] */
-	private $density = [];
-
 	/** @var GroundGenerator */
 	private $groundGen;
 
@@ -111,7 +128,7 @@ class OverworldGenerator extends VanillaGenerator{
 		$cz = $chunkZ << 4;
 
 		/** @var SimplexOctaveGenerator $octaveGenerator */
-		$octaveGenerator = $this->getWorldOctaves()["surface"];
+		$octaveGenerator = $this->getWorldOctaves()->surface;
 		$sizeX = $octaveGenerator->getSizeX();
 		$sizeZ = $octaveGenerator->getSizeZ();
 
@@ -132,39 +149,42 @@ class OverworldGenerator extends VanillaGenerator{
 		}
 	}
 
-	protected function createWorldOctaves(array &$octaves) : void{
+	protected function createWorldOctaves() : WorldOctaves{
 		$seed = new Random($this->random->getSeed());
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 1, 5);
 		$gen->setXScale(self::HEIGHT_NOISE_SCALE_X);
 		$gen->setZScale(self::HEIGHT_NOISE_SCALE_Z);
-		$octaves["height"] = $gen;
+		$height = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
 		$gen->setXScale(self::COORDINATE_SCALE);
 		$gen->setYScale(self::HEIGHT_SCALE);
 		$gen->setZScale(self::COORDINATE_SCALE);
-		$octaves["roughness"] = $gen;
+		$roughness = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
 		$gen->setXScale(self::COORDINATE_SCALE);
 		$gen->setYScale(self::HEIGHT_SCALE);
 		$gen->setZScale(self::COORDINATE_SCALE);
-		$octaves["roughness2"] = $gen;
+		$roughness2 = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 33, 5);
 		$gen->setXScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_X);
 		$gen->setYScale(self::HEIGHT_SCALE / self::DETAIL_NOISE_SCALE_Y);
 		$gen->setZScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_Z);
-		$octaves["detail"] = $gen;
+		$detail = $gen;
 
 		$gen = SimplexOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 1, 16);
 		$gen->setScale(self::SURFACE_SCALE);
-		$octaves["surface"] = $gen;
+		$surface = $gen;
+
+		return new WorldOctaves($height, $roughness, $roughness2, $detail, $surface);
 	}
 
 	private function generateRawTerrain(int $chunkX, int $chunkZ) : void{
-		$this->generateTerrainDensity($chunkX, $chunkZ);
+		$density = $this->generateTerrainDensity($chunkX, $chunkZ);
+
 		$seaLevel = 64;
 
 		// Terrain densities are sampled at different resolutions (1/4x on x,z and 1/8x on y by
@@ -176,27 +196,34 @@ class OverworldGenerator extends VanillaGenerator{
 		$seaFill = self::DENSITY_FILL_SEA_MODE;
 		$densityOffset = self::DENSITY_FILL_OFFSET;
 
-		$x = $chunkX << 4;
-		$z = $chunkZ << 4;
+		$still_water = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_WATER)->getFullId();
+		$water = VanillaBlocks::WATER()->getFullId();
+		$stone = VanillaBlocks::STONE()->getFullId();
 
-		$block_factory = BlockFactory::getInstance();
+		/** @var Chunk $chunk */
+		$chunk = $this->world->getChunk($chunkX, $chunkZ);
 
 		for($i = 0; $i < 5 - 1; ++$i){
 			for($j = 0; $j < 5 - 1; ++$j){
 				for($k = 0; $k < 33 - 1; ++$k){
 					// 2x2 grid
-					$d1 = $this->density[$i][$j][$k];
-					$d2 = $this->density[$i + 1][$j][$k];
-					$d3 = $this->density[$i][$j + 1][$k];
-					$d4 = $this->density[$i + 1][$j + 1][$k];
+					$d1 = $density[self::densityHash($i, $j, $k)];
+					$d2 = $density[self::densityHash($i + 1, $j, $k)];
+					$d3 = $density[self::densityHash($i, $j + 1, $k)];
+					$d4 = $density[self::densityHash($i + 1, $j + 1, $k)];
 					// 2x2 grid (row above)
-					$d5 = ($this->density[$i][$j][$k + 1] - $d1) / 8;
-					$d6 = ($this->density[$i + 1][$j][$k + 1] - $d2) / 8;
-					$d7 = ($this->density[$i][$j + 1][$k + 1] - $d3) / 8;
-					$d8 = ($this->density[$i + 1][$j + 1][$k + 1] - $d4) / 8;
+					$d5 = ($density[self::densityHash($i, $j, $k + 1)] - $d1) / 8;
+					$d6 = ($density[self::densityHash($i + 1, $j, $k + 1)] - $d2) / 8;
+					$d7 = ($density[self::densityHash($i, $j + 1, $k + 1)] - $d3) / 8;
+					$d8 = ($density[self::densityHash($i + 1, $j + 1, $k + 1)] - $d4) / 8;
 					for($l = 0; $l < 8; ++$l){
 						$d9 = $d1;
 						$d10 = $d3;
+
+						$y_pos = $l + ($k << 3);
+						$y_block_pos = $y_pos & 0xf;
+						$subChunk = $chunk->getSubChunk($y_pos >> 4);
+
 						for($m = 0; $m < 4; ++$m){
 							$dens = $d9;
 							for($n = 0; $n < 4; ++$n){
@@ -211,23 +238,22 @@ class OverworldGenerator extends VanillaGenerator{
 								// the target is densityOffset + 0, since the default target is
 								// 0, so don't get too confused by the naming :)
 								if($afill === 1 || $afill === 10 || $afill === 13 || $afill === 16){
-									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::WATER());
+									$subChunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $water);
 								}elseif($afill === 2 || $afill === 9 || $afill === 12 || $afill === 15){
-									$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
+									$subChunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
 								}
 
 								if(($dens > $densityOffset && $fill > -1) || ($dens <= $densityOffset && $fill < 0)){
 									if($afill === 0 || $afill === 3 || $afill === 6 || $afill === 9 || $afill === 12){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
+										$subChunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
 									}elseif($afill === 2 || $afill === 7 || $afill === 10 || $afill === 16){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), $block_factory->get(BlockLegacyIds::STILL_WATER));
+										$subChunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
 									}
-								}elseif(($l + ($k << 3) < $seaLevel - 1 && $seaFill === 0) || ($l + ($k << 3) >= $seaLevel - 1 && $seaFill === 1)){
+								}elseif(($y_pos < $seaLevel - 1 && $seaFill === 0) || ($y_pos >= $seaLevel - 1 && $seaFill === 1)){
 									if($afill === 0 || $afill === 3 || $afill === 7 || $afill === 10 || $afill === 13){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), $block_factory->get(BlockLegacyIds::STILL_WATER));
-									}elseif($afill === 1 || $afill === 6 || $afill === 9
-										|| $afill === 15){
-										$this->world->setBlockAt($x + $m + ($i << 2), $l + ($k << 3), $z + $n + ($j << 2), VanillaBlocks::STONE());
+										$subChunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
+									}elseif($afill === 1 || $afill === 6 || $afill === 9 || $afill === 15){
+										$subChunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
 									}
 								}
 
@@ -253,7 +279,14 @@ class OverworldGenerator extends VanillaGenerator{
 		}
 	}
 
-	private function generateTerrainDensity(int $x, int $z) : void{
+	/**
+	 * @param int $x
+	 * @param int $z
+	 * @return float[]
+	 */
+	private function generateTerrainDensity(int $x, int $z) : array{
+		$density = [];
+
 		// Scaling chunk x and z coordinates (4x, see below)
 		$x <<= 2;
 		$z <<= 2;
@@ -271,12 +304,11 @@ class OverworldGenerator extends VanillaGenerator{
 		// neighborhood.
 		$biomeGrid = $this->getBiomeGridAtLowerRes($x - 2, $z - 2, 10, 10);
 
-		/** @var PerlinOctaveGenerator[] $octaves */
 		$octaves = $this->getWorldOctaves();
-		$heightNoise = $octaves["height"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$roughnessNoise = $octaves["roughness"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$roughnessNoise2 = $octaves["roughness2"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$detailNoise = $octaves["detail"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$heightNoise = $octaves->height->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$roughnessNoise = $octaves->roughness->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$roughnessNoise2 = $octaves->roughness2->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$detailNoise = $octaves->detail->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
 
 		$index = 0;
 		$indexHeight = 0;
@@ -314,7 +346,7 @@ class OverworldGenerator extends VanillaGenerator{
 							$heightScale = 1.0 + $heightScale * 4.0;
 						}
 
-						$weight = self::$ELEVATION_WEIGHT[$m][$n] / ($heightBase + 2.0);
+						$weight = self::$ELEVATION_WEIGHT[self::elevationWeightHash($m, $n)] / ($heightBase + 2.0);
 						if($nearBiomeHeight->getHeight() > $biomeHeight->getHeight()){
 							$weight *= 0.5;
 						}
@@ -363,10 +395,11 @@ class OverworldGenerator extends VanillaGenerator{
 						// linear interpolation
 						$dens = $dens * (1.0 - $lowering) + -10.0 * $lowering;
 					}
-					$this->density[$i][$j][$k] = $dens;
+					$density[self::densityHash($i, $j, $k)] = $dens;
 				}
 			}
 		}
+		return $density;
 	}
 }
 

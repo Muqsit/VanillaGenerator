@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator\generator\overworld\populator;
 
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use muqsit\vanillagenerator\generator\Populator;
+use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -17,13 +18,17 @@ class SnowPopulator implements Populator{
 	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
 		$sourceX = $chunk->getX() << 4;
 		$sourceZ = $chunk->getZ() << 4;
-		for($x = $sourceX; $x < $sourceX + 16; ++$x){
-			for($z = $sourceZ; $z < $sourceZ + 16; ++$z){
-				$y = $chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) - 1;
-				if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $x, $y, $z)){
-					$block = $world->getBlockAt($x, $y, $z);
-					$blockAbove = $world->getBlockAt($x, $y + 1, $z);
-					switch($block->getId()){
+
+		$block_factory = BlockFactory::getInstance();
+		$air = VanillaBlocks::AIR()->getFullId();
+		$grass = VanillaBlocks::GRASS()->getFullId();
+		$snow_layer = VanillaBlocks::SNOW_LAYER()->getFullId();
+
+		for($x = 0; $x < 16; ++$x){
+			for($z = 0; $z < 16; ++$z){
+				$y = $chunk->getHighestBlockAt($x, $z) - 1;
+				if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $sourceX + $x, $y, $sourceZ + $z)){
+					switch($block_factory->fromFullBlock($chunk->getFullBlock($x, $y, $z))->getId()){
 						case BlockLegacyIds::WATER:
 						case BlockLegacyIds::STILL_WATER:
 						case BlockLegacyIds::SNOW:
@@ -38,14 +43,14 @@ class SnowPopulator implements Populator{
 						case BlockLegacyIds::STILL_LAVA:
 							break;
 						case BlockLegacyIds::DIRT:
-							$world->setBlockAt($x, $y, $z, VanillaBlocks::GRASS());
-							if($blockAbove->getId() === BlockLegacyIds::AIR){
-								$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::SNOW_LAYER());
+							$chunk->setFullBlock($x, $y, $z, $grass);
+							if($chunk->getFullBlock($x, $y + 1, $z) === $air){
+								$chunk->setFullBlock($x, $y + 1, $z, $snow_layer);
 							}
 							break;
 						default:
-							if($blockAbove->getId() === BlockLegacyIds::AIR){
-								$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::SNOW_LAYER());
+							if($chunk->getFullBlock($x, $y + 1, $z) === $air){
+								$chunk->setFullBlock($x, $y + 1, $z, $snow_layer);
 							}
 							break;
 					}

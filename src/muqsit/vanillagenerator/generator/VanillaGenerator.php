@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator;
 
 use muqsit\vanillagenerator\generator\biomegrid\MapLayer;
-use muqsit\vanillagenerator\generator\noise\bukkit\OctaveGenerator;
 use muqsit\vanillagenerator\generator\overworld\WorldType;
+use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\format\Chunk;
 use pocketmine\world\generator\Generator;
 use pocketmine\world\SimpleChunkManager;
 use pocketmine\world\World;
@@ -29,8 +30,8 @@ abstract class VanillaGenerator extends Generator{
 		return $world;
 	}
 
-	/** @var OctaveGenerator[] */
-	private $octaveCache = [];
+	/** @var WorldOctaves|null */
+	private $octaveCache = null;
 
 	/** @var Populator[] */
 	private $populators = [];
@@ -71,9 +72,9 @@ abstract class VanillaGenerator extends Generator{
 	}
 
 	/**
-	 * @param OctaveGenerator[] $octaves
+	 * @return WorldOctaves
 	 */
-	abstract protected function createWorldOctaves(array &$octaves) : void;
+	abstract protected function createWorldOctaves();
 
 	public function generateChunk(int $chunkX, int $chunkZ) : void{
 		$biomes = new VanillaBiomeGrid();
@@ -88,14 +89,10 @@ abstract class VanillaGenerator extends Generator{
 	abstract protected function generateChunkData(int $chunkX, int $chunkZ, VanillaBiomeGrid $biomes) : void;
 
 	/**
-	 * @return OctaveGenerator[]
+	 * @return WorldOctaves
 	 */
-	protected function getWorldOctaves() : array{
-		if(count($this->octaveCache) === 0){
-			$this->createWorldOctaves($this->octaveCache);
-		}
-
-		return $this->octaveCache;
+	protected function getWorldOctaves() : WorldOctaves{
+		return $this->octaveCache ?? $this->octaveCache = $this->createWorldOctaves();
 	}
 
 	/**
@@ -106,8 +103,10 @@ abstract class VanillaGenerator extends Generator{
 	}
 
 	final public function populateChunk(int $chunkX, int $chunkZ) : void{
+		/** @var Chunk $chunk */
+		$chunk = $this->world->getChunk($chunkX, $chunkZ);
 		foreach($this->populators as $populator){
-			$populator->populate($this->world, $this->random, $this->world->getChunk($chunkX, $chunkZ));
+			$populator->populate($this->world, $this->random, $chunk);
 		}
 	}
 

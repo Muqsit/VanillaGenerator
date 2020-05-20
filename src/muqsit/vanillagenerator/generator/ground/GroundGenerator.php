@@ -6,10 +6,12 @@ namespace muqsit\vanillagenerator\generator\ground;
 
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use pocketmine\block\Block;
+use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\format\Chunk;
 
 class GroundGenerator{
 
@@ -19,9 +21,9 @@ class GroundGenerator{
 	/** @var Block */
 	private $groundMaterial;
 
-	public function __construct(){
-		$this->setTopMaterial(VanillaBlocks::GRASS());
-		$this->setGroundMaterial(VanillaBlocks::DIRT());
+	public function __construct(?Block $topMaterial = null, ?Block $groundMaterial = null){
+		$this->setTopMaterial($topMaterial ?? VanillaBlocks::GRASS());
+		$this->setGroundMaterial($groundMaterial ?? VanillaBlocks::DIRT());
 	}
 
 	final protected function setTopMaterial(Block $topMaterial) : void{
@@ -45,8 +47,9 @@ class GroundGenerator{
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surfaceNoise) : void{
 		$seaLevel = 64;
 
-		$topMat = $this->topMaterial;
-		$groundMat = $this->groundMaterial;
+		$topMat = $this->topMaterial->getFullId();
+		$groundMat = $this->groundMaterial->getFullId();
+		$groundMatId = $this->groundMaterial->getId();
 
 		$chunkX = $x;
 		$chunkZ = $z;
@@ -54,47 +57,54 @@ class GroundGenerator{
 		$surfaceHeight = max((int) ($surfaceNoise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
 		$deep = -1;
 
-		$air = VanillaBlocks::AIR();
-		$stone = VanillaBlocks::STONE();
-		$sandstone = VanillaBlocks::SANDSTONE();
-		$gravel = VanillaBlocks::GRAVEL();
+		$block_factory = BlockFactory::getInstance();
+		$air = VanillaBlocks::AIR()->getFullId();
+		$stone = VanillaBlocks::STONE()->getFullId();
+		$sandstone = VanillaBlocks::SANDSTONE()->getFullId();
+		$gravel = VanillaBlocks::GRAVEL()->getFullId();
+		$bedrock = VanillaBlocks::BEDROCK()->getFullId();
+		$ice = VanillaBlocks::ICE()->getFullId();
+
+		/** @var Chunk $chunk */
+		$chunk = $world->getChunk($x >> 4, $z >> 4);
+		$block_x = $x & 0x0f;
+		$block_z = $z & 0x0f;
 
 		for($y = 255; $y >= 0; --$y){
 			if($y <= $random->nextBoundedInt(5)){
-				$world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
+				$chunk->setFullBlock($block_x, $y, $block_z, $bedrock);
 			}else{
-				$mat = $world->getBlockAt($x, $y, $z);
-				$matId = $mat->getId();
+				$matId = $block_factory->fromFullBlock($chunk->getFullBlock($block_x, $y, $block_z))->getId();
 				if($matId === BlockLegacyIds::AIR){
 					$deep = -1;
 				}elseif($matId === BlockLegacyIds::STONE){
 					if($deep === -1){
 						if($y >= $seaLevel - 5 && $y <= $seaLevel){
-							$topMat = $this->topMaterial;
-							$groundMat = $this->groundMaterial;
+							$topMat = $this->topMaterial->getFullId();
+							$groundMat = $this->groundMaterial->getFullId();
 						}
 
 						$deep = $surfaceHeight;
 						if($y >= $seaLevel - 2){
-							$world->setBlockAt($x, $y, $z, $topMat);
+							$chunk->setFullBlock($block_x, $y, $block_z, $topMat);
 						}elseif($y < $seaLevel - 8 - $surfaceHeight){
 							$topMat = $air;
 							$groundMat = $stone;
-							$world->setBlockAt($x, $y, $z, $gravel);
+							$chunk->setFullBlock($block_x, $y, $block_z, $gravel);
 						}else{
-							$world->setBlockAt($x, $y, $z, $groundMat);
+							$chunk->setFullBlock($block_x, $y, $block_z, $groundMat);
 						}
 					}elseif($deep > 0){
 						--$deep;
-						$world->setBlockAt($x, $y, $z, $groundMat);
+						$chunk->setFullBlock($block_x, $y, $block_z, $groundMat);
 
-						if($deep === 0 && $groundMat->getId() === BlockLegacyIds::SAND){
+						if($deep === 0 && $groundMatId === BlockLegacyIds::SAND){
 							$deep = $random->nextBoundedInt(4) + max(0, $y - $seaLevel - 1);
 							$groundMat = $sandstone;
 						}
 					}
 				}elseif($matId === BlockLegacyIds::STILL_WATER && $y === $seaLevel - 2 && BiomeClimateManager::isCold($biome, $chunkX, $y, $chunkZ)){
-					$world->setBlockAt($x, $y, $z, VanillaBlocks::ICE());
+					$chunk->setFullBlock($block_x, $y, $block_z, $ice);
 				}
 			}
 		}

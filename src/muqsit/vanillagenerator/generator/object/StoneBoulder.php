@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
+use Ds\Set;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -11,7 +12,12 @@ use pocketmine\world\ChunkManager;
 
 class StoneBoulder extends TerrainObject{
 
-	private const GROUND_TYPES = [BlockLegacyIds::GRASS, BlockLegacyIds::DIRT, BlockLegacyIds::STONE];
+	/** @var Set<int> */
+	private static $GROUND_TYPES;
+
+	public static function init() : void{
+		self::$GROUND_TYPES = new Set([BlockLegacyIds::GRASS, BlockLegacyIds::DIRT, BlockLegacyIds::STONE]);
+	}
 
 	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
 		$groundReached = false;
@@ -22,15 +28,17 @@ class StoneBoulder extends TerrainObject{
 				continue;
 			}
 
-			if(in_array($block->getId(), self::GROUND_TYPES, true)){
+			if(self::$GROUND_TYPES->contains($block->getId())){
 				$groundReached = true;
 				++$sourceY;
 				break;
 			}
 		}
+
 		if(!$groundReached || $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId() !== BlockLegacyIds::AIR){
 			return false;
 		}
+
 		for($i = 0; $i < 3; ++$i){
 			$radiusX = $random->nextBoundedInt(2);
 			$radiusZ = $random->nextBoundedInt(2);
@@ -45,7 +53,7 @@ class StoneBoulder extends TerrainObject{
 						if($xsquared + $zsquared + $y * $y > $fsquared){
 							continue;
 						}
-						if(!TerrainObject::killPlantAbove($world, $sourceX + $x, $sourceY + $y, $sourceZ + $z)){
+						if(!TerrainObject::killWeakBlocksAbove($world, $sourceX + $x, $sourceY + $y, $sourceZ + $z)){
 							$world->setBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z, VanillaBlocks::MOSSY_COBBLESTONE());
 						}
 					}
@@ -58,3 +66,4 @@ class StoneBoulder extends TerrainObject{
 		return true;
 	}
 }
+StoneBoulder::init();

@@ -4,52 +4,56 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
+use Ds\Set;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\BlockLegacyMetadata;
-use pocketmine\block\DoublePlant;
+use pocketmine\block\Flowable;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\World;
 
 abstract class TerrainObject{
 
-	/**
-	 * Plant block types.
-	 */
-	public const PLANT_TYPES = [
-		BlockLegacyIds::TALL_GRASS,
-		BlockLegacyIds::YELLOW_FLOWER,
-		BlockLegacyIds::RED_FLOWER,
-		BlockLegacyIds::DOUBLE_PLANT,
-		BlockLegacyIds::BROWN_MUSHROOM,
-		BlockLegacyIds::RED_MUSHROOM
-	];
+	/** @var Set<int> */
+	private static $PLANT_TYPES;
+
+	public static function init() : void{
+		self::$PLANT_TYPES = new Set([
+			BlockLegacyIds::TALL_GRASS,
+			BlockLegacyIds::YELLOW_FLOWER,
+			BlockLegacyIds::RED_FLOWER,
+			BlockLegacyIds::DOUBLE_PLANT,
+			BlockLegacyIds::BROWN_MUSHROOM,
+			BlockLegacyIds::RED_MUSHROOM
+		]);
+	}
 
 	/**
-	 * Removes the grass, shrub, flower or mushroom directly above the given block, if present. Does
-	 * not drop an item.
+	 * Removes weak blocks like grass, shrub, flower or mushroom directly above the given block, if present.
+	 * Does not drop an item.
 	 *
 	 * @param ChunkManager $world
 	 * @param int $x
 	 * @param int $y
 	 * @param int $z
-	 * @return bool whether a plant was removed; false if none was present
+	 * @return bool whether a block was removed; false if none was present
 	 */
-	public static function killPlantAbove(ChunkManager $world, int $x, int $y, int $z) : bool{
-		$blockAbove = $world->getBlockAt($x, $y + 1, $z);
-		$mat = $blockAbove->getId();
-		if(in_array($mat, static::PLANT_TYPES, true)){
-			if(($mat === BlockLegacyIds::DOUBLE_PLANT) && $blockAbove instanceof DoublePlant){
-				$dataAbove = $blockAbove->getMeta();
-				if(($dataAbove & BlockLegacyMetadata::DOUBLE_PLANT_FLAG_TOP) !== 0){
-					$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::AIR());
-				}
+	public static function killWeakBlocksAbove(ChunkManager $world, int $x, int $y, int $z) : bool{
+		$cur_y = $y + 1;
+		$changed = false;
+
+		while($cur_y < World::Y_MAX){
+			$block = $world->getBlockAt($x, $cur_y, $z);
+			if(!($block instanceof Flowable)){
+				break;
 			}
-			$world->setBlockAt($x, $y + 1, $z, VanillaBlocks::AIR());
-			return true;
+			$world->setBlockAt($x, $cur_y, $z, VanillaBlocks::AIR());
+			$changed = true;
+			++$cur_y;
 		}
 
-		return false;
+		return $changed;
 	}
 
 	/**
@@ -64,3 +68,5 @@ abstract class TerrainObject{
 	 */
 	abstract public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool;
 }
+
+TerrainObject::init();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\biomegrid;
 
+use muqsit\vanillagenerator\generator\biomegrid\utils\BiomeEdgeEntry;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 
 class BiomeEdgeMapLayer extends MapLayer{
@@ -34,16 +35,16 @@ class BiomeEdgeMapLayer extends MapLayer{
 		BiomeIds::SWAMPLAND => BiomeIds::JUNGLE_EDGE
 	];
 
-	/** @var int[][]|int[][][]|null[][] */
+	/** @var BiomeEdgeEntry[] */
 	private static $EDGES;
 
 	public static function init() : void{
 		self::$EDGES = [
-			[self::$MESA_EDGES, null],
-			[self::$MEGA_TAIGA_EDGES, null],
-			[self::$DESERT_EDGES, [BiomeIds::ICE_FLATS]],
-			[self::$SWAMP1_EDGES, [BiomeIds::DESERT, BiomeIds::TAIGA_COLD, BiomeIds::ICE_FLATS]],
-			[self::$SWAMP2_EDGES, [BiomeIds::JUNGLE]]
+			new BiomeEdgeEntry(self::$MESA_EDGES),
+			new BiomeEdgeEntry(self::$MEGA_TAIGA_EDGES),
+			new BiomeEdgeEntry(self::$DESERT_EDGES, [BiomeIds::ICE_FLATS]),
+			new BiomeEdgeEntry(self::$SWAMP1_EDGES, [BiomeIds::DESERT, BiomeIds::TAIGA_COLD, BiomeIds::ICE_FLATS]),
+			new BiomeEdgeEntry(self::$SWAMP2_EDGES, [BiomeIds::JUNGLE])
 		];
 	}
 
@@ -68,29 +69,30 @@ class BiomeEdgeMapLayer extends MapLayer{
 				// This applies biome large edges using Von Neumann neighborhood
 				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
 				$val = $centerVal;
-				foreach(self::$EDGES as [$map, $entry]){
-					if(isset($map[$centerVal])){
+				foreach(self::$EDGES as $edge){ // [$map, $entry]
+					if(isset($edge->key[$centerVal])){
 						$upperVal = $values[$j + 1 + $i * $gridSizeX];
 						$lowerVal = $values[$j + 1 + ($i + 2) * $gridSizeX];
 						$leftVal = $values[$j + ($i + 1) * $gridSizeX];
 						$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX];
-						if($entry === null && (
-								!isset($map[$upperVal])
-								|| !isset($map[$lowerVal])
-								|| !isset($map[$leftVal])
-								|| !isset($map[$rightVal])
-							)){
-							$val = $map[$centerVal];
+
+						if($edge->value === null && (
+							!isset($edge->key[$upperVal])
+							|| !isset($edge->key[$lowerVal])
+							|| !isset($edge->key[$leftVal])
+							|| !isset($edge->key[$rightVal])
+						)){
+							$val = $edge->key[$centerVal];
 							break;
 						}
 
-						if($entry !== null && (
-								in_array($upperVal, $entry, true)
-								|| in_array($lowerVal, $entry, true)
-								|| in_array($leftVal, $entry, true)
-								|| in_array($rightVal, $entry, true)
-							)){
-							$val = $map[$centerVal];
+						if($edge->value !== null && (
+							$edge->value->contains($upperVal) ||
+							$edge->value->contains($lowerVal) ||
+							$edge->value->contains($leftVal) ||
+							$edge->value->contains($rightVal)
+						)){
+							$val = $edge->key[$centerVal];
 							break;
 						}
 					}

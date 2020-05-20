@@ -63,7 +63,7 @@ class SimplexNoise extends PerlinNoise{
 	 * @param float $amplitude
 	 * @return float[]
 	 */
-	protected function get2dNoise(array $noise, float $x, float $z, int $sizeX, int $sizeY, float $scaleX, float $scaleY, float $amplitude) : array{
+	protected function get2dNoise(array &$noise, float $x, float $z, int $sizeX, int $sizeY, float $scaleX, float $scaleY, float $amplitude) : array{
 		$index = 0;
 		for($i = 0; $i < $sizeY; ++$i){
 			$zin = $this->offsetY + ($z + $i) * $scaleY;
@@ -94,15 +94,15 @@ class SimplexNoise extends PerlinNoise{
 	 * @param float $amplitude
 	 * @return float[]
 	 */
-	protected function get3dNoise(array $noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
-		$index = 0;
+	protected function get3dNoise(array &$noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
+		$index = -1;
 		for($i = 0; $i < $sizeZ; ++$i){
 			$zin = $this->offsetZ + ($z + $i) * $scaleZ;
 			for($j = 0; $j < $sizeX; ++$j){
 				$xin = $this->offsetX + ($x + $j) * $scaleX;
 				for($k = 0; $k < $sizeY; ++$k){
 					$yin = $this->offsetY + ($y + $k) * $scaleY;
-					$noise[$index++] += $this->simplex3D($xin, $yin, $zin) * $amplitude;
+					$noise[++$index] += $this->simplex3D($xin, $yin, $zin) * $amplitude;
 				}
 			}
 		}

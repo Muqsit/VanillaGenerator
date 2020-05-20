@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator\generator\nether;
 
 use muqsit\vanillagenerator\generator\nether\populator\NetherPopulator;
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
+use muqsit\vanillagenerator\generator\utils\NetherWorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
 use pocketmine\block\BlockFactory;
@@ -43,12 +44,12 @@ class NetherGenerator extends VanillaGenerator{
 		$cx = $chunkX << 4;
 		$cz = $chunkZ << 4;
 
-		/** @var PerlinOctaveGenerator[] $octaves */
+		/** @var NetherWorldOctaves $octaves */
 		$octaves = $this->getWorldOctaves();
 
-		$surfaceNoise = $octaves["surface"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
-		$soulsandNoise = $octaves["soulsand"]->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
-		$gravelNoise = $octaves["gravel"]->getFractalBrownianMotion($cx, 0, $cz, 0.5, 2.0);
+		$surfaceNoise = $octaves->surface->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
+		$soulsandNoise = $octaves->soul_sand->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
+		$gravelNoise = $octaves->gravel->getFractalBrownianMotion($cx, 0, $cz, 0.5, 2.0);
 
 		/** @var Chunk $chunk */
 		$chunk = $this->world->getChunk($chunkX, $chunkZ);
@@ -61,45 +62,47 @@ class NetherGenerator extends VanillaGenerator{
 		}
 	}
 
-	protected function createWorldOctaves(array &$octaves) : void{
+	protected function createWorldOctaves() : NetherWorldOctaves{
 		$seed = new Random($this->random->getSeed());
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 1, 5);
 		$gen->setXScale(static::HEIGHT_NOISE_SCALE_X);
 		$gen->setZScale(static::HEIGHT_NOISE_SCALE_Z);
-		$octaves["height"] = $gen;
+		$height = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 17, 5);
 		$gen->setXScale(static::COORDINATE_SCALE);
 		$gen->setYScale(static::HEIGHT_SCALE);
 		$gen->setZScale(static::COORDINATE_SCALE);
-		$octaves["roughness"] = $gen;
+		$roughness = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 17, 5);
 		$gen->setXScale(static::COORDINATE_SCALE);
 		$gen->setYScale(static::HEIGHT_SCALE);
 		$gen->setZScale(static::COORDINATE_SCALE);
-		$octaves["roughness2"] = $gen;
+		$roughness2 = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 17, 5);
 		$gen->setXScale(static::COORDINATE_SCALE / static::DETAIL_NOISE_SCALE_X);
 		$gen->setYScale(static::HEIGHT_SCALE / static::DETAIL_NOISE_SCALE_Y);
 		$gen->setZScale(static::COORDINATE_SCALE / static::DETAIL_NOISE_SCALE_Z);
-		$octaves["detail"] = $gen;
+		$detail = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 16, 1);
 		$gen->setScale(static::SURFACE_SCALE);
-		$octaves["surface"] = $gen;
+		$surface = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 16, 1);
 		$gen->setXScale(static::SURFACE_SCALE / 2.0);
 		$gen->setYScale(static::SURFACE_SCALE / 2.0);
-		$octaves["soulsand"] = $gen;
+		$soulsand = $gen;
 
 		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 1, 16);
 		$gen->setXScale(static::SURFACE_SCALE / 2.0);
 		$gen->setZScale(static::SURFACE_SCALE / 2.0);
-		$octaves["gravel"] = $gen;
+		$gravel = $gen;
+
+		return new NetherWorldOctaves($height, $roughness, $roughness2, $detail, $surface, $soulsand, $gravel);
 	}
 
 	private function generateRawTerrain(int $chunkX, int $chunkZ) : void{
@@ -155,14 +158,14 @@ class NetherGenerator extends VanillaGenerator{
 	}
 
 	private function generateTerrainDensity(int $x, int $z) : void{
-		/** @var PerlinOctaveGenerator[] $octaves */
+		/** @var NetherWorldOctaves $octaves */
 		$octaves = $this->getWorldOctaves();
-		$heightNoise = $octaves["height"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$roughnessNoise = $octaves["roughness"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$roughnessNoise2 = $octaves["roughness2"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$detailNoise = $octaves["detail"]->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$heightNoise = $octaves->height->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$roughnessNoise = $octaves->roughness->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$roughnessNoise2 = $octaves->roughness2->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$detailNoise = $octaves->detail->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
 
-		$k_max = $octaves["detail"]->getSizeY();
+		$k_max = $octaves->detail->getSizeY();
 
 		$nv = [];
 		for($i = 0; $i < $k_max; ++$i){

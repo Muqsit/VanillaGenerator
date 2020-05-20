@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
+use Ds\Set;
 use pocketmine\block\Block;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -21,7 +22,7 @@ class BlockPatch extends TerrainObject{
 	/** @var int */
 	private $vertRadius;
 
-	/** @var int[] */
+	/** @var Set<int> */
 	private $overridables;
 
 	/**
@@ -35,7 +36,7 @@ class BlockPatch extends TerrainObject{
 		$this->type = $type;
 		$this->horizRadius = $horizRadius;
 		$this->vertRadius = $vertRadius;
-		$this->overridables = $overridables_full_id;
+		$this->overridables = new Set($overridables_full_id);
 	}
 
 	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
@@ -49,10 +50,11 @@ class BlockPatch extends TerrainObject{
 				}
 				for($y = $sourceY - $this->vertRadius; $y <= $sourceY + $this->vertRadius; ++$y){
 					$block = $world->getBlockAt($x, $y, $z);
-					if(!in_array($block->getFullId(), $this->overridables, true)){
+					if(!$this->overridables->contains($block->getFullId())){
 						continue;
 					}
-					if(TerrainObject::killPlantAbove($world, $x, $y, $z)){
+
+					if(TerrainObject::killWeakBlocksAbove($world, $x, $y, $z)){
 						break;
 					}
 

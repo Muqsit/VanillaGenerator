@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
+use Ds\Set;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -11,13 +12,19 @@ use pocketmine\world\ChunkManager;
 
 class IceSpike extends TerrainObject{
 
-	private const MATERIALS = [BlockLegacyIds::AIR, BlockLegacyIds::DIRT, BlockLegacyIds::SNOW, BlockLegacyIds::SNOW_BLOCK, BlockLegacyIds::ICE];
 	private const MAX_STEM_RADIUS = 1;
 	private const MAX_STEM_HEIGHT = 50;
 
+	/** @var Set<int> */
+	private static $MATERIALS;
+
+	public static function init() : void{
+		self::$MATERIALS = new Set([BlockLegacyIds::AIR, BlockLegacyIds::DIRT, BlockLegacyIds::SNOW_LAYER, BlockLegacyIds::SNOW_BLOCK, BlockLegacyIds::ICE, BlockLegacyIds::PACKED_ICE]);
+	}
+
 	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
 		$tipHeight = $random->nextBoundedInt(4) + 7;
-		$tipRadius = $tipHeight / 4 + $random->nextBoundedInt(2);
+		$tipRadius = (int) ($tipHeight / 4 + $random->nextBoundedInt(2));
 		$tipOffset = $random->nextBoundedInt(4);
 		if($tipRadius > 1 && $random->nextBoundedInt(60) === 0){
 			// sometimes generate a giant spike
@@ -33,10 +40,7 @@ class IceSpike extends TerrainObject{
 				}
 				for($y = $tipOffset - 1; $y >= -3; --$y){
 					$block = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z);
-					if(
-						$block->getId() === BlockLegacyIds::PACKED_ICE ||
-						in_array($block->getId(), self::MATERIALS, true)
-					){
+					if(self::$MATERIALS->contains($block->getId())){
 						$world->setBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z, VanillaBlocks::PACKED_ICE());
 						--$stackHeight;
 						if($stackHeight <= 0){
@@ -63,14 +67,12 @@ class IceSpike extends TerrainObject{
 						continue;
 					}
 					// tip shape in top direction
-					$block = $world->getBlockAt($sourceX + $x, $sourceY + $tipOffset + $y, $sourceZ + $z);
-					if(in_array($block->getId(), self::MATERIALS, true)){
+					if(self::$MATERIALS->contains($world->getBlockAt($sourceX + $x, $sourceY + $tipOffset + $y, $sourceZ + $z)->getId())){
 						$world->setBlockAt($sourceX + $x, $sourceY + $tipOffset + $y, $sourceZ + $z, VanillaBlocks::PACKED_ICE());
 						$succeeded = true;
 					}
 					if($radius > 1 && $y !== 0){ // same shape in bottom direction
-						$block = $world->getBlockAt($sourceX + $x, $sourceY + $tipOffset - $y, $sourceZ + $z);
-						if(in_array($block->getId(), self::MATERIALS, true)){
+						if(self::$MATERIALS->contains($world->getBlockAt($sourceX + $x, $sourceY + $tipOffset - $y, $sourceZ + $z)->getId())){
 							$world->setBlockAt($sourceX + $x, $sourceY + $tipOffset - $y, $sourceZ + $z, VanillaBlocks::PACKED_ICE());
 							$succeeded = true;
 						}
@@ -81,3 +83,5 @@ class IceSpike extends TerrainObject{
 		return $succeeded;
 	}
 }
+
+IceSpike::init();

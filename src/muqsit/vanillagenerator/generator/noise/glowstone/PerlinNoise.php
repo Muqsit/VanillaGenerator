@@ -63,7 +63,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 	 * @param float $amplitude the amplitude parameter
 	 * @return float[] noise with this layer of noise added
 	 */
-	public function getNoise(array $noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
+	public function getNoise(array &$noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
 		if($sizeY === 1){
 			return $this->get2dNoise($noise, $x, $z, $sizeX, $sizeZ, $scaleX, $scaleZ, $amplitude);
 		}
@@ -82,7 +82,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 	 * @param float $amplitude
 	 * @return float[]
 	 */
-	protected function get2dNoise(array $noise, float $x, float $z, int $sizeX, int $sizeZ, float $scaleX, float $scaleZ, float $amplitude) : array{
+	protected function get2dNoise(array &$noise, float $x, float $z, int $sizeX, int $sizeZ, float $scaleX, float $scaleZ, float $amplitude) : array{
 		$index = 0;
 		for($i = 0; $i < $sizeX; ++$i){
 			$dx = $x + $this->offsetX + $i * $scaleX;
@@ -130,7 +130,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 	 * @param float $amplitude
 	 * @return float[]
 	 */
-	protected function get3dNoise(array $noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
+	protected function get3dNoise(array &$noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
 		$n = -1;
 		$x1 = 0;
 		$x2 = 0;

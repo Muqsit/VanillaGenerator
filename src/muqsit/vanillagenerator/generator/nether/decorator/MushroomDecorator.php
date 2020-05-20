@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\nether\decorator;
 
+use Ds\Set;
 use muqsit\vanillagenerator\generator\Decorator;
 use pocketmine\block\Block;
 use pocketmine\block\BlockLegacyIds;
@@ -13,7 +14,12 @@ use pocketmine\world\format\Chunk;
 
 class MushroomDecorator extends Decorator{
 
-	private const MATERIALS = [BlockLegacyIds::NETHERRACK, BlockLegacyIds::QUARTZ_ORE, BlockLegacyIds::SOUL_SAND, BlockLegacyIds::GRAVEL];
+	/** @var Set<int> */
+	private static $MATERIALS;
+
+	public static function init() : void{
+		self::$MATERIALS = new Set([BlockLegacyIds::NETHERRACK, BlockLegacyIds::QUARTZ_ORE, BlockLegacyIds::SOUL_SAND, BlockLegacyIds::GRAVEL]);
+	}
 
 	/** @var Block */
 	private $type;
@@ -39,10 +45,12 @@ class MushroomDecorator extends Decorator{
 			if(
 				$y < $height &&
 				$block->getId() === BlockLegacyIds::AIR &&
-				in_array($blockBelow->getId(), self::MATERIALS, true)
+				self::$MATERIALS->contains($blockBelow->getId())
 			){
 				$world->setBlockAt($x, $y, $z, $this->type);
 			}
 		}
 	}
 }
+
+MushroomDecorator::init();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
+use Ds\Set;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use pocketmine\block\Block;
@@ -18,7 +19,13 @@ class Lake extends TerrainObject{
 
 	private const MAX_DIAMETER = 16.0;
 	private const MAX_HEIGHT = 8.0;
-	private const MYCEL_BIOMES = [BiomeIds::MUSHROOM_ISLAND, BiomeIds::MUSHROOM_ISLAND_SHORE];
+
+	/** @var Set<int> */
+	private static $MYCEL_BIOMES;
+
+	public static function init() : void{
+		self::$MYCEL_BIOMES = new Set([BiomeIds::MUSHROOM_ISLAND, BiomeIds::MUSHROOM_ISLAND_SHORE]);
+	}
 
 	/** @var Block */
 	private $type;
@@ -64,7 +71,7 @@ class Lake extends TerrainObject{
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($sourceX >> 4, $sourceZ >> 4);
 		$biome = $chunk->getBiomeId(($sourceX + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f, ($sourceZ + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f);
-		$mycelBiome = in_array($biome, self::MYCEL_BIOMES, true);
+		$mycelBiome = self::$MYCEL_BIOMES->contains($biome);
 
 		for($x = 0; $x < (int) self::MAX_DIAMETER; ++$x){
 			for($z = 0; $z < (int) self::MAX_DIAMETER; ++$z){
@@ -84,7 +91,7 @@ class Lake extends TerrainObject{
 
 					if($y >= (int) (self::MAX_HEIGHT / 2)){
 						$type = VanillaBlocks::AIR();
-						if(TerrainObject::killPlantAbove($world, $sourceX + $x, $sourceY + $y, $sourceZ + $z)){
+						if(TerrainObject::killWeakBlocksAbove($world, $sourceX + $x, $sourceY + $y, $sourceZ + $z)){
 							break;
 						}
 
@@ -175,3 +182,4 @@ class Lake extends TerrainObject{
 		$lakeMap[($x * (int) self::MAX_DIAMETER + $z) * (int) self::MAX_HEIGHT + $y] = 1;
 	}
 }
+Lake::init();

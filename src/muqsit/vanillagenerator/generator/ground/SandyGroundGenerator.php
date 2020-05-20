@@ -1,4 +1,4 @@
-<?php /** @noinspection MagicMethodsValidityInspection */
+<?php
 
 declare(strict_types=1);
 
@@ -8,9 +8,7 @@ use pocketmine\block\VanillaBlocks;
 
 class SandyGroundGenerator extends GroundGenerator{
 
-	/** @noinspection PhpMissingParentConstructorInspection */
 	public function __construct(){
-		$this->setTopMaterial(VanillaBlocks::SAND());
-		$this->setGroundMaterial(VanillaBlocks::SAND());
+		parent::__construct(VanillaBlocks::SAND(), VanillaBlocks::SAND());
 	}
 }

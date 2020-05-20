@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator\generator\overworld\populator\biome;
 
 use muqsit\vanillagenerator\generator\object\OreType;
 use muqsit\vanillagenerator\generator\object\OreVein;
+use muqsit\vanillagenerator\generator\overworld\populator\biome\utils\OreTypeHolder;
 use muqsit\vanillagenerator\generator\Populator;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -14,7 +15,7 @@ use pocketmine\world\format\Chunk;
 
 class OrePopulator implements Populator{
 
-	/** @var OreType[][]|int[][] */
+	/** @var OreTypeHolder[] */
 	private $ores = [];
 
 	/**
@@ -36,24 +37,19 @@ class OrePopulator implements Populator{
 	}
 
 	protected function addOre(OreType $type, int $value) : void{
-		$this->ores[] = [$type, $value];
+		$this->ores[] = new OreTypeHolder($type, $value);
 	}
 
 	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
 		$cx = $chunk->getX() << 4;
 		$cz = $chunk->getZ() << 4;
 
-		/**
-		 * @var OreType $oreType
-		 * @var int $value
-		 */
-		foreach($this->ores as [$oreType, $value]){
-			for($n = 0; $n < $value; ++$n){
+		foreach($this->ores as $ore_type_holder){
+			for($n = 0; $n < $ore_type_holder->value; ++$n){
 				$sourceX = $cx + $random->nextBoundedInt(16);
 				$sourceZ = $cz + $random->nextBoundedInt(16);
-				$sourceY = $oreType->getRandomHeight($random);
-
-				(new OreVein($oreType))->generate($world, $random, $sourceX, $sourceY, $sourceZ);
+				$sourceY = $ore_type_holder->type->getRandomHeight($random);
+				(new OreVein($ore_type_holder->type))->generate($world, $random, $sourceX, $sourceY, $sourceZ);
 			}
 		}
 	}

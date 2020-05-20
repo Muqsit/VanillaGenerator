@@ -8,9 +8,7 @@ use pocketmine\block\VanillaBlocks;
 
 class SnowyGroundGenerator extends GroundGenerator{
 
-	/** @noinspection MagicMethodsValidityInspection */
-	/** @noinspection PhpMissingParentConstructorInspection */
 	public function __construct(){
-		$this->setTopMaterial(VanillaBlocks::SNOW());
+		parent::__construct(VanillaBlocks::SNOW_LAYER());
 	}
 }

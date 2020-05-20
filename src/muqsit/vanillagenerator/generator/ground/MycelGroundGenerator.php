@@ -8,8 +8,7 @@ use pocketmine\block\VanillaBlocks;
 
 class MycelGroundGenerator extends GroundGenerator{
 
-	/** @noinspection MagicMethodsValidityInspection */
 	public function __construct(){
-		$this->setTopMaterial(VanillaBlocks::MYCELIUM());
+		parent::__construct(VanillaBlocks::MYCELIUM());
 	}
 }

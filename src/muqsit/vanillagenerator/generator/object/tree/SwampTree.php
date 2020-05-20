@@ -4,18 +4,26 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object\tree;
 
+use Ds\Set;
 use pocketmine\block\Block;
+use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\utils\TreeType;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\format\Chunk;
 use pocketmine\world\World;
 
 class SwampTree extends CocoaTree{
 
-	public const WATER_BLOCK_TYPES = [BlockLegacyIds::WATER, BlockLegacyIds::STILL_WATER];
+	/** @var Set<int> */
+	private static $WATER_BLOCK_TYPES;
+
+	public static function init() : void{
+		self::$WATER_BLOCK_TYPES = new Set([BlockLegacyIds::WATER, BlockLegacyIds::STILL_WATER]);
+	}
 
 	public function __construct(Random $random, BlockTransaction $transaction){
 		parent::__construct($random, $transaction);
@@ -65,7 +73,12 @@ class SwampTree extends CocoaTree{
 	}
 
 	public function generate(ChunkManager $world, Random $random, int $blockX, int $blockY, int $blockZ) : bool{
-		while(in_array($world->getBlockAt($blockX, $blockY, $blockZ)->getId(), self::WATER_BLOCK_TYPES, true)){
+		/** @var Chunk $chunk */
+		$chunk = $world->getChunk($blockX >> 4, $blockZ >> 4);
+		$chunk_block_x = $blockX & 0x0f;
+		$chunk_block_z = $blockZ & 0x0f;
+		$block_factory = BlockFactory::getInstance();
+		while(self::$WATER_BLOCK_TYPES->contains($block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY, $chunk_block_z))->getId())){
 			--$blockY;
 		}
 
@@ -76,7 +89,7 @@ class SwampTree extends CocoaTree{
 		// generate the leaves
 		for($y = $blockY + $this->height - 3; $y <= $blockY + $this->height; ++$y){
 			$n = $y - ($blockY + $this->height);
-			$radius = 2 - $n / 2;
+			$radius = (int) (2 - $n / 2);
 			for($x = $blockX - $radius; $x <= $blockX + $radius; ++$x){
 				for($z = $blockZ - $radius; $z <= $blockZ + $radius; ++$z){
 					if(
@@ -84,7 +97,7 @@ class SwampTree extends CocoaTree{
 						abs($z - $blockZ) !== $radius ||
 						($random->nextBoolean() && $n !== 0)
 					){
-						$this->replaceIfAirOrLeaves((int) $x, $y, (int) $z, $this->leavesType, $world);
+						$this->replaceIfAirOrLeaves($x, $y, $z, $this->leavesType, $world);
 					}
 				}
 			}
@@ -92,7 +105,7 @@ class SwampTree extends CocoaTree{
 
 		// generate the trunk
 		for($y = 0; $y < $this->height; ++$y){
-			$material = $world->getBlockAt($blockX, $blockY + $y, $blockZ)->getId();
+			$material = $block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY + $y, $chunk_block_z))->getId();
 			if(
 				$material === BlockLegacyIds::AIR ||
 				$material === BlockLegacyIds::LEAVES ||
@@ -110,3 +123,5 @@ class SwampTree extends CocoaTree{
 		return true;
 	}
 }
+
+SwampTree::init();

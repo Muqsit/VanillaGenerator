@@ -62,19 +62,28 @@ class OreVein extends TerrainObject{
 			$q = $random->nextFloat() * $this->amount / 16.0;
 			$radiusH = (sin($i * M_PI / $this->amount) + 1 * $q + 1) / 2.0;
 			$radiusV = (sin($i * M_PI / $this->amount) + 1 * $q + 1) / 2.0;
-			for($x = (int) ($originX - $radiusH); $x <= (int) ($originX + $radiusH); ++$x){
 
+			$min_x = (int) ($originX - $radiusH);
+			$max_x = (int) ($originX + $radiusH);
+
+			$min_y = (int) ($originY - $radiusV);
+			$max_y = (int) ($originY + $radiusV);
+
+			$min_z = (int) ($originZ - $radiusH);
+			$max_z = (int) ($originZ + $radiusH);
+
+			for($x = $min_x; $x <= $max_x; ++$x){
 				// scale the center of x to the range [-1, 1] within the circle
 				$squaredNormalizedX = self::normalizedSquaredCoordinate($originX, $radiusH, $x);
 				if($squaredNormalizedX >= 1){
 					continue;
 				}
-				for($y = (int) ($originY - $radiusV); $y <= (int) ($originY + $radiusV); ++$y){
+				for($y = $min_y; $y <= $max_y; ++$y){
 					$squaredNormalizedY = self::normalizedSquaredCoordinate($originY, $radiusV, $y);
 					if($squaredNormalizedX + $squaredNormalizedY >= 1){
 						continue;
 					}
-					for($z = (int) ($originZ - $radiusH); $z <= (int) ($originZ + $radiusH); ++$z){
+					for($z = $min_z; $z <= $max_z; ++$z){
 						$squaredNormalizedZ = self::normalizedSquaredCoordinate($originZ, $radiusH, $z);
 						if($squaredNormalizedX + $squaredNormalizedY + $squaredNormalizedZ < 1 && $world->getBlockAt($x, $y, $z)->getId() === $this->targetType){
 							$world->setBlockAt($x, $y, $z, $this->type);
