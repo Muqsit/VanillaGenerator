@@ -19,14 +19,11 @@ class CactusDecorator extends Decorator{
 		$z = $random->nextBoundedInt(16);
 		$sourceY = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) << 1);
 
-		for($i = 0; $i < 10; ++$i){
-			(new Cactus())->generate(
-				$world,
-				$random,
-				$x + $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8),
-				$sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4),
-				$z + $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8)
-			);
+		for($l = 0; $l < 10; ++$l){
+			$i = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$k = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$j = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
+			(new Cactus())->generate($world, $random, $x + $i, $j, $z + $k);
 		}
 	}
 }
