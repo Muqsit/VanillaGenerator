@@ -152,32 +152,27 @@ class OverworldGenerator extends VanillaGenerator{
 	protected function createWorldOctaves() : WorldOctaves{
 		$seed = new Random($this->random->getSeed());
 
-		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 1, 5);
-		$gen->setXScale(self::HEIGHT_NOISE_SCALE_X);
-		$gen->setZScale(self::HEIGHT_NOISE_SCALE_Z);
-		$height = $gen;
+		$height = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 1, 5);
+		$height->setXScale(self::HEIGHT_NOISE_SCALE_X);
+		$height->setZScale(self::HEIGHT_NOISE_SCALE_Z);
 
-		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
-		$gen->setXScale(self::COORDINATE_SCALE);
-		$gen->setYScale(self::HEIGHT_SCALE);
-		$gen->setZScale(self::COORDINATE_SCALE);
-		$roughness = $gen;
+		$roughness = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
+		$roughness->setXScale(self::COORDINATE_SCALE);
+		$roughness->setYScale(self::HEIGHT_SCALE);
+		$roughness->setZScale(self::COORDINATE_SCALE);
 
-		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
-		$gen->setXScale(self::COORDINATE_SCALE);
-		$gen->setYScale(self::HEIGHT_SCALE);
-		$gen->setZScale(self::COORDINATE_SCALE);
-		$roughness2 = $gen;
+		$roughness2 = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
+		$roughness2->setXScale(self::COORDINATE_SCALE);
+		$roughness2->setYScale(self::HEIGHT_SCALE);
+		$roughness2->setZScale(self::COORDINATE_SCALE);
 
-		$gen = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 33, 5);
-		$gen->setXScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_X);
-		$gen->setYScale(self::HEIGHT_SCALE / self::DETAIL_NOISE_SCALE_Y);
-		$gen->setZScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_Z);
-		$detail = $gen;
+		$detail = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 33, 5);
+		$detail->setXScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_X);
+		$detail->setYScale(self::HEIGHT_SCALE / self::DETAIL_NOISE_SCALE_Y);
+		$detail->setZScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_Z);
 
-		$gen = SimplexOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 1, 16);
-		$gen->setScale(self::SURFACE_SCALE);
-		$surface = $gen;
+		$surface = SimplexOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 1, 16);
+		$surface->setScale(self::SURFACE_SCALE);
 
 		return new WorldOctaves($height, $roughness, $roughness2, $detail, $surface);
 	}
