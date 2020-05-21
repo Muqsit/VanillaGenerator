@@ -36,7 +36,7 @@ class SimplexOctaveGenerator extends PerlinOctaveGenerator{
 	}
 
 	public function getFractalBrownianMotion(float $x, float $y, float $z, float $lacunarity, float $persistence) : array{
-		$this->noise = array_fill(0, count($this->noise), 0.0);
+		$this->noise = array_fill(0, $this->sizeX * $this->sizeY * $this->sizeZ, 0.0);
 
 		$freq = 1.0;
 		$amp = 1.0;

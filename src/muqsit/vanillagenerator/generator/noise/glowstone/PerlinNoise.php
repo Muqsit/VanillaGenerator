@@ -83,7 +83,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 	 * @return float[]
 	 */
 	protected function get2dNoise(array &$noise, float $x, float $z, int $sizeX, int $sizeZ, float $scaleX, float $scaleZ, float $amplitude) : array{
-		$index = 0;
+		$index = -1;
 		for($i = 0; $i < $sizeX; ++$i){
 			$dx = $x + $this->offsetX + $i * $scaleX;
 			$floorX = self::floor($dx);
@@ -105,11 +105,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 				$x2 = self::lerp($fx, self::grad($this->perm[$aa + 1], $dx, 0, $dz - 1),
 					self::grad($this->perm[$ba + 1], $dx - 1, 0, $dz - 1));
 
-				if(!isset($noise[$index])){
-					$noise[$index] = 0.0;
-				}
-				$noise[$index] += self::lerp($fz, $x1, $x2) * $amplitude;
-				++$index;
+				$noise[++$index] += self::lerp($fz, $x1, $x2) * $amplitude;
 			}
 		}
 
@@ -136,7 +132,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 		$x2 = 0;
 		$x3 = 0;
 		$x4 = 0;
-		$index = 0;
+		$index = -1;
 		for($i = 0; $i < $sizeX; ++$i){
 			$dx = $x + $this->offsetX + $i * $scaleX;
 			$floorX = self::floor($dx);
@@ -175,11 +171,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 					$y1 = self::lerp($fy, $x1, $x2);
 					$y2 = self::lerp($fy, $x3, $x4);
 
-					if(!isset($noise[$index])){
-						$noise[$index] = 0.0;
-					}
-					$noise[$index] += self::lerp($fz, $y1, $y2) * $amplitude;
-					++$index;
+					$noise[++$index] += self::lerp($fz, $y1, $y2) * $amplitude;
 				}
 			}
 		}

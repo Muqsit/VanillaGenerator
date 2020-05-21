@@ -82,6 +82,7 @@ class GroundGenerator{
 						if($y >= $seaLevel - 5 && $y <= $seaLevel){
 							$topMat = $this->topMaterial->getFullId();
 							$groundMat = $this->groundMaterial->getFullId();
+							$groundMatId = $this->groundMaterial->getId();
 						}
 
 						$deep = $surfaceHeight;
@@ -90,6 +91,7 @@ class GroundGenerator{
 						}elseif($y < $seaLevel - 8 - $surfaceHeight){
 							$topMat = $air;
 							$groundMat = $stone;
+							$groundMatId = BlockLegacyIds::STONE;
 							$chunk->setFullBlock($block_x, $y, $block_z, $gravel);
 						}else{
 							$chunk->setFullBlock($block_x, $y, $block_z, $groundMat);
@@ -101,6 +103,7 @@ class GroundGenerator{
 						if($deep === 0 && $groundMatId === BlockLegacyIds::SAND){
 							$deep = $random->nextBoundedInt(4) + max(0, $y - $seaLevel - 1);
 							$groundMat = $sandstone;
+							$groundMatId = BlockLegacyIds::SANDSTONE;
 						}
 					}
 				}elseif($matId === BlockLegacyIds::STILL_WATER && $y === $seaLevel - 2 && BiomeClimateManager::isCold($biome, $chunkX, $y, $chunkZ)){

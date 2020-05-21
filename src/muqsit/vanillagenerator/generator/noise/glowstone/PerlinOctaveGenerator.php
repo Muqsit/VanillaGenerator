@@ -51,7 +51,7 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 	protected $sizeZ;
 
 	/** @var float[] */
-	protected $noise = [];
+	protected $noise;
 
 	/**
 	 * Creates a generator for multiple layers of Perlin noise.
@@ -67,6 +67,7 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 		$this->sizeX = $sizeX;
 		$this->sizeY = $sizeY;
 		$this->sizeZ = $sizeZ;
+		$this->noise = array_fill(0, $sizeX * $sizeY * $sizeZ, 0.0);
 	}
 
 	public function getSizeX() : int{
@@ -104,9 +105,7 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 	 * @return float[] the noise array
 	 */
 	public function getFractalBrownianMotion(float $x, float $y, float $z, float $lacunarity, float $persistence) : array{
-		foreach($this->noise as $k => $_){
-			$this->noise[$k] = 0.0;
-		}
+		$this->noise = array_fill(0, $this->sizeX * $this->sizeY * $this->sizeZ, 0.0);
 
 		$freq = 1;
 		$amp = 1;

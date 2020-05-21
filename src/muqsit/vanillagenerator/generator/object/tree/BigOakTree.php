@@ -84,7 +84,7 @@ class BigOakTree extends GenericTree{
 			if((float) ($node->branchY - $blockY) >= $this->height * 0.2){
 				$base = new Vector3($blockX, $node->branchY, $blockZ);
 				$leafNode = new Vector3($node->x, $node->y, $node->z);
-				$branch = $leafNode->subtract($base);
+				$branch = $leafNode->subtractVector($base);
 				$maxDistance = max(abs($branch->getFloorY()), max(abs($branch->getFloorX()), abs($branch->getFloorZ())));
 				if($maxDistance > 0){
 					$dx = (float) $branch->x / $maxDistance;
@@ -107,7 +107,7 @@ class BigOakTree extends GenericTree{
 
 	private function countAvailableBlocks(Vector3 $from, Vector3 $to, ChunkManager $world) : int{
 		$n = 0;
-		$target = $to->subtract($from);
+		$target = $to->subtractVector($from);
 		$maxDistance = max(abs($target->getFloorY()), max(abs($target->getFloorX()), abs($target->getFloorZ())));
 		if($maxDistance > 0){
 			$dx = (float) $target->x / $maxDistance;
@@ -144,8 +144,8 @@ class BigOakTree extends GenericTree{
 
 		for($l = --$y - $blockY; $l >= 0; --$l, --$y){
 			$h = $this->height / 2.0;
-			$v = (float) ($h - $l);
-			$f = $l < (float) ($this->height * 0.3) ? -1.0 : (
+			$v = $h - $l;
+			$f = $l < ($this->height * 0.3) ? -1.0 : (
 			$v === $h ? $h * 0.5 : (
 			$h <= abs($v) ? 0.0 : (float) sqrt($h * $h - $v * $v) * 0.5
 			)

@@ -7,7 +7,6 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\DoubleTallPlant;
 use muqsit\vanillagenerator\generator\overworld\decorator\types\DoublePlantDecoration;
-use pocketmine\block\Block;
 use pocketmine\block\DoublePlant;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -18,7 +17,7 @@ class DoublePlantDecorator extends Decorator{
 	/**
 	 * @param Random $random
 	 * @param DoublePlantDecoration[] $decorations
-	 * @return Block|null
+	 * @return DoublePlant|null
 	 */
 	private static function getRandomDoublePlant(Random $random, array $decorations) : ?DoublePlant{
 		$totalWeight = 0;

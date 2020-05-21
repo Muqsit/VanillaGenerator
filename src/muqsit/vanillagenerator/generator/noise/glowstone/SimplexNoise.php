@@ -64,17 +64,12 @@ class SimplexNoise extends PerlinNoise{
 	 * @return float[]
 	 */
 	protected function get2dNoise(array &$noise, float $x, float $z, int $sizeX, int $sizeY, float $scaleX, float $scaleY, float $amplitude) : array{
-		$index = 0;
+		$index = -1;
 		for($i = 0; $i < $sizeY; ++$i){
 			$zin = $this->offsetY + ($z + $i) * $scaleY;
 			for($j = 0; $j < $sizeX; ++$j){
 				$xin = $this->offsetX + ($x + $j) * $scaleX;
-
-				if(!isset($noise[$index])){
-					$noise[$index] = 0.0;
-				}
-				$noise[$index] += $this->simplex2D($xin, $zin) * $amplitude;
-				++$index;
+				$noise[++$index] += $this->simplex2D($xin, $zin) * $amplitude;
 			}
 		}
 		return $noise;
