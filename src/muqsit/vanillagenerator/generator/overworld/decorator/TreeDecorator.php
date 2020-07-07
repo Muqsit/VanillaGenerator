@@ -38,7 +38,7 @@ class TreeDecorator extends Decorator{
 	}
 
 	/** @var TreeDecoration[] */
-	private $trees;
+	private $trees = [];
 
 	final public function setTrees(TreeDecoration ...$trees) : void{
 		$this->trees = $trees;
