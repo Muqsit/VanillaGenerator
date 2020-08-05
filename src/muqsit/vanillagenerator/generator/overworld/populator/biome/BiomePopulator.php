@@ -179,9 +179,9 @@ class BiomePopulator implements Populator{
 
 		$this->doublePlantDecorator->setAmount(0);
 		$this->treeDecorator->setAmount(PHP_INT_MIN);
-		$this->treeDecorator->setTrees(...static::$TREES);
+		$this->treeDecorator->setTrees(...self::$TREES);
 		$this->flowerDecorator->setAmount(2);
-		$this->flowerDecorator->setFlowers(...static::$FLOWERS);
+		$this->flowerDecorator->setFlowers(...self::$FLOWERS);
 		$this->tallGrassDecorator->setAmount(1);
 		$this->deadBushDecorator->setAmount(0);
 		$this->brownMushroomDecorator->setAmount(1);

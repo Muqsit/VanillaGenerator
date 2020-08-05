@@ -82,7 +82,7 @@ class SwampTree extends CocoaTree{
 			--$blockY;
 		}
 
-		if(!$this->cannotGenerateAt($blockX, $blockY, $blockZ, $world)){
+		if($this->cannotGenerateAt($blockX, $blockY, $blockZ, $world)){
 			return false;
 		}
 

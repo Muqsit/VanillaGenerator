@@ -81,7 +81,7 @@ class GenericTree extends TerrainObject{
 	 * @return bool whether this tree can grow without exceeding block height 255; false otherwise.
 	 */
 	public function canHeightFit(int $baseHeight) : bool{
-		return $baseHeight >= 1 && $baseHeight + $this->height + 1 <= World::Y_MAX;
+		return $baseHeight >= 1 && $baseHeight + $this->height + 1 < World::Y_MAX;
 	}
 
 	/**
