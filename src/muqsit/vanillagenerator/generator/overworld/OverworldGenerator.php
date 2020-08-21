@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\overworld;
 
+use muqsit\vanillagenerator\generator\Environment;
 use muqsit\vanillagenerator\generator\ground\DirtAndStonePatchGroundGenerator;
 use muqsit\vanillagenerator\generator\ground\DirtPatchGroundGenerator;
 use muqsit\vanillagenerator\generator\ground\GravelPatchGroundGenerator;
@@ -116,7 +117,7 @@ class OverworldGenerator extends VanillaGenerator{
 	private $type = WorldType::NORMAL;
 
 	public function __construct(ChunkManager $world, int $seed, array $options = []){
-		parent::__construct($world, $seed, $options);
+		parent::__construct($world, $seed, Environment::OVERWORLD, null, $options);
 		$this->groundGen = new GroundGenerator();
 		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}

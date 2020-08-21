@@ -39,10 +39,10 @@ abstract class VanillaGenerator extends Generator{
 	/** @var MapLayer[] */
 	private $biomeGrid;
 
-	public function __construct(ChunkManager $world, int $seed, array $options = []){
+	public function __construct(ChunkManager $world, int $seed, int $environment, ?string $world_type = null, array $options = []){
 		assert($world instanceof SimpleChunkManager);
 		parent::__construct(self::modifyChunkManager($world, $this), $seed, $options);
-		$this->biomeGrid = MapLayer::initialize($seed, Environment::OVERWORLD, WorldType::NORMAL);
+		$this->biomeGrid = MapLayer::initialize($seed, $environment, $world_type ?? WorldType::NORMAL);
 	}
 
 	/**

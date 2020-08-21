@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\nether;
 
+use muqsit\vanillagenerator\generator\Environment;
 use muqsit\vanillagenerator\generator\nether\populator\NetherPopulator;
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
 use muqsit\vanillagenerator\generator\utils\NetherWorldOctaves;
@@ -38,7 +39,7 @@ class NetherGenerator extends VanillaGenerator{
 	}
 
 	public function __construct(ChunkManager $world, int $seed, array $options = []){
-		parent::__construct($world, $seed, $options);
+		parent::__construct($world, $seed, Environment::NETHER, null, $options);
 		$this->addPopulators(new NetherPopulator($world->getWorldHeight()));
 	}
 
