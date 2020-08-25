@@ -97,7 +97,7 @@ class Lake extends TerrainObject{
 						}
 
 						if(($blockType === BlockLegacyIds::ICE || $blockType === BlockLegacyIds::PACKED_ICE) && $this->type->getId() === BlockLegacyIds::STILL_WATER){
-							$type = $blockType;
+							$type = $block;
 						}
 					}elseif($y === (int) (self::MAX_HEIGHT / 2 - 1)){
 						if($type->getId() === BlockLegacyIds::STILL_WATER && BiomeClimateManager::isCold($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $sourceX + $x, $y, $sourceZ + $z)){
