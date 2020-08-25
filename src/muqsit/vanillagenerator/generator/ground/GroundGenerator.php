@@ -21,9 +21,20 @@ class GroundGenerator{
 	/** @var Block */
 	private $groundMaterial;
 
+	/** @var int */
+	protected $bedrock_roughness = 5;
+
 	public function __construct(?Block $topMaterial = null, ?Block $groundMaterial = null){
 		$this->setTopMaterial($topMaterial ?? VanillaBlocks::GRASS());
 		$this->setGroundMaterial($groundMaterial ?? VanillaBlocks::DIRT());
+	}
+
+	public function getBedrockRoughness() : int{
+		return $this->bedrock_roughness;
+	}
+
+	public function setBedrockRoughness(int $bedrock_roughness) : void{
+		$this->bedrock_roughness = $bedrock_roughness;
 	}
 
 	final protected function setTopMaterial(Block $topMaterial) : void{
@@ -71,7 +82,7 @@ class GroundGenerator{
 		$block_z = $z & 0x0f;
 
 		for($y = 255; $y >= 0; --$y){
-			if($y <= $random->nextBoundedInt(5)){
+			if($y <= $random->nextBoundedInt($this->bedrock_roughness)){
 				$chunk->setFullBlock($block_x, $y, $block_z, $bedrock);
 			}else{
 				$matId = $block_factory->fromFullBlock($chunk->getFullBlock($block_x, $y, $block_z))->getId();

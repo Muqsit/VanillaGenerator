@@ -38,9 +38,20 @@ class NetherGenerator extends VanillaGenerator{
 		return ($k << 6) | ($j << 3) | $i;
 	}
 
+	/** @var int */
+	protected $bedrock_roughness = 5;
+
 	public function __construct(ChunkManager $world, int $seed, array $options = []){
 		parent::__construct($world, $seed, Environment::NETHER, null, $options);
 		$this->addPopulators(new NetherPopulator($world->getWorldHeight()));
+	}
+
+	public function getBedrockRoughness() : int{
+		return $this->bedrock_roughness;
+	}
+
+	public function setBedrockRoughness(int $bedrock_roughness) : void{
+		$this->bedrock_roughness = $bedrock_roughness;
 	}
 
 	public function getWorldHeight() : int{
@@ -258,7 +269,7 @@ class NetherGenerator extends VanillaGenerator{
 		$chunk_block_z = $z & 0x0f;
 
 		for($y = $worldHeightM1; $y >= 0; --$y){
-			if($y <= $this->random->nextBoundedInt(5) || $y >= $worldHeightM1 - $this->random->nextBoundedInt(5)){
+			if($y <= $this->random->nextBoundedInt($this->bedrock_roughness) || $y >= $worldHeightM1 - $this->random->nextBoundedInt($this->bedrock_roughness)){
 				$chunk->setFullBlock($chunk_block_x, $y, $chunk_block_z, $block_bedrock);
 				continue;
 			}

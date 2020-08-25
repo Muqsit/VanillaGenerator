@@ -122,6 +122,10 @@ class OverworldGenerator extends VanillaGenerator{
 		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}
 
+	public function getGroundGenerator() : GroundGenerator{
+		return $this->groundGen;
+	}
+
 	protected function generateChunkData(int $chunkX, int $chunkZ, VanillaBiomeGrid $grid) : void{
 		$this->generateRawTerrain($chunkX, $chunkZ);
 
