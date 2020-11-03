@@ -13,9 +13,11 @@ use muqsit\vanillagenerator\generator\VanillaGenerator;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\Server;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
+use pocketmine\world\World;
 
 class NetherGenerator extends VanillaGenerator{
 
@@ -41,9 +43,9 @@ class NetherGenerator extends VanillaGenerator{
 	/** @var int */
 	protected $bedrock_roughness = 5;
 
-	public function __construct(ChunkManager $world, int $seed, array $options = []){
-		parent::__construct($world, $seed, Environment::NETHER, null, $options);
-		$this->addPopulators(new NetherPopulator($world->getWorldHeight()));
+	public function __construct($seed, array $options = []){
+		parent::__construct($seed, Environment::NETHER, null, $options);
+		$this->addPopulators(new NetherPopulator($this->getWorldHeight()));
 	}
 
 	public function getBedrockRoughness() : int{
@@ -58,8 +60,8 @@ class NetherGenerator extends VanillaGenerator{
 		return 128;
 	}
 
-	protected function generateChunkData(int $chunkX, int $chunkZ, VanillaBiomeGrid $biomes) : void{
-		$this->generateRawTerrain($chunkX, $chunkZ);
+	protected function generateChunkData(ChunkManager $world, $chunkX, int $chunkZ, VanillaBiomeGrid $biomes) : void{
+		$this->generateRawTerrain($world, $chunkX, $chunkZ);
 		$cx = $chunkX << 4;
 		$cz = $chunkZ << 4;
 
@@ -71,12 +73,12 @@ class NetherGenerator extends VanillaGenerator{
 		$gravelNoise = $octaves->gravel->getFractalBrownianMotion($cx, 0, $cz, 0.5, 2.0);
 
 		/** @var Chunk $chunk */
-		$chunk = $this->world->getChunk($chunkX, $chunkZ);
+		$chunk = $world->getChunk($chunkX, $chunkZ);
 
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){
 				$chunk->setBiomeId($x, $z, $id = $biomes->getBiome($x, $z));
-				$this->generateTerrainColumn($cx + $x, $cz + $z, $surfaceNoise[$x | $z << 4], $soulsandNoise[$x | $z << 4], $gravelNoise[$x | $z << 4]);
+				$this->generateTerrainColumn($world, $cx + $x, $cz + $z, $surfaceNoise[$x | $z << 4], $soulsandNoise[$x | $z << 4], $gravelNoise[$x | $z << 4]);
 			}
 		}
 	}
@@ -117,14 +119,14 @@ class NetherGenerator extends VanillaGenerator{
 		return new NetherWorldOctaves($height, $roughness, $roughness2, $detail, $surface, $soulsand, $gravel);
 	}
 
-	private function generateRawTerrain(int $chunkX, int $chunkZ) : void{
+	private function generateRawTerrain(ChunkManager $world, $chunkX, int $chunkZ) : void{
 		$density = $this->generateTerrainDensity($chunkX << 2, $chunkZ << 2);
 
 		$nether_rack = VanillaBlocks::NETHERRACK()->getFullId();
 		$still_lava = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_LAVA)->getFullId();
 
 		/** @var Chunk $chunk */
-		$chunk = $this->world->getChunk($chunkX, $chunkZ);
+		$chunk = $world->getChunk($chunkX, $chunkZ);
 
 		for ($i = 0; $i < 5 - 1; ++$i) {
 			for ($j = 0; $j < 5 - 1; ++$j) {
@@ -245,7 +247,7 @@ class NetherGenerator extends VanillaGenerator{
 		return $density;
 	}
 
-	public function generateTerrainColumn(int $x, int $z, float $surfaceNoise, float $soulsandNoise, float $gravelNoise) : void{
+	public function generateTerrainColumn(ChunkManager $world, $x, int $z, float $surfaceNoise, float $soulsandNoise, float $gravelNoise) : void{
 		$soulSand = $soulsandNoise + $this->random->nextFloat() * 0.2 > 0;
 		$gravel = $gravelNoise + $this->random->nextFloat() * 0.2 > 0;
 
@@ -264,7 +266,7 @@ class NetherGenerator extends VanillaGenerator{
 		$groundMat = $block_nether_rack;
 
 		/** @var Chunk $chunk */
-		$chunk = $this->world->getChunk($x >> 4, $z >> 4);
+		$chunk = $world->getChunk($x >> 4, $z >> 4);
 		$chunk_block_x = $x & 0x0f;
 		$chunk_block_z = $z & 0x0f;
 
