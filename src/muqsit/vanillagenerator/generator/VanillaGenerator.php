@@ -18,6 +18,7 @@ abstract class VanillaGenerator extends Generator{
 
 	protected const WORLD_DEPTH = 128;
 
+	// TODO Figure out a non hacky way to use this. We don't have access to the ChunkManager necessary to call it in the constructor
 	private static function modifyChunkManager(SimpleChunkManager $world, self $generator) : SimpleChunkManager{
 		static $_worldHeight = null;
 		if($_worldHeight === null){
