@@ -13,11 +13,9 @@ use muqsit\vanillagenerator\generator\VanillaGenerator;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\Server;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
-use pocketmine\world\World;
 
 class NetherGenerator extends VanillaGenerator{
 
@@ -45,7 +43,7 @@ class NetherGenerator extends VanillaGenerator{
 
 	public function __construct($seed, array $options = []){
 		parent::__construct($seed, Environment::NETHER, null, $options);
-		$this->addPopulators(new NetherPopulator($this->getWorldHeight()));
+		$this->addPopulators(new NetherPopulator($this->getWorldHeight())); // This isn't faithful to original code. Was $world->getWorldHeight()
 	}
 
 	public function getBedrockRoughness() : int{
