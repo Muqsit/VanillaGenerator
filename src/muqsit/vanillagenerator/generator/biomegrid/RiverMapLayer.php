@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\biomegrid;
 
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
-use pocketmine\world\biome\Biome;
 
 class RiverMapLayer extends MapLayer{
 
 	/** @var int[] */
-	private static $OCEANS = [Biome::OCEAN => 0, BiomeIds::DEEP_OCEAN => 0];
+	private static $OCEANS = [BiomeIds::OCEAN => 0, BiomeIds::DEEP_OCEAN => 0];
 
 	/** @var int[] */
 	private static $SPECIAL_RIVERS = [

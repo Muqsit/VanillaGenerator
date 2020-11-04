@@ -116,8 +116,8 @@ class OverworldGenerator extends VanillaGenerator{
 	/** @var string */
 	private $type = WorldType::NORMAL;
 
-	public function __construct(ChunkManager $world, int $seed, array $options = []){
-		parent::__construct($world, $seed, Environment::OVERWORLD, null, $options);
+	public function __construct(int $seed, array $options = []){
+		parent::__construct($seed, Environment::OVERWORLD, null, $options);
 		$this->groundGen = new GroundGenerator();
 		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}
@@ -126,8 +126,8 @@ class OverworldGenerator extends VanillaGenerator{
 		return $this->groundGen;
 	}
 
-	protected function generateChunkData(int $chunkX, int $chunkZ, VanillaBiomeGrid $grid) : void{
-		$this->generateRawTerrain($chunkX, $chunkZ);
+	protected function generateChunkData(ChunkManager $world, int $chunkX, int $chunkZ, VanillaBiomeGrid $grid) : void{
+		$this->generateRawTerrain($world, $chunkX, $chunkZ);
 
 		$cx = $chunkX << 4;
 		$cz = $chunkZ << 4;
@@ -140,15 +140,15 @@ class OverworldGenerator extends VanillaGenerator{
 		$surfaceNoise = $octaveGenerator->getFractalBrownianMotion($cx, 0.0, $cz, 0.5, 0.5);
 
 		/** @var Chunk $chunk */
-		$chunk = $this->world->getChunk($chunkX, $chunkZ);
+		$chunk = $world->getChunk($chunkX, $chunkZ);
 
 		for($x = 0; $x < $sizeX; ++$x){
 			for($z = 0; $z < $sizeZ; ++$z){
 				$chunk->setBiomeId($x, $z, $id = $grid->getBiome($x, $z));
 				if(isset(self::$GROUND_MAP[$id])){
-					self::$GROUND_MAP[$id]->generateTerrainColumn($this->world, $this->random, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
+					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
 				}else{
-					$this->groundGen->generateTerrainColumn($this->world, $this->random, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
+					$this->groundGen->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
 				}
 			}
 		}
@@ -182,7 +182,7 @@ class OverworldGenerator extends VanillaGenerator{
 		return new WorldOctaves($height, $roughness, $roughness2, $detail, $surface);
 	}
 
-	private function generateRawTerrain(int $chunkX, int $chunkZ) : void{
+	private function generateRawTerrain(ChunkManager $world, $chunkX, int $chunkZ) : void{
 		$density = $this->generateTerrainDensity($chunkX, $chunkZ);
 
 		$seaLevel = 64;
@@ -201,7 +201,7 @@ class OverworldGenerator extends VanillaGenerator{
 		$stone = VanillaBlocks::STONE()->getFullId();
 
 		/** @var Chunk $chunk */
-		$chunk = $this->world->getChunk($chunkX, $chunkZ);
+		$chunk = $world->getChunk($chunkX, $chunkZ);
 
 		for($i = 0; $i < 5 - 1; ++$i){
 			for($j = 0; $j < 5 - 1; ++$j){
