@@ -10,13 +10,9 @@ use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\generator\Generator;
-use pocketmine\world\SimpleChunkManager;
 use pocketmine\world\World;
-use ReflectionProperty;
 
 abstract class VanillaGenerator extends Generator{
-
-	protected const WORLD_DEPTH = 128;
 
 	/** @var WorldOctaves|null */
 	private $octaveCache = null;
@@ -89,7 +85,7 @@ abstract class VanillaGenerator extends Generator{
 		return $this->populators;
 	}
 
-	final public function populateChunk(ChunkManager $world, $chunkX, int $chunkZ) : void{
+	final public function populateChunk(ChunkManager $world, int $chunkX, int $chunkZ) : void{
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunkX, $chunkZ);
 		foreach($this->populators as $populator){

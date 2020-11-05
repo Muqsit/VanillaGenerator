@@ -41,7 +41,7 @@ class NetherGenerator extends VanillaGenerator{
 	/** @var int */
 	protected $bedrock_roughness = 5;
 
-	public function __construct($seed, array $options = []){
+	public function __construct(int $seed, array $options = []){
 		parent::__construct($seed, Environment::NETHER, null, $options);
 		$this->addPopulators(new NetherPopulator($this->getWorldHeight())); // This isn't faithful to original code. Was $world->getWorldHeight()
 	}
@@ -58,7 +58,7 @@ class NetherGenerator extends VanillaGenerator{
 		return 128;
 	}
 
-	protected function generateChunkData(ChunkManager $world, $chunkX, int $chunkZ, VanillaBiomeGrid $biomes) : void{
+	protected function generateChunkData(ChunkManager $world, int $chunkX, int $chunkZ, VanillaBiomeGrid $biomes) : void{
 		$this->generateRawTerrain($world, $chunkX, $chunkZ);
 		$cx = $chunkX << 4;
 		$cz = $chunkZ << 4;
@@ -117,7 +117,7 @@ class NetherGenerator extends VanillaGenerator{
 		return new NetherWorldOctaves($height, $roughness, $roughness2, $detail, $surface, $soulsand, $gravel);
 	}
 
-	private function generateRawTerrain(ChunkManager $world, $chunkX, int $chunkZ) : void{
+	private function generateRawTerrain(ChunkManager $world, int $chunkX, int $chunkZ) : void{
 		$density = $this->generateTerrainDensity($chunkX << 2, $chunkZ << 2);
 
 		$nether_rack = VanillaBlocks::NETHERRACK()->getFullId();
@@ -245,7 +245,7 @@ class NetherGenerator extends VanillaGenerator{
 		return $density;
 	}
 
-	public function generateTerrainColumn(ChunkManager $world, $x, int $z, float $surfaceNoise, float $soulsandNoise, float $gravelNoise) : void{
+	public function generateTerrainColumn(ChunkManager $world, int $x, int $z, float $surfaceNoise, float $soulsandNoise, float $gravelNoise) : void{
 		$soulSand = $soulsandNoise + $this->random->nextFloat() * 0.2 > 0;
 		$gravel = $gravelNoise + $this->random->nextFloat() * 0.2 > 0;
 

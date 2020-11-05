@@ -182,7 +182,7 @@ class OverworldGenerator extends VanillaGenerator{
 		return new WorldOctaves($height, $roughness, $roughness2, $detail, $surface);
 	}
 
-	private function generateRawTerrain(ChunkManager $world, $chunkX, int $chunkZ) : void{
+	private function generateRawTerrain(ChunkManager $world, int $chunkX, int $chunkZ) : void{
 		$density = $this->generateTerrainDensity($chunkX, $chunkZ);
 
 		$seaLevel = 64;

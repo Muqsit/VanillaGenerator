@@ -13,7 +13,7 @@ interface BiomeIds{
 	public const DESERT = VanillaBiomeIds::DESERT;
 	public const EXTREME_HILLS = VanillaBiomeIds::MOUNTAINS;
 	public const FOREST = VanillaBiomeIds::FOREST;
-	public const TAIGA = VanillaBiomeIds::TAG;
+	public const TAIGA = VanillaBiomeIds::TAIGA;
 	public const SWAMPLAND = VanillaBiomeIds::SWAMP;
 	public const RIVER = VanillaBiomeIds::RIVER;
 	public const HELL = VanillaBiomeIds::HELL;
