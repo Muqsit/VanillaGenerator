@@ -121,7 +121,7 @@ class NetherGenerator extends VanillaGenerator{
 		$density = $this->generateTerrainDensity($chunkX << 2, $chunkZ << 2);
 
 		$nether_rack = VanillaBlocks::NETHERRACK()->getFullId();
-		$still_lava = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_LAVA)->getFullId();
+		$still_lava = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_LAVA, 0)->getFullId();
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunkX, $chunkZ);

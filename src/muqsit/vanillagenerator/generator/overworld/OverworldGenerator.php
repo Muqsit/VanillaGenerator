@@ -196,7 +196,7 @@ class OverworldGenerator extends VanillaGenerator{
 		$seaFill = self::DENSITY_FILL_SEA_MODE;
 		$densityOffset = self::DENSITY_FILL_OFFSET;
 
-		$still_water = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_WATER)->getFullId();
+		$still_water = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_WATER, 0)->getFullId();
 		$water = VanillaBlocks::WATER()->getFullId();
 		$stone = VanillaBlocks::STONE()->getFullId();
 
