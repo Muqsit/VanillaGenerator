@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\ground;
 
 use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
-use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
@@ -23,12 +22,6 @@ class MesaGroundGenerator extends GroundGenerator{
 
 	/** @var int[] */
 	private $colorLayer;
-
-	/** @var Block */
-	private $topMaterial;
-
-	/** @var Block */
-	private $groundMaterial;
 
 	/** @var SimplexOctaveGenerator */
 	private $colorNoise;

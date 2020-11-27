@@ -16,10 +16,10 @@ use pocketmine\world\format\Chunk;
 class GroundGenerator{
 
 	/** @var Block */
-	private $topMaterial;
+	protected $topMaterial;
 
 	/** @var Block */
-	private $groundMaterial;
+	protected $groundMaterial;
 
 	/** @var int */
 	protected $bedrock_roughness = 5;
