@@ -89,7 +89,7 @@ abstract class VanillaGenerator extends Generator{
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunkX, $chunkZ);
 		foreach($this->populators as $populator){
-			$populator->populate($world, $this->random, $chunk);
+			$populator->populate($world, $this->random, $chunkX, $chunkZ, $chunk);
 		}
 	}
 

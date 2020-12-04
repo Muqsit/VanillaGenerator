@@ -42,10 +42,10 @@ class MushroomDecorator extends Decorator{
 		return $this;
 	}
 
-	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		if($random->nextFloat() < $this->density){
-			$sourceX = ($chunk->getX() << 4) + $random->nextBoundedInt(16);
-			$sourceZ = ($chunk->getZ() << 4) + $random->nextBoundedInt(16);
+			$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
+			$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
 			$sourceY = $chunk->getHighestBlockAt($sourceX & 0x0f, $sourceZ & 0x0f);
 			$sourceY = $this->fixedHeightRange ? $sourceY : $random->nextBoundedInt($sourceY << 1);
 

@@ -59,9 +59,9 @@ class PlainsPopulator extends BiomePopulator{
 		return [BiomeIds::PLAINS];
 	}
 
-	public function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = $chunk->getX() << 4;
-		$sourceZ = $chunk->getZ() << 4;
+	public function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$sourceX = $chunkX << 4;
+		$sourceZ = $chunkZ << 4;
 
 		$flowerAmount = 15;
 		$tallGrassAmount = 5;
@@ -98,7 +98,7 @@ class PlainsPopulator extends BiomePopulator{
 			(new TallGrass(VanillaBlocks::TALL_GRASS()))->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z);
 		}
 
-		parent::populateOnGround($world, $random, $chunk);
+		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
 	}
 }
 

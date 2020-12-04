@@ -55,9 +55,9 @@ class ForestPopulator extends BiomePopulator{
 		return self::BIOMES;
 	}
 
-	public function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = $chunk->getX() << 4;
-		$sourceZ = $chunk->getZ() << 4;
+	public function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$sourceX = $chunkX << 4;
+		$sourceZ = $chunkZ << 4;
 		$amount = $random->nextBoundedInt(5) - $this->doublePlantLoweringAmount;
 		$i = 0;
 		while($i < $amount){
@@ -73,7 +73,7 @@ class ForestPopulator extends BiomePopulator{
 			}
 		}
 
-		parent::populateOnGround($world, $random, $chunk);
+		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
 	}
 }
 

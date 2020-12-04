@@ -17,11 +17,11 @@ abstract class Decorator implements Populator{
 		$this->amount = $amount;
 	}
 
-	abstract public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void;
+	abstract public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void;
 
-	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		for($i = 0; $i < $this->amount; ++$i){
-			$this->decorate($world, $random, $chunk);
+			$this->decorate($world, $random, $chunkX, $chunkZ, $chunk);
 		}
 	}
 }

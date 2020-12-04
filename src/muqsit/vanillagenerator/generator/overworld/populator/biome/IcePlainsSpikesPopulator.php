@@ -21,9 +21,9 @@ class IcePlainsSpikesPopulator extends IcePlainsPopulator{
 		$this->iceDecorator = new IceDecorator();
 	}
 
-	protected function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$this->iceDecorator->populate($world, $random, $chunk);
-		parent::populateOnGround($world, $random, $chunk);
+	protected function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$this->iceDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
+		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
 	}
 
 	public function getBiomes() : ?array{

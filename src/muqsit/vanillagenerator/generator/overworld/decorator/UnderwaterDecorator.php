@@ -50,9 +50,9 @@ class UnderwaterDecorator extends Decorator{
 		return $this;
 	}
 
-	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = ($chunk->getX() << 4) + $random->nextBoundedInt(16);
-		$sourceZ = ($chunk->getZ() << 4) + $random->nextBoundedInt(16);
+	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
+		$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
 		$sourceY = $chunk->getHighestBlockAt($sourceX & 0x0f, $sourceZ & 0x0f) - 1;
 		while($world->getBlockAt($sourceX, $sourceY - 1, $sourceZ)->getId() === BlockLegacyIds::STILL_WATER || ($world->getBlockAt($sourceX, $sourceY - 1, $sourceZ)->getId() === BlockLegacyIds::WATER && $sourceY > 1)){
 			--$sourceY;

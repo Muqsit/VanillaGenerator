@@ -50,11 +50,11 @@ class FlowerForestPopulator extends ForestPopulator{
 		return [BiomeIds::MUTATED_FOREST];
 	}
 
-	public function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		parent::populateOnGround($world, $random, $chunk);
+	public function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
 
-		$sourceX = $chunk->getX() << 4;
-		$sourceZ = $chunk->getZ() << 4;
+		$sourceX = $chunkX << 4;
+		$sourceZ = $chunkZ << 4;
 
 		for($i = 0; $i < 100; ++$i){
 			$x = $random->nextBoundedInt(16);

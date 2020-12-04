@@ -15,9 +15,9 @@ use pocketmine\world\format\Chunk;
 
 class SnowPopulator implements Populator{
 
-	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = $chunk->getX() << 4;
-		$sourceZ = $chunk->getZ() << 4;
+	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$sourceX = $chunkX << 4;
+		$sourceZ = $chunkZ << 4;
 
 		$block_factory = BlockFactory::getInstance();
 		$air = VanillaBlocks::AIR()->getFullId();

@@ -12,9 +12,9 @@ use pocketmine\world\format\Chunk;
 
 class CactusDecorator extends Decorator{
 
-	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = $chunk->getX() << 4;
-		$sourceZ = $chunk->getZ() << 4;
+	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$sourceX = $chunkX << 4;
+		$sourceZ = $chunkZ << 4;
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
 		$sourceY = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) << 1);

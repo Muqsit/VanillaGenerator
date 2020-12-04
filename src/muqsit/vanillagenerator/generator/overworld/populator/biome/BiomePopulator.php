@@ -202,20 +202,20 @@ class BiomePopulator implements Populator{
 		return null;
 	}
 
-	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$this->populateInGround($world, $random, $chunk);
-		$this->populateOnGround($world, $random, $chunk);
+	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$this->populateInGround($world, $random, $chunkX, $chunkZ, $chunk);
+		$this->populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
 	}
 
-	protected function populateInGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	protected function populateInGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		foreach($this->inGroundPopulators as $populator){
-			$populator->populate($world, $random, $chunk);
+			$populator->populate($world, $random, $chunkX, $chunkZ, $chunk);
 		}
 	}
 
-	protected function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	protected function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		foreach($this->onGroundPopulators as $populator){
-			$populator->populate($world, $random, $chunk);
+			$populator->populate($world, $random, $chunkX, $chunkZ, $chunk);
 		}
 	}
 }

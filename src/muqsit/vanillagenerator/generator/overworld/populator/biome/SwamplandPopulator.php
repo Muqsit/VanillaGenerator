@@ -70,11 +70,11 @@ class SwamplandPopulator extends BiomePopulator{
 		return [BiomeIds::SWAMPLAND, BiomeIds::MUTATED_SWAMPLAND];
 	}
 
-	protected function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		parent::populateOnGround($world, $random, $chunk);
-		$this->swamplandBrownMushroomDecorator->populate($world, $random, $chunk);
-		$this->swamplandRedMushroomDecorator->populate($world, $random, $chunk);
-		$this->waterlilyDecorator->populate($world, $random, $chunk);
+	protected function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
+		$this->swamplandBrownMushroomDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
+		$this->swamplandRedMushroomDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
+		$this->waterlilyDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
 	}
 }
 

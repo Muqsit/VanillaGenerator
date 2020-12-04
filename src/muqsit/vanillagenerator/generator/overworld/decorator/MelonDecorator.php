@@ -13,9 +13,9 @@ use pocketmine\world\format\Chunk;
 
 class MelonDecorator extends Decorator{
 
-	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = ($chunk->getX() << 4) + $random->nextBoundedInt(16);
-		$sourceZ = ($chunk->getZ() << 4) + $random->nextBoundedInt(16);
+	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
+		$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
 		$sea_level = 64;
 		$sourceY = $random->nextBoundedInt($sea_level << 1);
 

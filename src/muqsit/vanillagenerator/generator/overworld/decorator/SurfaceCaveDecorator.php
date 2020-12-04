@@ -14,13 +14,13 @@ use pocketmine\world\format\Chunk;
 
 class SurfaceCaveDecorator extends Decorator{
 
-	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		if($random->nextBoundedInt(8) !== 0){
 			return;
 		}
 
-		$cx = $chunk->getX() << 4;
-		$cz = $chunk->getZ() << 4;
+		$cx = $chunkX << 4;
+		$cz = $chunkZ << 4;
 
 		$startCx = $random->nextBoundedInt(16);
 		$startCz = $random->nextBoundedInt(16);

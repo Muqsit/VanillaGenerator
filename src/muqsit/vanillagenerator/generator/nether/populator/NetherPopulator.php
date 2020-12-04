@@ -66,20 +66,20 @@ class NetherPopulator implements Populator{
 		$this->redMushroomDecorator->setAmount(1);
 	}
 
-	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$this->populateInGround($world, $random, $chunk);
-		$this->populateOnGround($world, $random, $chunk);
+	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$this->populateInGround($world, $random, $chunkX, $chunkZ, $chunk);
+		$this->populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
 	}
 
-	private function populateInGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	private function populateInGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		foreach($this->inGroundPopulators as $populator){
-			$populator->populate($world, $random, $chunk);
+			$populator->populate($world, $random, $chunkX, $chunkZ, $chunk);
 		}
 	}
 
-	private function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	private function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		foreach($this->onGroundPopulators as $populator){
-			$populator->populate($world, $random, $chunk);
+			$populator->populate($world, $random, $chunkX, $chunkZ, $chunk);
 		}
 	}
 }

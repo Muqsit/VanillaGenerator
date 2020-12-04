@@ -40,9 +40,9 @@ class OrePopulator implements Populator{
 		$this->ores[] = new OreTypeHolder($type, $value);
 	}
 
-	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$cx = $chunk->getX() << 4;
-		$cz = $chunk->getZ() << 4;
+	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$cx = $chunkX << 4;
+		$cz = $chunkZ << 4;
 
 		foreach($this->ores as $ore_type_holder){
 			for($n = 0; $n < $ore_type_holder->value; ++$n){

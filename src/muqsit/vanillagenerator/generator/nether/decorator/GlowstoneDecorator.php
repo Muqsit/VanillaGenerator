@@ -24,15 +24,15 @@ class GlowstoneDecorator extends Decorator{
 		$this->variableAmount = $variableAmount;
 	}
 
-	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		$amount = $this->variableAmount ? 1 + $random->nextBoundedInt(1 + $random->nextBoundedInt(10)) : 10;
 
 		$height = $world->getWorldHeight();
 		$sourceYMargin = 8 * ($height >> 7);
 
 		for($i = 0; $i < $amount; ++$i){
-			$sourceX = ($chunk->getX() << 4) + $random->nextBoundedInt(16);
-			$sourceZ = ($chunk->getZ() << 4) + $random->nextBoundedInt(16);
+			$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
+			$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
 			$sourceY = 4 + $random->nextBoundedInt($height - $sourceYMargin);
 
 			$block = $world->getBlockAt($sourceX, $sourceY, $sourceZ);

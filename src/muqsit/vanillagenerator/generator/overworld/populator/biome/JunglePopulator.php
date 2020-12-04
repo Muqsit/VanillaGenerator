@@ -51,9 +51,9 @@ class JunglePopulator extends BiomePopulator{
 		return [BiomeIds::JUNGLE, BiomeIds::JUNGLE_HILLS, BiomeIds::MUTATED_JUNGLE];
 	}
 
-	protected function populateOnGround(ChunkManager $world, Random $random, Chunk $chunk) : void{
-		$sourceX = $chunk->getX() << 4;
-		$sourceZ = $chunk->getZ() << 4;
+	protected function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+		$sourceX = $chunkX << 4;
+		$sourceZ = $chunkZ << 4;
 
 		for($i = 0; $i < 7; ++$i){
 			$x = $random->nextBoundedInt(16);
@@ -66,8 +66,8 @@ class JunglePopulator extends BiomePopulator{
 			}
 		}
 
-		parent::populateOnGround($world, $random, $chunk);
-		$this->melonDecorator->populate($world, $random, $chunk);
+		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
+		$this->melonDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
 	}
 }
 

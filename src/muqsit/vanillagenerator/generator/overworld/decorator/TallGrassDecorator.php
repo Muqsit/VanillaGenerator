@@ -22,7 +22,7 @@ class TallGrassDecorator extends Decorator{
 		$this->fernDensity = $fernDensity;
 	}
 
-	public function decorate(ChunkManager $world, Random $random, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
 		$topBlock = $chunk->getHighestBlockAt($x, $z);
@@ -38,6 +38,6 @@ class TallGrassDecorator extends Decorator{
 		if($this->fernDensity > 0 && $random->nextFloat() < $this->fernDensity){
 			$species = BlockLegacyMetadata::TALLGRASS_FERN;
 		}
-		(new TallGrass(BlockFactory::getInstance()->get(BlockLegacyIds::TALL_GRASS, $species)))->generate($world, $random, ($chunk->getX() << 4) + $x, $sourceY, ($chunk->getZ() << 4) + $z);
+		(new TallGrass(BlockFactory::getInstance()->get(BlockLegacyIds::TALL_GRASS, $species)))->generate($world, $random, ($chunkX << 4) + $x, $sourceY, ($chunkZ << 4) + $z);
 	}
 }

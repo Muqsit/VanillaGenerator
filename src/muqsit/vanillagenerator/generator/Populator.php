@@ -10,5 +10,5 @@ use pocketmine\world\format\Chunk;
 
 interface Populator{
 
-	public function populate(ChunkManager $world, Random $random, Chunk $chunk) : void;
+	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void;
 }
