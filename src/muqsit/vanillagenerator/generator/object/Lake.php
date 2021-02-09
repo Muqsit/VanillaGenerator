@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use Ds\Set;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use pocketmine\block\Block;
@@ -20,11 +19,14 @@ class Lake extends TerrainObject{
 	private const MAX_DIAMETER = 16.0;
 	private const MAX_HEIGHT = 8.0;
 
-	/** @var Set<int> */
+	/** @var int[] */
 	private static $MYCEL_BIOMES;
 
 	public static function init() : void{
-		self::$MYCEL_BIOMES = new Set([BiomeIds::MUSHROOM_ISLAND, BiomeIds::MUSHROOM_ISLAND_SHORE]);
+		self::$MYCEL_BIOMES = [];
+		foreach([BiomeIds::MUSHROOM_ISLAND, BiomeIds::MUSHROOM_ISLAND_SHORE] as $block_id){
+			self::$MYCEL_BIOMES[$block_id] = $block_id;
+		}
 	}
 
 	/** @var Block */
@@ -71,7 +73,7 @@ class Lake extends TerrainObject{
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($sourceX >> 4, $sourceZ >> 4);
 		$biome = $chunk->getBiomeId(($sourceX + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f, ($sourceZ + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f);
-		$mycelBiome = self::$MYCEL_BIOMES->contains($biome);
+		$mycelBiome = isset(self::$MYCEL_BIOMES[$biome]);
 
 		$max_diameter = (int) self::MAX_DIAMETER;
 		for($x = 0; $x < $max_diameter; ++$x){

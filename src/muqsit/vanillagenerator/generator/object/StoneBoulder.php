@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use Ds\Set;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -12,11 +11,14 @@ use pocketmine\world\ChunkManager;
 
 class StoneBoulder extends TerrainObject{
 
-	/** @var Set<int> */
+	/** @var int[] */
 	private static $GROUND_TYPES;
 
 	public static function init() : void{
-		self::$GROUND_TYPES = new Set([BlockLegacyIds::GRASS, BlockLegacyIds::DIRT, BlockLegacyIds::STONE]);
+		self::$GROUND_TYPES = [];
+		foreach([BlockLegacyIds::GRASS, BlockLegacyIds::DIRT, BlockLegacyIds::STONE] as $block_id){
+			self::$GROUND_TYPES[$block_id] = $block_id;
+		}
 	}
 
 	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
@@ -28,7 +30,7 @@ class StoneBoulder extends TerrainObject{
 				continue;
 			}
 
-			if(self::$GROUND_TYPES->contains($block->getId())){
+			if(isset(self::$GROUND_TYPES[$block->getId()])){
 				$groundReached = true;
 				++$sourceY;
 				break;

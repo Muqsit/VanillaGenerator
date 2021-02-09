@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\biomegrid\utils;
 
-use Ds\Set;
-
 final class BiomeEdgeEntry{
 
 	/** @var array<int, int> */
 	public $key;
 
-	/** @var Set<int>|null */
+	/** @var int[]|null */
 	public $value;
 
 	/**
@@ -20,6 +18,11 @@ final class BiomeEdgeEntry{
 	 */
 	public function __construct(array $mapping, ?array $value = null){
 		$this->key = $mapping;
-		$this->value = $value !== null ? new Set($value) : null;
+		if($value !== null){
+			$this->value = [];
+			foreach($value as $v){
+				$this->value[$v] = $v;
+			}
+		}
 	}
 }

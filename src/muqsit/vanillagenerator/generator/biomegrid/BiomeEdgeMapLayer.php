@@ -87,10 +87,10 @@ class BiomeEdgeMapLayer extends MapLayer{
 						}
 
 						if($edge->value !== null && (
-							$edge->value->contains($upperVal) ||
-							$edge->value->contains($lowerVal) ||
-							$edge->value->contains($leftVal) ||
-							$edge->value->contains($rightVal)
+							isset($edge->value[$upperVal]) ||
+							isset($edge->value[$lowerVal]) ||
+							isset($edge->value[$leftVal]) ||
+							isset($edge->value[$rightVal])
 						)){
 							$val = $edge->key[$centerVal];
 							break;

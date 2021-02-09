@@ -78,10 +78,10 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 							break;
 						}
 						if($edge->value !== null && (
-							(!isset(self::$OCEANS[$upperVal]) && !$edge->value->contains($upperVal))
-							|| (!isset(self::$OCEANS[$lowerVal]) && !$edge->value->contains($lowerVal))
-							|| (!isset(self::$OCEANS[$leftVal]) && !$edge->value->contains($leftVal))
-							|| (!isset(self::$OCEANS[$rightVal]) && !$edge->value->contains($rightVal))
+							(!isset(self::$OCEANS[$upperVal]) && !isset($edge->value[$upperVal]))
+							|| (!isset(self::$OCEANS[$lowerVal]) && !isset($edge->value[$lowerVal]))
+							|| (!isset(self::$OCEANS[$leftVal]) && !isset($edge->value[$leftVal]))
+							|| (!isset(self::$OCEANS[$rightVal]) && !isset($edge->value[$rightVal]))
 						)){
 							$val = $edge->key[$centerVal];
 							break;

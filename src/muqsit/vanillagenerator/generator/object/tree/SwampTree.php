@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object\tree;
 
-use Ds\Set;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
@@ -18,11 +17,14 @@ use pocketmine\world\World;
 
 class SwampTree extends CocoaTree{
 
-	/** @var Set<int> */
+	/** @var int[] */
 	private static $WATER_BLOCK_TYPES;
 
 	public static function init() : void{
-		self::$WATER_BLOCK_TYPES = new Set([BlockLegacyIds::WATER, BlockLegacyIds::STILL_WATER]);
+		self::$WATER_BLOCK_TYPES = [];
+		foreach([BlockLegacyIds::WATER, BlockLegacyIds::STILL_WATER] as $block_id){
+			self::$WATER_BLOCK_TYPES[$block_id] = $block_id;
+		}
 	}
 
 	public function __construct(Random $random, BlockTransaction $transaction){
@@ -78,7 +80,7 @@ class SwampTree extends CocoaTree{
 		$chunk_block_x = $blockX & 0x0f;
 		$chunk_block_z = $blockZ & 0x0f;
 		$block_factory = BlockFactory::getInstance();
-		while(self::$WATER_BLOCK_TYPES->contains($block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY, $chunk_block_z))->getId())){
+		while(isset(self::$WATER_BLOCK_TYPES[$block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY, $chunk_block_z))->getId()])){
 			--$blockY;
 		}
 
@@ -103,16 +105,19 @@ class SwampTree extends CocoaTree{
 			}
 		}
 
+		$world_height = $world->getWorldHeight();
 		// generate the trunk
 		for($y = 0; $y < $this->height; ++$y){
-			$material = $block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY + $y, $chunk_block_z))->getId();
-			if(
-				$material === BlockLegacyIds::AIR ||
-				$material === BlockLegacyIds::LEAVES ||
-				$material === BlockLegacyIds::WATER ||
-				$material === BlockLegacyIds::STILL_WATER
-			){
-				$this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ, $this->logType);
+			if($blockY + $y < $world_height){
+				$material = $block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY + $y, $chunk_block_z))->getId();
+				if(
+					$material === BlockLegacyIds::AIR ||
+					$material === BlockLegacyIds::LEAVES ||
+					$material === BlockLegacyIds::WATER ||
+					$material === BlockLegacyIds::STILL_WATER
+				){
+					$this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ, $this->logType);
+				}
 			}
 		}
 

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use Ds\Set;
 use pocketmine\block\BlockLegacyIds;
-use pocketmine\block\BlockLegacyMetadata;
 use pocketmine\block\Flowable;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -15,18 +13,14 @@ use pocketmine\world\World;
 
 abstract class TerrainObject{
 
-	/** @var Set<int> */
+	/** @var int[] */
 	private static $PLANT_TYPES;
 
 	public static function init() : void{
-		self::$PLANT_TYPES = new Set([
-			BlockLegacyIds::TALL_GRASS,
-			BlockLegacyIds::YELLOW_FLOWER,
-			BlockLegacyIds::RED_FLOWER,
-			BlockLegacyIds::DOUBLE_PLANT,
-			BlockLegacyIds::BROWN_MUSHROOM,
-			BlockLegacyIds::RED_MUSHROOM
-		]);
+		self::$PLANT_TYPES = [];
+		foreach([BlockLegacyIds::TALL_GRASS, BlockLegacyIds::YELLOW_FLOWER, BlockLegacyIds::RED_FLOWER, BlockLegacyIds::DOUBLE_PLANT, BlockLegacyIds::BROWN_MUSHROOM, BlockLegacyIds::RED_MUSHROOM] as $block_id){
+			self::$PLANT_TYPES[$block_id] = $block_id;
+		}
 	}
 
 	/**
