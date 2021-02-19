@@ -30,7 +30,7 @@ class StoneBoulder extends TerrainObject{
 				continue;
 			}
 
-			if(isset(self::$GROUND_TYPES[$block->getId()])){
+			if(array_key_exists($block->getId(), self::$GROUND_TYPES)){
 				$groundReached = true;
 				++$sourceY;
 				break;

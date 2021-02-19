@@ -64,9 +64,9 @@ class ShoreMapLayer extends MapLayer{
 				$leftVal = $values[$j + ($i + 1) * $gridSizeX];
 				$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX];
 				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
-				if(!isset(self::$OCEANS[$centerVal]) && (
-						isset(self::$OCEANS[$upperVal]) || isset(self::$OCEANS[$lowerVal])
-						|| isset(self::$OCEANS[$leftVal]) || isset(self::$OCEANS[$rightVal])
+				if(!array_key_exists($centerVal, self::$OCEANS) && (
+						array_key_exists($upperVal, self::$OCEANS) || array_key_exists($lowerVal, self::$OCEANS)
+						|| array_key_exists($leftVal, self::$OCEANS) || array_key_exists($rightVal, self::$OCEANS)
 					)){
 					$finalValues[$j + $i * $sizeX] = self::$SPECIAL_SHORES[$centerVal] ?? BiomeIds::BEACH;
 				}else{

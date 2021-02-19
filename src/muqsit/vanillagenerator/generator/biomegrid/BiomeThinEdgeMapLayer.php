@@ -63,25 +63,25 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
 				$val = $centerVal;
 				foreach(self::$EDGES as $edge){
-					if(isset($edge->key[$centerVal])){
+					if(array_key_exists($centerVal, $edge->key)){
 						$upperVal = $values[$j + 1 + $i * $gridSizeX];
 						$lowerVal = $values[$j + 1 + ($i + 2) * $gridSizeX];
 						$leftVal = $values[$j + ($i + 1) * $gridSizeX];
 						$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX];
 						if($edge->value === null && (
-							(!isset(self::$OCEANS[$upperVal]) && !isset($edge->key[$upperVal]))
-							|| (!isset(self::$OCEANS[$lowerVal]) && !isset($edge->key[$lowerVal]))
-							|| (!isset(self::$OCEANS[$leftVal]) && !isset($edge->key[$leftVal]))
-							|| (!isset(self::$OCEANS[$rightVal]) && !isset($edge->key[$rightVal]))
+							(!array_key_exists($upperVal, self::$OCEANS) && !array_key_exists($upperVal, $edge->key))
+							|| (!array_key_exists($lowerVal, self::$OCEANS) && !array_key_exists($lowerVal, $edge->key))
+							|| (!array_key_exists($leftVal, self::$OCEANS) && !array_key_exists($leftVal, $edge->key))
+							|| (!array_key_exists($rightVal, self::$OCEANS) && !array_key_exists($rightVal, $edge->key))
 						)){
 							$val = $edge->key[$centerVal];
 							break;
 						}
 						if($edge->value !== null && (
-							(!isset(self::$OCEANS[$upperVal]) && !isset($edge->value[$upperVal]))
-							|| (!isset(self::$OCEANS[$lowerVal]) && !isset($edge->value[$lowerVal]))
-							|| (!isset(self::$OCEANS[$leftVal]) && !isset($edge->value[$leftVal]))
-							|| (!isset(self::$OCEANS[$rightVal]) && !isset($edge->value[$rightVal]))
+							(!array_key_exists($upperVal, self::$OCEANS) && !array_key_exists($upperVal, $edge->value))
+							|| (!array_key_exists($lowerVal, self::$OCEANS) && !array_key_exists($lowerVal, $edge->value))
+							|| (!array_key_exists($leftVal, self::$OCEANS) && !array_key_exists($leftVal, $edge->value))
+							|| (!array_key_exists($rightVal, self::$OCEANS) && !array_key_exists($rightVal, $edge->value))
 						)){
 							$val = $edge->key[$centerVal];
 							break;

@@ -91,7 +91,7 @@ class RiverMapLayer extends MapLayer{
 		$finalValues = [];
 		for($i = 0; $i < $sizeX * $sizeZ; ++$i){
 			$val = $mergeValues[$i];
-			if(isset(self::$OCEANS[$mergeValues[$i]])){
+			if(array_key_exists($mergeValues[$i], self::$OCEANS)){
 				$val = $mergeValues[$i];
 			}elseif($values[$i] === self::$RIVER_VALUE){
 				$val = self::$SPECIAL_RIVERS[$mergeValues[$i]] ?? BiomeIds::RIVER;

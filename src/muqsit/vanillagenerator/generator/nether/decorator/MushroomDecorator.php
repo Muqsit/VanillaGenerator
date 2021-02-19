@@ -47,7 +47,7 @@ class MushroomDecorator extends Decorator{
 			if(
 				$y < $height &&
 				$block->getId() === BlockLegacyIds::AIR &&
-				isset(self::$MATERIALS[$blockBelow->getId()])
+				array_key_exists($blockBelow->getId(), self::$MATERIALS)
 			){
 				$world->setBlockAt($x, $y, $z, $this->type);
 			}

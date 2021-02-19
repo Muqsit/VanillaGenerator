@@ -114,16 +114,16 @@ class BiomeVariationMapLayer extends MapLayer{
 				$centerValue = $values[$j + 1 + ($i + 1) * $gridSizeX];
 				$variationValue = $variationValues[$j + 1 + ($i + 1) * $gridSizeX];
 				if($centerValue !== 0 && $variationValue === 3 && $centerValue < 128){
-					$finalValues[$j + $i * $sizeX] = isset(self::$BIOMES[$centerValue + 128]) ? $centerValue + 128 : $centerValue;
+					$finalValues[$j + $i * $sizeX] = array_key_exists($centerValue + 128, self::$BIOMES) ? $centerValue + 128 : $centerValue;
 				}elseif($variationValue === 2 || $this->nextInt(3) === 0){
 					$val = $centerValue;
-					if(isset(self::$VARIATIONS[$centerValue])){
+					if(array_key_exists($centerValue, self::$VARIATIONS)){
 						$val = self::$VARIATIONS[$centerValue][$this->nextInt(count(self::$VARIATIONS[$centerValue]))];
 					}elseif($centerValue === BiomeIds::DEEP_OCEAN && $this->nextInt(3) === 0){
 						$val = self::$ISLANDS[$this->nextInt(count(self::$ISLANDS))];
 					}
 					if($variationValue === 2 && $val !== $centerValue){
-						$val = isset(self::$BIOMES[$val + 128]) ? $val + 128 : $centerValue;
+						$val = array_key_exists($val + 128, self::$BIOMES) ? $val + 128 : $centerValue;
 					}
 					if($val !== $centerValue){
 						$count = 0;

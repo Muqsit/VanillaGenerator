@@ -64,7 +64,7 @@ class BigOakTree extends GenericTree{
 					for($z = -$nodeDistance; $z <= $nodeDistance; ++$z){
 						$sizeX = abs($x) + 0.5;
 						$sizeZ = abs($z) + 0.5;
-						if($sizeX * $sizeX + $sizeZ * $sizeZ <= $size * $size && isset($this->overridables[$world->getBlockAt($node->x + $x, $node->y + $y, $node->z + $z)->getId()])){
+						if($sizeX * $sizeX + $sizeZ * $sizeZ <= $size * $size && array_key_exists($world->getBlockAt($node->x + $x, $node->y + $y, $node->z + $z)->getId(), $this->overridables)){
 							$this->transaction->addBlockAt($node->x + $x, $node->y + $y, $node->z + $z, $this->leavesType);
 						}
 					}
@@ -117,7 +117,7 @@ class BigOakTree extends GenericTree{
 			for($i = 0; $i <= $maxDistance; ++$i, ++$n){
 				$target = $from->add(0.5 + $i * $dx, 0.5 + $i * $dy, 0.5 + $i * $dz);
 				$target_floorY = $target->getFloorY();
-				if($target_floorY < 0 || $target_floorY > $height || !isset($this->overridables[$world->getBlockAt($target->getFloorX(), $target->getFloorY(), $target->getFloorZ())->getId()])){
+				if($target_floorY < 0 || $target_floorY > $height || !array_key_exists($world->getBlockAt($target->getFloorX(), $target->getFloorY(), $target->getFloorZ())->getId(), $this->overridables)){
 					return $n;
 				}
 			}

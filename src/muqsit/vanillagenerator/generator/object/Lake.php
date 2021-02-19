@@ -73,7 +73,7 @@ class Lake extends TerrainObject{
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($sourceX >> 4, $sourceZ >> 4);
 		$biome = $chunk->getBiomeId(($sourceX + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f, ($sourceZ + 8 + (int) self::MAX_DIAMETER / 2) & 0x0f);
-		$mycelBiome = isset(self::$MYCEL_BIOMES[$biome]);
+		$mycelBiome = array_key_exists($biome, self::$MYCEL_BIOMES);
 
 		$max_diameter = (int) self::MAX_DIAMETER;
 		for($x = 0; $x < $max_diameter; ++$x){

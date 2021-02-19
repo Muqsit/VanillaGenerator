@@ -32,7 +32,7 @@ class RarePlainsMapLayer extends MapLayer{
 			for($j = 0; $j < $sizeX; ++$j){
 				$this->setCoordsSeed($x + $j, $z + $i);
 				$centerValue = $values[$j + 1 + ($i + 1) * $gridSizeX];
-				if($this->nextInt(57) === 0 && isset(self::$RARE_PLAINS[$centerValue])){
+				if($this->nextInt(57) === 0 && array_key_exists($centerValue, self::$RARE_PLAINS)){
 					$centerValue = self::$RARE_PLAINS[$centerValue];
 				}
 

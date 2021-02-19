@@ -58,7 +58,7 @@ class BrownMushroomTree extends GenericTree{
 					// skip source block check
 					if($y !== $baseY || $x !== $baseX || $z !== $baseZ){
 						// we can overlap leaves around
-						if(!isset($this->overridables[$world->getBlockAt($x, $y, $z)->getId()])){
+						if(!array_key_exists($world->getBlockAt($x, $y, $z)->getId(), $this->overridables)){
 							return false;
 						}
 					}

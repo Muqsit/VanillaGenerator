@@ -70,27 +70,27 @@ class BiomeEdgeMapLayer extends MapLayer{
 				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
 				$val = $centerVal;
 				foreach(self::$EDGES as $edge){ // [$map, $entry]
-					if(isset($edge->key[$centerVal])){
+					if(array_key_exists($centerVal, $edge->key)){
 						$upperVal = $values[$j + 1 + $i * $gridSizeX];
 						$lowerVal = $values[$j + 1 + ($i + 2) * $gridSizeX];
 						$leftVal = $values[$j + ($i + 1) * $gridSizeX];
 						$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX];
 
 						if($edge->value === null && (
-							!isset($edge->key[$upperVal])
-							|| !isset($edge->key[$lowerVal])
-							|| !isset($edge->key[$leftVal])
-							|| !isset($edge->key[$rightVal])
+							!array_key_exists($upperVal, $edge->key)
+							|| !array_key_exists($lowerVal, $edge->key)
+							|| !array_key_exists($leftVal, $edge->key)
+							|| !array_key_exists($rightVal, $edge->key)
 						)){
 							$val = $edge->key[$centerVal];
 							break;
 						}
 
 						if($edge->value !== null && (
-							isset($edge->value[$upperVal]) ||
-							isset($edge->value[$lowerVal]) ||
-							isset($edge->value[$leftVal]) ||
-							isset($edge->value[$rightVal])
+							array_key_exists($upperVal, $edge->value) ||
+							array_key_exists($lowerVal, $edge->value) ||
+							array_key_exists($leftVal, $edge->value) ||
+							array_key_exists($rightVal, $edge->value)
 						)){
 							$val = $edge->key[$centerVal];
 							break;

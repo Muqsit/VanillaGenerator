@@ -57,7 +57,7 @@ class SwampTree extends CocoaTree{
 				for($z = $baseZ - $radius; $z <= $baseZ + $radius; ++$z){
 					// we can overlap some blocks around
 					$type = $world->getBlockAt($x, $y, $z)->getId();
-					if(isset($this->overridables[$type])){
+					if(array_key_exists($type, $this->overridables)){
 						continue;
 					}
 
@@ -80,7 +80,7 @@ class SwampTree extends CocoaTree{
 		$chunk_block_x = $blockX & 0x0f;
 		$chunk_block_z = $blockZ & 0x0f;
 		$block_factory = BlockFactory::getInstance();
-		while(isset(self::$WATER_BLOCK_TYPES[$block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY, $chunk_block_z))->getId()])){
+		while(array_key_exists($block_factory->fromFullBlock($chunk->getFullBlock($chunk_block_x, $blockY, $chunk_block_z))->getId(), self::$WATER_BLOCK_TYPES)){
 			--$blockY;
 		}
 
