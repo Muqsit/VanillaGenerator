@@ -15,7 +15,7 @@ class PerlinNoiseGenerator extends BasePerlinNoiseGenerator{
 	 * @return PerlinNoiseGenerator
 	 */
 	public static function getInstance(){
-		return self::$instance ?? self::$instance = new PerlinNoiseGenerator();
+		return self::$instance ??= new PerlinNoiseGenerator();
 	}
 
 	public static function getNoise3d(float $x, float $y = 0.0, float $z = 0.0) : float{

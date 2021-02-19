@@ -53,7 +53,7 @@ class SimplexNoiseGenerator extends BasePerlinNoiseGenerator{
 	 * @return SimplexNoiseGenerator
 	 */
 	public static function getInstance(){
-		return self::$instance ?? self::$instance = new SimplexNoiseGenerator();
+		return self::$instance ??= new SimplexNoiseGenerator();
 	}
 
 	/**
