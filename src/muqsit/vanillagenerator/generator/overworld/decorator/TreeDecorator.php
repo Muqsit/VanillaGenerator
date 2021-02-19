@@ -65,8 +65,8 @@ class TreeDecorator extends Decorator{
 		$class = self::getRandomTree($random, $this->trees);
 		if($class !== null){
 			$txn = new BlockTransaction($world);
-			/** @var GenericTree $tree */
 			try{
+				/** @var GenericTree $tree */
 				$tree = new $class($random, $txn);
 			}catch(Exception $ex){
 				$tree = new GenericTree($random, $txn);

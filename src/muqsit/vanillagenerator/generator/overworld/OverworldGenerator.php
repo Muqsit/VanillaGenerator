@@ -31,6 +31,9 @@ use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 
+/**
+ * @phpstan-extends VanillaGenerator<WorldOctaves<PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, SimplexOctaveGenerator>>
+ */
 class OverworldGenerator extends VanillaGenerator{
 
 	/** @var float[] */
@@ -196,8 +199,8 @@ class OverworldGenerator extends VanillaGenerator{
 		$seaFill = self::DENSITY_FILL_SEA_MODE;
 		$densityOffset = self::DENSITY_FILL_OFFSET;
 
-		$still_water = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_WATER, 0)->getFullId();
-		$water = VanillaBlocks::WATER()->getFullId();
+		$still_water = VanillaBlocks::WATER()->getStillForm()->getFullId();
+		$water = VanillaBlocks::WATER()->getFlowingForm()->getFullId();
 		$stone = VanillaBlocks::STONE()->getFullId();
 
 		/** @var Chunk $chunk */

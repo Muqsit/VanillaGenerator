@@ -33,7 +33,7 @@ class SnowPopulator implements Populator{
 					$y = $highest_y - 1;
 					if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x, $z), $sourceX + $x, $y, $sourceZ + $z)){
 						switch($block_factory->fromFullBlock($chunk->getFullBlock($x, $y, $z))->getId()){
-							case BlockLegacyIds::WATER:
+							case BlockLegacyIds::FLOWING_WATER:
 							case BlockLegacyIds::STILL_WATER:
 							case BlockLegacyIds::SNOW:
 							case BlockLegacyIds::ICE:
@@ -43,7 +43,7 @@ class SnowPopulator implements Populator{
 							case BlockLegacyIds::TALL_GRASS:
 							case BlockLegacyIds::DOUBLE_PLANT:
 							case BlockLegacyIds::SUGARCANE_BLOCK:
-							case BlockLegacyIds::LAVA:
+							case BlockLegacyIds::FLOWING_LAVA:
 							case BlockLegacyIds::STILL_LAVA:
 								break;
 							case BlockLegacyIds::DIRT:

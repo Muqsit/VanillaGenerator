@@ -119,8 +119,8 @@ class BiomePopulator implements Populator{
 	public function __construct(){
 		$block_factory = BlockFactory::getInstance();
 
-		$this->waterLakeDecorator = new LakeDecorator($block_factory->get(BlockLegacyIds::STILL_WATER, 0), 4);
-		$this->lavaLakeDecorator = new LakeDecorator($block_factory->get(BlockLegacyIds::STILL_LAVA, 0), 8, 8);
+		$this->waterLakeDecorator = new LakeDecorator(VanillaBlocks::WATER()->getStillForm(), 4);
+		$this->lavaLakeDecorator = new LakeDecorator(VanillaBlocks::LAVA()->getStillForm(), 8, 8);
 		$this->orePopulator = new OrePopulator();
 		$this->sandPatchDecorator = new UnderwaterDecorator(VanillaBlocks::SAND());
 		$this->clayPatchDecorator = new UnderwaterDecorator(VanillaBlocks::CLAY());

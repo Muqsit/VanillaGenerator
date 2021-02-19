@@ -22,7 +22,7 @@ class SwampTree extends CocoaTree{
 
 	public static function init() : void{
 		self::$WATER_BLOCK_TYPES = [];
-		foreach([BlockLegacyIds::WATER, BlockLegacyIds::STILL_WATER] as $block_id){
+		foreach([BlockLegacyIds::FLOWING_WATER, BlockLegacyIds::STILL_WATER] as $block_id){
 			self::$WATER_BLOCK_TYPES[$block_id] = $block_id;
 		}
 	}
@@ -61,7 +61,7 @@ class SwampTree extends CocoaTree{
 						continue;
 					}
 
-					if($type === BlockLegacyIds::WATER || $type === BlockLegacyIds::STILL_WATER){
+					if($type === BlockLegacyIds::FLOWING_WATER || $type === BlockLegacyIds::STILL_WATER){
 						if($y > $baseY){
 							return false;
 						}
@@ -113,7 +113,7 @@ class SwampTree extends CocoaTree{
 				if(
 					$material === BlockLegacyIds::AIR ||
 					$material === BlockLegacyIds::LEAVES ||
-					$material === BlockLegacyIds::WATER ||
+					$material === BlockLegacyIds::FLOWING_WATER ||
 					$material === BlockLegacyIds::STILL_WATER
 				){
 					$this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ, $this->logType);

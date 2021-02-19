@@ -54,11 +54,17 @@ class UnderwaterDecorator extends Decorator{
 		$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
 		$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
 		$sourceY = $chunk->getHighestBlockAt($sourceX & 0x0f, $sourceZ & 0x0f) - 1;
-		while($world->getBlockAt($sourceX, $sourceY - 1, $sourceZ)->getId() === BlockLegacyIds::STILL_WATER || ($world->getBlockAt($sourceX, $sourceY - 1, $sourceZ)->getId() === BlockLegacyIds::WATER && $sourceY > 1)){
+		while(
+			$sourceY > 1 &&
+			(
+				($block_id = $world->getBlockAt($sourceX, $sourceY - 1, $sourceZ)->getId()) === BlockLegacyIds::STILL_WATER ||
+				$block_id === BlockLegacyIds::FLOWING_WATER
+			)
+		){
 			--$sourceY;
 		}
 		$material = $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId();
-		if($material === BlockLegacyIds::STILL_WATER || $material === BlockLegacyIds::WATER){
+		if($material === BlockLegacyIds::STILL_WATER || $material === BlockLegacyIds::FLOWING_WATER){
 			(new BlockPatch($this->type, $this->horizRadius, $this->vertRadius, ...$this->overridables))->generate($world, $random, $sourceX, $sourceY, $sourceZ);
 		}
 	}

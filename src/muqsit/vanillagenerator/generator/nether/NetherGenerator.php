@@ -17,6 +17,9 @@ use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 
+/**
+ * @phpstan-extends VanillaGenerator<NetherWorldOctaves<PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator>>
+ */
 class NetherGenerator extends VanillaGenerator{
 
 	protected const COORDINATE_SCALE = 684.412;
@@ -63,7 +66,6 @@ class NetherGenerator extends VanillaGenerator{
 		$cx = $chunkX << 4;
 		$cz = $chunkZ << 4;
 
-		/** @var NetherWorldOctaves $octaves */
 		$octaves = $this->getWorldOctaves();
 
 		$surfaceNoise = $octaves->surface->getFractalBrownianMotion($cx, $cz, 0, 0.5, 2.0);
@@ -121,7 +123,7 @@ class NetherGenerator extends VanillaGenerator{
 		$density = $this->generateTerrainDensity($chunkX << 2, $chunkZ << 2);
 
 		$nether_rack = VanillaBlocks::NETHERRACK()->getFullId();
-		$still_lava = BlockFactory::getInstance()->get(BlockLegacyIds::STILL_LAVA, 0)->getFullId();
+		$still_lava = VanillaBlocks::LAVA()->getStillForm()->getFullId();
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunkX, $chunkZ);
@@ -181,7 +183,6 @@ class NetherGenerator extends VanillaGenerator{
 	 * @return float[]
 	 */
 	private function generateTerrainDensity(int $x, int $z) : array{
-		/** @var NetherWorldOctaves $octaves */
 		$octaves = $this->getWorldOctaves();
 		$heightNoise = $octaves->height->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
 		$roughnessNoise = $octaves->roughness->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);

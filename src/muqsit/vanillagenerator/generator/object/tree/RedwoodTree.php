@@ -94,8 +94,8 @@ class RedwoodTree extends GenericTree{
 				$radius = $minRadius;
 				$minRadius = 1; // after the peak $radius is reached once, the min $radius increases
 				++$peakRadius;  // the peak $radius increases each time it's reached
-				if($peakRadius > $minRadius){
-					$peakRadius = $minRadius;
+				if($peakRadius > $this->maxRadius){
+					$peakRadius = $this->maxRadius;
 				}
 			}else{
 				++$radius;

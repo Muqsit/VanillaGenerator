@@ -32,7 +32,7 @@ class SimplexOctaveGenerator extends PerlinOctaveGenerator{
 	 * @return SimplexOctaveGenerator
 	 */
 	public static function fromRandomAndOctaves(Random $random, int $octaves, int $sizeX, int $sizeY, int $sizeZ){
-		return new SimplexOctaveGenerator(self::createOctaves($random, $octaves), $random, $sizeX, $sizeY, $sizeZ);
+		return new SimplexOctaveGenerator(self::createOctaves($random, $octaves), $sizeX, $sizeY, $sizeZ);
 	}
 
 	public function getFractalBrownianMotion(float $x, float $y, float $z, float $lacunarity, float $persistence) : array{
