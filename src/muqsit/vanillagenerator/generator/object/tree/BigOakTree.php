@@ -9,6 +9,7 @@ use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
+use function array_key_exists;
 
 class BigOakTree extends GenericTree{
 

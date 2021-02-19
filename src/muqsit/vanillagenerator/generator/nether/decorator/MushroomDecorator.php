@@ -10,6 +10,7 @@ use pocketmine\block\BlockLegacyIds;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
+use function array_key_exists;
 
 class MushroomDecorator extends Decorator{
 

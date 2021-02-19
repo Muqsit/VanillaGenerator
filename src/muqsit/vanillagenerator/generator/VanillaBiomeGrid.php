@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator;
 
 use muqsit\vanillagenerator\generator\biomegrid\BiomeGrid;
+use function array_key_exists;
 
 class VanillaBiomeGrid implements BiomeGrid{
 

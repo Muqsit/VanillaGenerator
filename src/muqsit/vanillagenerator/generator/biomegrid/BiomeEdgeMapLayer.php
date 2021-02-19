@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator\generator\biomegrid;
 
 use muqsit\vanillagenerator\generator\biomegrid\utils\BiomeEdgeEntry;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
+use function array_key_exists;
 
 class BiomeEdgeMapLayer extends MapLayer{
 

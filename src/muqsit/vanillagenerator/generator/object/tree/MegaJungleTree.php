@@ -14,6 +14,7 @@ use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\World;
+use function array_key_exists;
 
 class MegaJungleTree extends GenericTree{
 

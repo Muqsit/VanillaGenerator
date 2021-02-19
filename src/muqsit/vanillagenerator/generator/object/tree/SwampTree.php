@@ -14,6 +14,7 @@ use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\World;
+use function array_key_exists;
 
 class SwampTree extends CocoaTree{
 

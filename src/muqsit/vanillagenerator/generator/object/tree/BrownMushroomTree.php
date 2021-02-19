@@ -10,6 +10,7 @@ use pocketmine\block\BlockLegacyIds;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
+use function array_key_exists;
 
 class BrownMushroomTree extends GenericTree{
 

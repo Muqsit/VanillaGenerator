@@ -30,6 +30,7 @@ use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use ReflectionClass;
+use function array_key_exists;
 
 class OverworldPopulator implements Populator{
 
