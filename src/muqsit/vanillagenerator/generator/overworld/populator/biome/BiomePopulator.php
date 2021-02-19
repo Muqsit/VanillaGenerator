@@ -22,7 +22,6 @@ use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 use muqsit\vanillagenerator\generator\overworld\decorator\UnderwaterDecorator;
 use muqsit\vanillagenerator\generator\Populator;
 use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
