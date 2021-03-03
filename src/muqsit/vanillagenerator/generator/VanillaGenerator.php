@@ -96,7 +96,7 @@ abstract class VanillaGenerator extends Generator{
 		return $this->populators;
 	}
 
-	final public function populateChunk(ChunkManager $world, int $chunkX, int $chunkZ) : void{
+	public function populateChunk(ChunkManager $world, int $chunkX, int $chunkZ) : void{
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunkX, $chunkZ);
 		foreach($this->populators as $populator){
