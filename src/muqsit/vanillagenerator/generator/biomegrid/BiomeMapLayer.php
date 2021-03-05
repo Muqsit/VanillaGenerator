@@ -9,41 +9,41 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 class BiomeMapLayer extends MapLayer{
 
 	/** @var int[] */
-	private static $WARM = [BiomeIds::DESERT, BiomeIds::DESERT, BiomeIds::DESERT, BiomeIds::SAVANNA, BiomeIds::SAVANNA, BiomeIds::PLAINS];
+	private static array $WARM = [BiomeIds::DESERT, BiomeIds::DESERT, BiomeIds::DESERT, BiomeIds::SAVANNA, BiomeIds::SAVANNA, BiomeIds::PLAINS];
 
 	/** @var int[] */
-	private static $WET = [BiomeIds::PLAINS, BiomeIds::PLAINS, BiomeIds::FOREST, BiomeIds::BIRCH_FOREST, BiomeIds::ROOFED_FOREST, BiomeIds::EXTREME_HILLS, BiomeIds::SWAMPLAND];
+	private static array $WET = [BiomeIds::PLAINS, BiomeIds::PLAINS, BiomeIds::FOREST, BiomeIds::BIRCH_FOREST, BiomeIds::ROOFED_FOREST, BiomeIds::EXTREME_HILLS, BiomeIds::SWAMPLAND];
 
 	/** @var int[] */
-	private static $DRY = [BiomeIds::PLAINS, BiomeIds::FOREST, BiomeIds::TAIGA, BiomeIds::EXTREME_HILLS];
+	private static array $DRY = [BiomeIds::PLAINS, BiomeIds::FOREST, BiomeIds::TAIGA, BiomeIds::EXTREME_HILLS];
 
 	/** @var int[] */
-	private static $COLD = [BiomeIds::ICE_FLATS, BiomeIds::ICE_FLATS, BiomeIds::TAIGA_COLD];
+	private static array $COLD = [BiomeIds::ICE_FLATS, BiomeIds::ICE_FLATS, BiomeIds::TAIGA_COLD];
 
 	/** @var int[] */
-	private static $WARM_LARGE = [BiomeIds::MESA_ROCK, BiomeIds::MESA_ROCK, BiomeIds::MESA_CLEAR_ROCK];
+	private static array $WARM_LARGE = [BiomeIds::MESA_ROCK, BiomeIds::MESA_ROCK, BiomeIds::MESA_CLEAR_ROCK];
 
 	/** @var int[] */
-	private static $DRY_LARGE = [BiomeIds::REDWOOD_TAIGA];
+	private static array $DRY_LARGE = [BiomeIds::REDWOOD_TAIGA];
 
 	/** @var int[] */
-	private static $WET_LARGE = [BiomeIds::JUNGLE];
+	private static array $WET_LARGE = [BiomeIds::JUNGLE];
 
 	/** @var MapLayer */
-	private $belowLayer;
+	private MapLayer $below_layer;
 
-	public function __construct(int $seed, MapLayer $belowLayer){
+	public function __construct(int $seed, MapLayer $below_layer){
 		parent::__construct($seed);
-		$this->belowLayer = $belowLayer;
+		$this->below_layer = $below_layer;
 	}
 
-	public function generateValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		$values = $this->belowLayer->generateValues($x, $z, $sizeX, $sizeZ);
+	public function generateValues(int $x, int $z, int $size_x, int $size_z) : array{
+		$values = $this->below_layer->generateValues($x, $z, $size_x, $size_z);
 
-		$finalValues = [];
-		for($i = 0; $i < $sizeZ; ++$i){
-			for($j = 0; $j < $sizeX; ++$j){
-				$val = $values[$j + $i * $sizeX];
+		$final_values = [];
+		for($i = 0; $i < $size_z; ++$i){
+			for($j = 0; $j < $size_x; ++$j){
+				$val = $values[$j + $i * $size_x];
 				if($val !== 0){
 					$this->setCoordsSeed($x + $j, $z + $i);
 					switch($val){
@@ -74,10 +74,10 @@ class BiomeMapLayer extends MapLayer{
 					}
 				}
 
-				$finalValues[$j + $i * $sizeX] = $val;
+				$final_values[$j + $i * $size_x] = $val;
 			}
 		}
 
-		return $finalValues;
+		return $final_values;
 	}
 }

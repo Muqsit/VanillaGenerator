@@ -20,7 +20,7 @@ interface BiomeGrid{
 	 *
 	 * @param int $x - 0-15
 	 * @param int $z - 0-15
-	 * @param int $biomeId
+	 * @param int $biome_id
 	 */
-	public function setBiome(int $x, int $z, int $biomeId) : void;
+	public function setBiome(int $x, int $z, int $biome_id) : void;
 }

@@ -7,14 +7,14 @@ namespace muqsit\vanillagenerator\generator\noise\bukkit;
 class PerlinNoiseGenerator extends BasePerlinNoiseGenerator{
 
 	/** @var PerlinNoiseGenerator|null */
-	private static $instance;
+	private static ?PerlinNoiseGenerator $instance;
 
 	/**
 	 * Gets the singleton unseeded instance of this generator
 	 *
 	 * @return PerlinNoiseGenerator
 	 */
-	public static function getInstance(){
+	public static function getInstance() : PerlinNoiseGenerator{
 		return self::$instance ??= new PerlinNoiseGenerator();
 	}
 
@@ -39,23 +39,23 @@ class PerlinNoiseGenerator extends BasePerlinNoiseGenerator{
 	}
 
 	public function noise3d(float $x, float $y = 0.0, float $z = 0.0) : float{
-		$x += $this->offsetX;
-		$y += $this->offsetY;
-		$z += $this->offsetZ;
+		$x += $this->offset_x;
+		$y += $this->offset_y;
+		$z += $this->offset_z;
 
-		$floorX = self::floor($x);
-		$floorY = self::floor($y);
-		$floorZ = self::floor($z);
+		$floor_x = self::floor($x);
+		$floor_y = self::floor($y);
+		$floor_z = self::floor($z);
 
 		// Find unit cube containing the point
-		$X = $floorX & 255;
-		$Y = $floorY & 255;
-		$Z = $floorZ & 255;
+		$X = $floor_x & 255;
+		$Y = $floor_y & 255;
+		$Z = $floor_z & 255;
 
 		// Get relative xyz coordinates of the point within the cube
-		$x -= $floorX;
-		$y -= $floorY;
-		$z -= $floorZ;
+		$x -= $floor_x;
+		$y -= $floor_y;
+		$z -= $floor_z;
 
 		// Compute fade curves for xyz
 		$fX = self::fade($x);

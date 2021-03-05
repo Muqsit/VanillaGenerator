@@ -11,10 +11,10 @@ use function array_key_exists;
 class BiomeThinEdgeMapLayer extends MapLayer{
 
 	/** @var int[] */
-	private static $OCEANS = [BiomeIds::OCEAN, BiomeIds::DEEP_OCEAN];
+	private static array $OCEANS = [BiomeIds::OCEAN, BiomeIds::DEEP_OCEAN];
 
 	/** @var int[] */
-	private static $MESA_EDGES = [
+	private static array $MESA_EDGES = [
 		BiomeIds::MESA => BiomeIds::DESERT,
 		BiomeIds::MUTATED_MESA => BiomeIds::DESERT,
 		BiomeIds::MESA_ROCK => BiomeIds::DESERT,
@@ -24,7 +24,7 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 	];
 
 	/** @var int[] */
-	private static $JUNGLE_EDGES = [
+	private static array $JUNGLE_EDGES = [
 		BiomeIds::JUNGLE => BiomeIds::JUNGLE_EDGE,
 		BiomeIds::JUNGLE_HILLS => BiomeIds::JUNGLE_EDGE,
 		BiomeIds::MUTATED_JUNGLE => BiomeIds::JUNGLE_EDGE,
@@ -32,7 +32,7 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 	];
 
 	/** @var BiomeEdgeEntry[] */
-	private static $EDGES;
+	private static array $EDGES;
 
 	public static function init() : void{
 		self::$OCEANS = array_flip(self::$OCEANS);
@@ -43,57 +43,57 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 	}
 
 	/** @var MapLayer */
-	private $belowLayer;
+	private MapLayer $below_layer;
 
-	public function __construct(int $seed, MapLayer $belowLayer){
+	public function __construct(int $seed, MapLayer $below_layer){
 		parent::__construct($seed);
-		$this->belowLayer = $belowLayer;
+		$this->below_layer = $below_layer;
 	}
 
-	public function generateValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		$gridX = $x - 1;
-		$gridZ = $z - 1;
-		$gridSizeX = $sizeX + 2;
-		$gridSizeZ = $sizeZ + 2;
-		$values = $this->belowLayer->generateValues($gridX, $gridZ, $gridSizeX, $gridSizeZ);
+	public function generateValues(int $x, int $z, int $size_x, int $size_z) : array{
+		$grid_x = $x - 1;
+		$grid_z = $z - 1;
+		$grid_size_x = $size_x + 2;
+		$grid_size_z = $size_z + 2;
+		$values = $this->below_layer->generateValues($grid_x, $grid_z, $grid_size_x, $grid_size_z);
 
-		$finalValues = [];
-		for($i = 0; $i < $sizeZ; ++$i){
-			for($j = 0; $j < $sizeX; ++$j){
+		$final_values = [];
+		for($i = 0; $i < $size_z; ++$i){
+			for($j = 0; $j < $size_x; ++$j){
 				// This applies biome thin edges using Von Neumann neighborhood
-				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
-				$val = $centerVal;
+				$center_val = $values[$j + 1 + ($i + 1) * $grid_size_x];
+				$val = $center_val;
 				foreach(self::$EDGES as $edge){
-					if(array_key_exists($centerVal, $edge->key)){
-						$upperVal = $values[$j + 1 + $i * $gridSizeX];
-						$lowerVal = $values[$j + 1 + ($i + 2) * $gridSizeX];
-						$leftVal = $values[$j + ($i + 1) * $gridSizeX];
-						$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX];
+					if(array_key_exists($center_val, $edge->key)){
+						$upper_val = $values[$j + 1 + $i * $grid_size_x];
+						$lower_val = $values[$j + 1 + ($i + 2) * $grid_size_x];
+						$left_val = $values[$j + ($i + 1) * $grid_size_x];
+						$right_val = $values[$j + 2 + ($i + 1) * $grid_size_x];
 						if($edge->value === null && (
-							(!array_key_exists($upperVal, self::$OCEANS) && !array_key_exists($upperVal, $edge->key))
-							|| (!array_key_exists($lowerVal, self::$OCEANS) && !array_key_exists($lowerVal, $edge->key))
-							|| (!array_key_exists($leftVal, self::$OCEANS) && !array_key_exists($leftVal, $edge->key))
-							|| (!array_key_exists($rightVal, self::$OCEANS) && !array_key_exists($rightVal, $edge->key))
+							(!array_key_exists($upper_val, self::$OCEANS) && !array_key_exists($upper_val, $edge->key))
+							|| (!array_key_exists($lower_val, self::$OCEANS) && !array_key_exists($lower_val, $edge->key))
+							|| (!array_key_exists($left_val, self::$OCEANS) && !array_key_exists($left_val, $edge->key))
+							|| (!array_key_exists($right_val, self::$OCEANS) && !array_key_exists($right_val, $edge->key))
 						)){
-							$val = $edge->key[$centerVal];
+							$val = $edge->key[$center_val];
 							break;
 						}
 						if($edge->value !== null && (
-							(!array_key_exists($upperVal, self::$OCEANS) && !array_key_exists($upperVal, $edge->value))
-							|| (!array_key_exists($lowerVal, self::$OCEANS) && !array_key_exists($lowerVal, $edge->value))
-							|| (!array_key_exists($leftVal, self::$OCEANS) && !array_key_exists($leftVal, $edge->value))
-							|| (!array_key_exists($rightVal, self::$OCEANS) && !array_key_exists($rightVal, $edge->value))
+							(!array_key_exists($upper_val, self::$OCEANS) && !array_key_exists($upper_val, $edge->value))
+							|| (!array_key_exists($lower_val, self::$OCEANS) && !array_key_exists($lower_val, $edge->value))
+							|| (!array_key_exists($left_val, self::$OCEANS) && !array_key_exists($left_val, $edge->value))
+							|| (!array_key_exists($right_val, self::$OCEANS) && !array_key_exists($right_val, $edge->value))
 						)){
-							$val = $edge->key[$centerVal];
+							$val = $edge->key[$center_val];
 							break;
 						}
 					}
 				}
 
-				$finalValues[$j + $i * $sizeX] = $val;
+				$final_values[$j + $i * $size_x] = $val;
 			}
 		}
-		return $finalValues;
+		return $final_values;
 	}
 }
 

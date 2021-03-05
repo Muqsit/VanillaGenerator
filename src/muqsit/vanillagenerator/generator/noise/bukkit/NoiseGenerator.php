@@ -7,16 +7,16 @@ namespace muqsit\vanillagenerator\generator\noise\bukkit;
 abstract class NoiseGenerator{
 
 	/** @var int[] */
-	protected $perm = [];
+	protected array $perm = [];
 
 	/** @var float */
-	protected $offsetX;
+	protected float $offset_x;
 
 	/** @var float */
-	protected $offsetY;
+	protected float $offset_y;
 
 	/** @var float */
-	protected $offsetZ;
+	protected float $offset_z;
 
 	public static function floor(float $x) : int{
 		return $x >= 0 ? (int) $x : (int) $x - 1;

@@ -16,9 +16,9 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 	 * @param Random $rand the PRNG used to generate the seed permutation
 	 */
 	public function __construct(Random $rand){
-		$this->offsetX = $rand->nextFloat() * 256;
-		$this->offsetY = $rand->nextFloat() * 256;
-		$this->offsetZ = $rand->nextFloat() * 256;
+		$this->offset_x = $rand->nextFloat() * 256;
+		$this->offset_y = $rand->nextFloat() * 256;
+		$this->offset_z = $rand->nextFloat() * 256;
 
 		// The only reason why I'm re-implementing the constructor code is that I've read
 		// on at least 3 different sources that the permutation table should initially be
@@ -54,47 +54,47 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 	 * @param float $x the X offset
 	 * @param float $y the Y offset
 	 * @param float $z the Z offset
-	 * @param int $sizeX the size on the X axis
-	 * @param int $sizeY the size on the Y axis
-	 * @param int $sizeZ the size on the Z axis
-	 * @param float $scaleX the X scale parameter
-	 * @param float $scaleY the Y scale parameter
-	 * @param float $scaleZ the Z scale parameter
+	 * @param int $size_x the size on the X axis
+	 * @param int $size_y the size on the Y axis
+	 * @param int $size_z the size on the Z axis
+	 * @param float $scale_x the X scale parameter
+	 * @param float $scale_y the Y scale parameter
+	 * @param float $scale_z the Z scale parameter
 	 * @param float $amplitude the amplitude parameter
 	 * @return float[] noise with this layer of noise added
 	 */
-	public function getNoise(array &$noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
-		if($sizeY === 1){
-			return $this->get2dNoise($noise, $x, $z, $sizeX, $sizeZ, $scaleX, $scaleZ, $amplitude);
+	public function getNoise(array &$noise, float $x, float $y, float $z, int $size_x, int $size_y, int $size_z, float $scale_x, float $scale_y, float $scale_z, float $amplitude) : array{
+		if($size_y === 1){
+			return $this->get2dNoise($noise, $x, $z, $size_x, $size_z, $scale_x, $scale_z, $amplitude);
 		}
 
-		return $this->get3dNoise($noise, $x, $y, $z, $sizeX, $sizeY, $sizeZ, $scaleX, $scaleY, $scaleZ, $amplitude);
+		return $this->get3dNoise($noise, $x, $y, $z, $size_x, $size_y, $size_z, $scale_x, $scale_y, $scale_z, $amplitude);
 	}
 
 	/**
 	 * @param float[] $noise
 	 * @param float $x
 	 * @param float $z
-	 * @param int $sizeX
-	 * @param int $sizeZ
-	 * @param float $scaleX
-	 * @param float $scaleZ
+	 * @param int $size_x
+	 * @param int $size_z
+	 * @param float $scale_x
+	 * @param float $scale_z
 	 * @param float $amplitude
 	 * @return float[]
 	 */
-	protected function get2dNoise(array &$noise, float $x, float $z, int $sizeX, int $sizeZ, float $scaleX, float $scaleZ, float $amplitude) : array{
+	protected function get2dNoise(array &$noise, float $x, float $z, int $size_x, int $size_z, float $scale_x, float $scale_z, float $amplitude) : array{
 		$index = -1;
-		for($i = 0; $i < $sizeX; ++$i){
-			$dx = $x + $this->offsetX + $i * $scaleX;
-			$floorX = self::floor($dx);
-			$ix = $floorX & 255;
-			$dx -= $floorX;
+		for($i = 0; $i < $size_x; ++$i){
+			$dx = $x + $this->offset_x + $i * $scale_x;
+			$floor_x = self::floor($dx);
+			$ix = $floor_x & 255;
+			$dx -= $floor_x;
 			$fx = self::fade($dx);
-			for($j = 0; $j < $sizeZ; ++$j){
-				$dz = $z + $this->offsetZ + $j * $scaleZ;
-				$floorZ = self::floor($dz);
-				$iz = $floorZ & 255;
-				$dz -= $floorZ;
+			for($j = 0; $j < $size_z; ++$j){
+				$dz = $z + $this->offset_z + $j * $scale_z;
+				$floor_z = self::floor($dz);
+				$iz = $floor_z & 255;
+				$dz -= $floor_z;
 				$fz = self::fade($dz);
 				// Hash coordinates of the square corners
 				$a = $this->perm[$ix];
@@ -117,39 +117,39 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 	 * @param float $x
 	 * @param float $y
 	 * @param float $z
-	 * @param int $sizeX
-	 * @param int $sizeY
-	 * @param int $sizeZ
-	 * @param float $scaleX
-	 * @param float $scaleY
-	 * @param float $scaleZ
+	 * @param int $size_x
+	 * @param int $size_y
+	 * @param int $size_z
+	 * @param float $scale_x
+	 * @param float $scale_y
+	 * @param float $scale_z
 	 * @param float $amplitude
 	 * @return float[]
 	 */
-	protected function get3dNoise(array &$noise, float $x, float $y, float $z, int $sizeX, int $sizeY, int $sizeZ, float $scaleX, float $scaleY, float $scaleZ, float $amplitude) : array{
+	protected function get3dNoise(array &$noise, float $x, float $y, float $z, int $size_x, int $size_y, int $size_z, float $scale_x, float $scale_y, float $scale_z, float $amplitude) : array{
 		$n = -1;
 		$x1 = 0;
 		$x2 = 0;
 		$x3 = 0;
 		$x4 = 0;
 		$index = -1;
-		for($i = 0; $i < $sizeX; ++$i){
-			$dx = $x + $this->offsetX + $i * $scaleX;
-			$floorX = self::floor($dx);
-			$ix = $floorX & 255;
-			$dx -= $floorX;
+		for($i = 0; $i < $size_x; ++$i){
+			$dx = $x + $this->offset_x + $i * $scale_x;
+			$floor_x = self::floor($dx);
+			$ix = $floor_x & 255;
+			$dx -= $floor_x;
 			$fx = self::fade($dx);
-			for($j = 0; $j < $sizeZ; ++$j){
-				$dz = $z + $this->offsetZ + $j * $scaleZ;
-				$floorZ = self::floor($dz);
-				$iz = $floorZ & 255;
-				$dz -= $floorZ;
+			for($j = 0; $j < $size_z; ++$j){
+				$dz = $z + $this->offset_z + $j * $scale_z;
+				$floor_z = self::floor($dz);
+				$iz = $floor_z & 255;
+				$dz -= $floor_z;
 				$fz = self::fade($dz);
-				for($k = 0; $k < $sizeY; ++$k){
-					$dy = $y + $this->offsetY + $k * $scaleY;
-					$floorY = self::floor($dy);
-					$iy = $floorY & 255;
-					$dy -= $floorY;
+				for($k = 0; $k < $size_y; ++$k){
+					$dy = $y + $this->offset_y + $k * $scale_y;
+					$floor_y = self::floor($dy);
+					$iy = $floor_y & 255;
+					$dy -= $floor_y;
 					$fy = self::fade($dy);
 					if($k === 0 || $iy !== $n){
 						$n = $iy;

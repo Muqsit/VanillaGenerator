@@ -10,10 +10,10 @@ use function array_key_exists;
 class ShoreMapLayer extends MapLayer{
 
 	/** @var int[] */
-	private static $OCEANS = [BiomeIds::OCEAN => 0, BiomeIds::DEEP_OCEAN => 0];
+	private static array $OCEANS = [BiomeIds::OCEAN => 0, BiomeIds::DEEP_OCEAN => 0];
 
 	/** @var int[] */
-	private static $SPECIAL_SHORES = [
+	private static array $SPECIAL_SHORES = [
 		BiomeIds::EXTREME_HILLS => BiomeIds::STONE_BEACH,
 		BiomeIds::EXTREME_HILLS_WITH_TREES => BiomeIds::STONE_BEACH,
 		BiomeIds::MUTATED_EXTREME_HILLS => BiomeIds::STONE_BEACH,
@@ -35,23 +35,23 @@ class ShoreMapLayer extends MapLayer{
 	];
 
 	/** @var MapLayer */
-	private $belowLayer;
+	private MapLayer $below_layer;
 
-	public function __construct(int $seed, MapLayer $belowLayer){
+	public function __construct(int $seed, MapLayer $below_layer){
 		parent::__construct($seed);
-		$this->belowLayer = $belowLayer;
+		$this->below_layer = $below_layer;
 	}
 
-	public function generateValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		$gridX = $x - 1;
-		$gridZ = $z - 1;
-		$gridSizeX = $sizeX + 2;
-		$gridSizeZ = $sizeZ + 2;
-		$values = $this->belowLayer->generateValues($gridX, $gridZ, $gridSizeX, $gridSizeZ);
+	public function generateValues(int $x, int $z, int $size_x, int $size_z) : array{
+		$grid_x = $x - 1;
+		$grid_z = $z - 1;
+		$grid_size_x = $size_x + 2;
+		$grid_size_z = $size_z + 2;
+		$values = $this->below_layer->generateValues($grid_x, $grid_z, $grid_size_x, $grid_size_z);
 
-		$finalValues = [];
-		for($i = 0; $i < $sizeZ; ++$i){
-			for($j = 0; $j < $sizeX; ++$j){
+		$final_values = [];
+		for($i = 0; $i < $size_z; ++$i){
+			for($j = 0; $j < $size_x; ++$j){
 				// This applies shores using Von Neumann neighborhood
 				// it takes a 3x3 grid with a cross shape and analyzes values as follow
 				// 0X0
@@ -60,21 +60,21 @@ class ShoreMapLayer extends MapLayer{
 				// the grid center value decides how we are proceeding:
 				// - if it's not ocean and it's surrounded by at least 1 ocean cell
 				// it turns the center value into beach.
-				$upperVal = $values[$j + 1 + $i * $gridSizeX];
-				$lowerVal = $values[$j + 1 + ($i + 2) * $gridSizeX];
-				$leftVal = $values[$j + ($i + 1) * $gridSizeX];
-				$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX];
-				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
-				if(!array_key_exists($centerVal, self::$OCEANS) && (
-						array_key_exists($upperVal, self::$OCEANS) || array_key_exists($lowerVal, self::$OCEANS)
-						|| array_key_exists($leftVal, self::$OCEANS) || array_key_exists($rightVal, self::$OCEANS)
+				$upper_val = $values[$j + 1 + $i * $grid_size_x];
+				$lower_val = $values[$j + 1 + ($i + 2) * $grid_size_x];
+				$left_val = $values[$j + ($i + 1) * $grid_size_x];
+				$right_val = $values[$j + 2 + ($i + 1) * $grid_size_x];
+				$center_val = $values[$j + 1 + ($i + 1) * $grid_size_x];
+				if(!array_key_exists($center_val, self::$OCEANS) && (
+						array_key_exists($upper_val, self::$OCEANS) || array_key_exists($lower_val, self::$OCEANS)
+						|| array_key_exists($left_val, self::$OCEANS) || array_key_exists($right_val, self::$OCEANS)
 					)){
-					$finalValues[$j + $i * $sizeX] = self::$SPECIAL_SHORES[$centerVal] ?? BiomeIds::BEACH;
+					$final_values[$j + $i * $size_x] = self::$SPECIAL_SHORES[$center_val] ?? BiomeIds::BEACH;
 				}else{
-					$finalValues[$j + $i * $sizeX] = $centerVal;
+					$final_values[$j + $i * $size_x] = $center_val;
 				}
 			}
 		}
-		return $finalValues;
+		return $final_values;
 	}
 }

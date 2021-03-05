@@ -7,10 +7,10 @@ namespace muqsit\vanillagenerator\generator\biomegrid\utils;
 final class BiomeEdgeEntry{
 
 	/** @var array<int, int> */
-	public $key;
+	public array $key;
 
 	/** @var int[]|null */
-	public $value;
+	public ?array $value = null;
 
 	/**
 	 * @param array<int, int> $mapping

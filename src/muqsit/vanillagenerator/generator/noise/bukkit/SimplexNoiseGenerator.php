@@ -44,15 +44,15 @@ class SimplexNoiseGenerator extends BasePerlinNoiseGenerator{
 	];
 
 	/** @var float */
-	protected static $offsetW;
+	protected static float $offset_w;
 
-	/** @var SimplexNoiseGenerator */
-	private static $instance;
+	/** @var SimplexNoiseGenerator|null */
+	private static ?SimplexNoiseGenerator $instance;
 
 	/**
 	 * @return SimplexNoiseGenerator
 	 */
-	public static function getInstance(){
+	public static function getInstance() : SimplexNoiseGenerator{
 		return self::$instance ??= new SimplexNoiseGenerator();
 	}
 
@@ -79,7 +79,7 @@ class SimplexNoiseGenerator extends BasePerlinNoiseGenerator{
 	public function __construct(?Random $rand = null){
 		parent::__construct($rand);
 		if($rand !== null){
-			self::$offsetW = $rand->nextFloat() * 256;
+			self::$offset_w = $rand->nextFloat() * 256;
 		}
 	}
 
@@ -112,8 +112,8 @@ class SimplexNoiseGenerator extends BasePerlinNoiseGenerator{
 
 	public function noise3d(float $xin, float $yin = 0.0, float $zin = 0.0) : float{
 		if($zin === 0.0){
-			$xin += $this->offsetX;
-			$yin += $this->offsetY;
+			$xin += $this->offset_x;
+			$yin += $this->offset_y;
 
 			// Noise contributions from the three corners
 			$n0 = 0.0;
@@ -192,9 +192,9 @@ class SimplexNoiseGenerator extends BasePerlinNoiseGenerator{
 			return 70.0 * ($n0 + $n1 + $n2);
 		}
 
-		$xin += $this->offsetX;
-		$yin += $this->offsetY;
-		$zin += $this->offsetZ;
+		$xin += $this->offset_x;
+		$yin += $this->offset_y;
+		$zin += $this->offset_z;
 
 		// Noise contributions from the four corners
 		$n0 = 0.0;
@@ -349,10 +349,10 @@ class SimplexNoiseGenerator extends BasePerlinNoiseGenerator{
 	 * @return float noise at given location, from range -1 to 1
 	 */
 	public function noise(float $x, float $y, float $z, float $w) : float{
-		$x += $this->offsetX;
-		$y += $this->offsetY;
-		$z += $this->offsetZ;
-		$w += self::$offsetW;
+		$x += $this->offset_x;
+		$y += $this->offset_y;
+		$z += $this->offset_z;
+		$w += self::$offset_w;
 
 		// Noise contributions from the five corners
 		$n0 = 0.0;

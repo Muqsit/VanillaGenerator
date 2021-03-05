@@ -42,9 +42,9 @@ abstract class BasePerlinNoiseGenerator extends NoiseGenerator{
 				$this->perm[$i] = $p[$i & 255];
 			}
 		}else{
-			$this->offsetX = $rand->nextFloat() * 256;
-			$this->offsetY = $rand->nextFloat() * 256;
-			$this->offsetZ = $rand->nextFloat() * 256;
+			$this->offset_x = $rand->nextFloat() * 256;
+			$this->offset_y = $rand->nextFloat() * 256;
+			$this->offset_z = $rand->nextFloat() * 256;
 
 			for($i = 0; $i < 256; ++$i){
 				$this->perm[$i] = $rand->nextBoundedInt(256);
@@ -62,23 +62,23 @@ abstract class BasePerlinNoiseGenerator extends NoiseGenerator{
 	}
 
 	public function noise3d(float $x, float $y = 0.0, float $z = 0.0) : float{
-		$x += $this->offsetX;
-		$y += $this->offsetY;
-		$z += $this->offsetZ;
+		$x += $this->offset_x;
+		$y += $this->offset_y;
+		$z += $this->offset_z;
 
-		$floorX = self::floor($x);
-		$floorY = self::floor($y);
-		$floorZ = self::floor($z);
+		$floor_x = self::floor($x);
+		$floor_y = self::floor($y);
+		$floor_z = self::floor($z);
 
 		// Find unit cube containing the point
-		$X = $floorX & 255;
-		$Y = $floorY & 255;
-		$Z = $floorZ & 255;
+		$X = $floor_x & 255;
+		$Y = $floor_y & 255;
+		$Z = $floor_z & 255;
 
 		// Get relative xyz coordinates of the point within the cube
-		$x -= $floorX;
-		$y -= $floorY;
-		$z -= $floorZ;
+		$x -= $floor_x;
+		$y -= $floor_y;
+		$z -= $floor_z;
 
 		// Compute fade curves for xyz
 		$fX = self::fade($x);

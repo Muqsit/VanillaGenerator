@@ -11,33 +11,33 @@ use function array_key_exists;
 class BiomeEdgeMapLayer extends MapLayer{
 
 	/** @var int[] */
-	private static $MESA_EDGES = [
+	private static array $MESA_EDGES = [
 		BiomeIds::MESA_ROCK => BiomeIds::MESA,
 		BiomeIds::MESA_CLEAR_ROCK => BiomeIds::MESA
 	];
 
 	/** @var int[] */
-	private static $MEGA_TAIGA_EDGES = [
+	private static array $MEGA_TAIGA_EDGES = [
 		BiomeIds::REDWOOD_TAIGA => BiomeIds::TAIGA
 	];
 
 	/** @var int[] */
-	private static $DESERT_EDGES = [
+	private static array $DESERT_EDGES = [
 		BiomeIds::DESERT => BiomeIdS::EXTREME_HILLS_WITH_TREES
 	];
 
 	/** @var int[] */
-	private static $SWAMP1_EDGES = [
+	private static array $SWAMP1_EDGES = [
 		BiomeIds::SWAMPLAND => BiomeIds::PLAINS
 	];
 
 	/** @var int[] */
-	private static $SWAMP2_EDGES = [
+	private static array $SWAMP2_EDGES = [
 		BiomeIds::SWAMPLAND => BiomeIds::JUNGLE_EDGE
 	];
 
 	/** @var BiomeEdgeEntry[] */
-	private static $EDGES;
+	private static array $EDGES;
 
 	public static function init() : void{
 		self::$EDGES = [
@@ -50,60 +50,60 @@ class BiomeEdgeMapLayer extends MapLayer{
 	}
 
 	/** @var MapLayer */
-	private $belowLayer;
+	private MapLayer $below_layer;
 
-	public function __construct(int $seed, MapLayer $belowLayer){
+	public function __construct(int $seed, MapLayer $below_layer){
 		parent::__construct($seed);
-		$this->belowLayer = $belowLayer;
+		$this->below_layer = $below_layer;
 	}
 
-	public function generateValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		$gridX = $x - 1;
-		$gridZ = $z - 1;
-		$gridSizeX = $sizeX + 2;
-		$gridSizeZ = $sizeZ + 2;
-		$values = $this->belowLayer->generateValues($gridX, $gridZ, $gridSizeX, $gridSizeZ);
+	public function generateValues(int $x, int $z, int $size_x, int $size_z) : array{
+		$grid_x = $x - 1;
+		$grid_z = $z - 1;
+		$grid_size_x = $size_x + 2;
+		$grid_size_z = $size_z + 2;
+		$values = $this->below_layer->generateValues($grid_x, $grid_z, $grid_size_x, $grid_size_z);
 
-		$finalValues = [];
-		for($i = 0; $i < $sizeZ; ++$i){
-			for($j = 0; $j < $sizeX; ++$j){
+		$final_values = [];
+		for($i = 0; $i < $size_z; ++$i){
+			for($j = 0; $j < $size_x; ++$j){
 				// This applies biome large edges using Von Neumann neighborhood
-				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
-				$val = $centerVal;
+				$center_val = $values[$j + 1 + ($i + 1) * $grid_size_x];
+				$val = $center_val;
 				foreach(self::$EDGES as $edge){ // [$map, $entry]
-					if(array_key_exists($centerVal, $edge->key)){
-						$upperVal = $values[$j + 1 + $i * $gridSizeX];
-						$lowerVal = $values[$j + 1 + ($i + 2) * $gridSizeX];
-						$leftVal = $values[$j + ($i + 1) * $gridSizeX];
-						$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX];
+					if(array_key_exists($center_val, $edge->key)){
+						$upper_val = $values[$j + 1 + $i * $grid_size_x];
+						$lower_val = $values[$j + 1 + ($i + 2) * $grid_size_x];
+						$left_val = $values[$j + ($i + 1) * $grid_size_x];
+						$right_val = $values[$j + 2 + ($i + 1) * $grid_size_x];
 
 						if($edge->value === null && (
-							!array_key_exists($upperVal, $edge->key)
-							|| !array_key_exists($lowerVal, $edge->key)
-							|| !array_key_exists($leftVal, $edge->key)
-							|| !array_key_exists($rightVal, $edge->key)
+							!array_key_exists($upper_val, $edge->key)
+							|| !array_key_exists($lower_val, $edge->key)
+							|| !array_key_exists($left_val, $edge->key)
+							|| !array_key_exists($right_val, $edge->key)
 						)){
-							$val = $edge->key[$centerVal];
+							$val = $edge->key[$center_val];
 							break;
 						}
 
 						if($edge->value !== null && (
-							array_key_exists($upperVal, $edge->value) ||
-							array_key_exists($lowerVal, $edge->value) ||
-							array_key_exists($leftVal, $edge->value) ||
-							array_key_exists($rightVal, $edge->value)
+							array_key_exists($upper_val, $edge->value) ||
+							array_key_exists($lower_val, $edge->value) ||
+							array_key_exists($left_val, $edge->value) ||
+							array_key_exists($right_val, $edge->value)
 						)){
-							$val = $edge->key[$centerVal];
+							$val = $edge->key[$center_val];
 							break;
 						}
 					}
 				}
 
-				$finalValues[$j + $i * $sizeX] = $val;
+				$final_values[$j + $i * $size_x] = $val;
 			}
 		}
 
-		return $finalValues;
+		return $final_values;
 	}
 }
 

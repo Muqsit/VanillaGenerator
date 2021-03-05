@@ -32,65 +32,65 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 	/**
 	 * @param Random $random
 	 * @param int $octaves
-	 * @param int $sizeX
-	 * @param int $sizeY
-	 * @param int $sizeZ
+	 * @param int $size_x
+	 * @param int $size_y
+	 * @param int $size_z
 	 * @return PerlinOctaveGenerator
 	 */
-	public static function fromRandomAndOctaves(Random $random, int $octaves, int $sizeX, int $sizeY, int $sizeZ){
-		return new PerlinOctaveGenerator(self::createOctaves($random, $octaves), $sizeX, $sizeY, $sizeZ);
+	public static function fromRandomAndOctaves(Random $random, int $octaves, int $size_x, int $size_y, int $size_z) : self{
+		return new PerlinOctaveGenerator(self::createOctaves($random, $octaves), $size_x, $size_y, $size_z);
 	}
 
 	/** @var int */
-	protected $sizeX;
+	protected int $size_x;
 
 	/** @var int */
-	protected $sizeY;
+	protected int $size_y;
 
 	/** @var int */
-	protected $sizeZ;
+	protected int $size_z;
 
 	/** @var float[] */
-	protected $noise;
+	protected array $noise;
 
 	/**
 	 * Creates a generator for multiple layers of Perlin noise.
 	 *
 	 * @param NoiseGenerator[] $octaves the noise generators
-	 * @param int $sizeX the size on the X axis
-	 * @param int $sizeY the size on the Y axis
-	 * @param int $sizeZ the size on the Z axis
+	 * @param int $size_x the size on the X axis
+	 * @param int $size_y the size on the Y axis
+	 * @param int $size_z the size on the Z axis
 	 */
-	public function __construct(array $octaves, int $sizeX, int $sizeY, int $sizeZ){
+	public function __construct(array $octaves, int $size_x, int $size_y, int $size_z){
 		parent::__construct($octaves);
-		$this->sizeX = $sizeX;
-		$this->sizeY = $sizeY;
-		$this->sizeZ = $sizeZ;
-		$this->noise = array_fill(0, $sizeX * $sizeY * $sizeZ, 0.0);
+		$this->size_x = $size_x;
+		$this->size_y = $size_y;
+		$this->size_z = $size_z;
+		$this->noise = array_fill(0, $size_x * $size_y * $size_z, 0.0);
 	}
 
 	public function getSizeX() : int{
-		return $this->sizeX;
+		return $this->size_x;
 	}
 
 	public function getSizeY() : int{
-		return $this->sizeY;
+		return $this->size_y;
 	}
 
 	public function getSizeZ() : int{
-		return $this->sizeZ;
+		return $this->size_z;
 	}
 
-	public function setSizeX(int $sizeX) : void{
-		$this->sizeX = $sizeX;
+	public function setSizeX(int $size_x) : void{
+		$this->size_x = $size_x;
 	}
 
-	public function setSizeY(int $sizeY) : void{
-		$this->sizeY = $sizeY;
+	public function setSizeY(int $size_y) : void{
+		$this->size_y = $size_y;
 	}
 
-	public function setSizeZ(int $sizeZ) : void{
-		$this->sizeZ = $sizeZ;
+	public function setSizeZ(int $size_z) : void{
+		$this->size_z = $size_z;
 	}
 
 	/**
@@ -104,14 +104,14 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 	 * @return float[] the noise array
 	 */
 	public function getFractalBrownianMotion(float $x, float $y, float $z, float $lacunarity, float $persistence) : array{
-		$this->noise = array_fill(0, $this->sizeX * $this->sizeY * $this->sizeZ, 0.0);
+		$this->noise = array_fill(0, $this->size_x * $this->size_y * $this->size_z, 0.0);
 
 		$freq = 1;
 		$amp = 1;
 
-		$x *= $this->xScale;
-		$y *= $this->yScale;
-		$z *= $this->zScale;
+		$x *= $this->x_scale;
+		$y *= $this->y_scale;
+		$z *= $this->z_scale;
 
 		// fBm
 		// the noise have to be periodic over x and z axis: otherwise it can go crazy with high
@@ -135,7 +135,7 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 			$dz += $lz;
 
 			$dy = $y * $freq;
-			$this->noise = $octave->getNoise($this->noise, $dx, $dy, $dz, $this->sizeX, $this->sizeY, $this->sizeZ, $this->xScale * $freq, $this->yScale * $freq, $this->zScale * $freq, $amp);
+			$this->noise = $octave->getNoise($this->noise, $dx, $dy, $dz, $this->size_x, $this->size_y, $this->size_z, $this->x_scale * $freq, $this->y_scale * $freq, $this->z_scale * $freq, $amp);
 			$freq *= $lacunarity;
 			$amp *= $persistence;
 		}

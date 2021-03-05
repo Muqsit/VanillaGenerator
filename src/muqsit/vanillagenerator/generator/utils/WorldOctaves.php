@@ -19,40 +19,40 @@ class WorldOctaves{
 	 *
 	 * @phpstan-var T
 	 */
-	public $height;
+	public OctaveGenerator $height;
 
 	/**
 	 * @var OctaveGenerator
 	 *
 	 * @phpstan-var U
 	 */
-	public $roughness;
+	public OctaveGenerator $roughness;
 
 	/**
 	 * @var OctaveGenerator
 	 *
 	 * @phpstan-var U
 	 */
-	public $roughness2;
+	public OctaveGenerator $roughness_2;
 
 	/**
 	 * @var OctaveGenerator
 	 *
 	 * @phpstan-var V
 	 */
-	public $detail;
+	public OctaveGenerator $detail;
 
 	/**
 	 * @var OctaveGenerator
 	 *
 	 * @phpstan-var W
 	 */
-	public $surface;
+	public OctaveGenerator $surface;
 
 	/**
 	 * @param OctaveGenerator $height
 	 * @param OctaveGenerator $roughness
-	 * @param OctaveGenerator $roughness2
+	 * @param OctaveGenerator $roughness_2
 	 * @param OctaveGenerator $detail
 	 * @param OctaveGenerator $surface
 	 *
@@ -65,13 +65,13 @@ class WorldOctaves{
 	public function __construct(
 		OctaveGenerator $height,
 		OctaveGenerator $roughness,
-		OctaveGenerator $roughness2,
+		OctaveGenerator $roughness_2,
 		OctaveGenerator $detail,
 		OctaveGenerator $surface
 	){
 		$this->height = $height;
 		$this->roughness = $roughness;
-		$this->roughness2 = $roughness2;
+		$this->roughness_2 = $roughness_2;
 		$this->detail = $detail;
 		$this->surface = $surface;
 	}
