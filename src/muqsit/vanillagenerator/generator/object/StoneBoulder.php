@@ -13,7 +13,7 @@ use function array_key_exists;
 class StoneBoulder extends TerrainObject{
 
 	/** @var int[] */
-	private static $GROUND_TYPES;
+	private static array $GROUND_TYPES;
 
 	public static function init() : void{
 		self::$GROUND_TYPES = [];
@@ -22,49 +22,49 @@ class StoneBoulder extends TerrainObject{
 		}
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
-		$groundReached = false;
-		while($sourceY > 3){
-			--$sourceY;
-			$block = $world->getBlockAt($sourceX, $sourceY, $sourceZ);
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		$ground_reached = false;
+		while($source_y > 3){
+			--$source_y;
+			$block = $world->getBlockAt($source_x, $source_y, $source_z);
 			if($block->getId() === BlockLegacyIds::AIR){
 				continue;
 			}
 
 			if(array_key_exists($block->getId(), self::$GROUND_TYPES)){
-				$groundReached = true;
-				++$sourceY;
+				$ground_reached = true;
+				++$source_y;
 				break;
 			}
 		}
 
-		if(!$groundReached || $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId() !== BlockLegacyIds::AIR){
+		if(!$ground_reached || $world->getBlockAt($source_x, $source_y, $source_z)->getId() !== BlockLegacyIds::AIR){
 			return false;
 		}
 
 		for($i = 0; $i < 3; ++$i){
-			$radiusX = $random->nextBoundedInt(2);
-			$radiusZ = $random->nextBoundedInt(2);
-			$radiusY = $random->nextBoundedInt(2);
-			$f = ($radiusX + $radiusZ + $radiusY) * 0.333 + 0.5;
+			$radius_x = $random->nextBoundedInt(2);
+			$radius_z = $random->nextBoundedInt(2);
+			$radius_y = $random->nextBoundedInt(2);
+			$f = ($radius_x + $radius_z + $radius_y) * 0.333 + 0.5;
 			$fsquared = $f * $f;
-			for($x = -$radiusX; $x <= $radiusX; ++$x){
+			for($x = -$radius_x; $x <= $radius_x; ++$x){
 				$xsquared = $x * $x;
-				for($z = -$radiusZ; $z <= $radiusZ; ++$z){
+				for($z = -$radius_z; $z <= $radius_z; ++$z){
 					$zsquared = $z * $z;
-					for($y = -$radiusY; $y <= $radiusY; ++$y){
+					for($y = -$radius_y; $y <= $radius_y; ++$y){
 						if($xsquared + $zsquared + $y * $y > $fsquared){
 							continue;
 						}
-						if(!TerrainObject::killWeakBlocksAbove($world, $sourceX + $x, $sourceY + $y, $sourceZ + $z)){
-							$world->setBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z, VanillaBlocks::MOSSY_COBBLESTONE());
+						if(!TerrainObject::killWeakBlocksAbove($world, $source_x + $x, $source_y + $y, $source_z + $z)){
+							$world->setBlockAt($source_x + $x, $source_y + $y, $source_z + $z, VanillaBlocks::MOSSY_COBBLESTONE());
 						}
 					}
 				}
 			}
-			$sourceX += $random->nextBoundedInt(4) - 1;
-			$sourceZ += $random->nextBoundedInt(4) - 1;
-			$sourceY -= $random->nextBoundedInt(2);
+			$source_x += $random->nextBoundedInt(4) - 1;
+			$source_z += $random->nextBoundedInt(4) - 1;
+			$source_y -= $random->nextBoundedInt(2);
 		}
 		return true;
 	}

@@ -17,51 +17,51 @@ class MegaPineTree extends MegaRedwoodTree{
 		$this->setLeavesHeight($random->nextBoundedInt(5) + 3);
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $blockX, int $blockY, int $blockZ) : bool{
-		$generated = parent::generate($world, $random, $blockX, $blockY, $blockZ);
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		$generated = parent::generate($world, $random, $source_x, $source_y, $source_z);
 		if($generated){
-			$this->generatePodzol($blockX, $blockY, $blockZ, $world, $random);
+			$this->generatePodzol($source_x, $source_y, $source_z, $world, $random);
 		}
 		return $generated;
 	}
 
-	protected function generateDirtBelowTrunk(int $blockX, int $blockY, int $blockZ) : void{
+	protected function generateDirtBelowTrunk(int $block_x, int $block_y, int $block_z) : void{
 		// SELF, SOUTH, EAST, SOUTH EAST
-		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ, VanillaBlocks::PODZOL());
-		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ + 1, VanillaBlocks::PODZOL());
-		$this->transaction->addBlockAt($blockX + 1, $blockY - 1, $blockZ, VanillaBlocks::PODZOL());
-		$this->transaction->addBlockAt($blockX + 1, $blockY - 1, $blockZ + 1, VanillaBlocks::PODZOL());
+		$this->transaction->addBlockAt($block_x, $block_y - 1, $block_z, VanillaBlocks::PODZOL());
+		$this->transaction->addBlockAt($block_x, $block_y - 1, $block_z + 1, VanillaBlocks::PODZOL());
+		$this->transaction->addBlockAt($block_x + 1, $block_y - 1, $block_z, VanillaBlocks::PODZOL());
+		$this->transaction->addBlockAt($block_x + 1, $block_y - 1, $block_z + 1, VanillaBlocks::PODZOL());
 	}
 
-	private function generatePodzol(int $sourceX, int $sourceY, int $sourceZ, ChunkManager $world, Random $random) : void{
-		$this->generatePodzolPatch($sourceX - 1, $sourceY, $sourceZ - 1, $world);
-		$this->generatePodzolPatch($sourceX + 2, $sourceY, $sourceZ - 1, $world);
-		$this->generatePodzolPatch($sourceX - 1, $sourceY, $sourceZ + 2, $world);
-		$this->generatePodzolPatch($sourceX + 2, $sourceY, $sourceZ + 2, $world);
+	private function generatePodzol(int $source_x, int $source_y, int $source_z, ChunkManager $world, Random $random) : void{
+		$this->generatePodzolPatch($source_x - 1, $source_y, $source_z - 1, $world);
+		$this->generatePodzolPatch($source_x + 2, $source_y, $source_z - 1, $world);
+		$this->generatePodzolPatch($source_x - 1, $source_y, $source_z + 2, $world);
+		$this->generatePodzolPatch($source_x + 2, $source_y, $source_z + 2, $world);
 		for($i = 0; $i < 5; ++$i){
 			$n = $random->nextBoundedInt(64);
 			if($n % 8 === 0 || $n % 8 === 7 || $n / 8 === 0 || $n / 8 === 7){
-				$this->generatePodzolPatch($sourceX - 3 + $n % 8, $sourceY, $sourceZ - 3 + $n / 8, $world);
+				$this->generatePodzolPatch($source_x - 3 + $n % 8, $source_y, $source_z - 3 + $n / 8, $world);
 			}
 		}
 	}
 
-	private function generatePodzolPatch(int $sourceX, int $sourceY, int $sourceZ, ChunkManager $world) : void{
+	private function generatePodzolPatch(int $source_x, int $source_y, int $source_z, ChunkManager $world) : void{
 		for($x = -2; $x <= 2; ++$x){
 			for($z = -2; $z <= 2; ++$z){
 				if(abs($x) === 2 && abs($z) === 2){
 					continue;
 				}
 				for($y = 2; $y >= -3; --$y){
-					$blockId = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z)->getId();
-					if($blockId === BlockLegacyIds::GRASS || $blockId === BlockLegacyIds::DIRT){
-						if($world->getBlockAt($sourceX + $x, $sourceY + $y + 1, $sourceZ + $z)->isSolid()){
+					$block_id = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z)->getId();
+					if($block_id === BlockLegacyIds::GRASS || $block_id === BlockLegacyIds::DIRT){
+						if($world->getBlockAt($source_x + $x, $source_y + $y + 1, $source_z + $z)->isSolid()){
 							$dirt = VanillaBlocks::DIRT();
 						}else{
 							$dirt = VanillaBlocks::PODZOL();
 						}
-						$world->setBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z, $dirt);
-					}elseif($blockId !== BlockLegacyIds::AIR && $sourceY + $y < $sourceY){
+						$world->setBlockAt($source_x + $x, $source_y + $y, $source_z + $z, $dirt);
+					}elseif($block_id !== BlockLegacyIds::AIR && $source_y + $y < $source_y){
 						break;
 					}
 				}

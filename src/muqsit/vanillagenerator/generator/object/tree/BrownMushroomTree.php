@@ -15,7 +15,7 @@ use function array_key_exists;
 class BrownMushroomTree extends GenericTree{
 
 	/** @var int */
-	protected $type = BlockLegacyIds::BROWN_MUSHROOM_BLOCK;
+	protected int $type = BlockLegacyIds::BROWN_MUSHROOM_BLOCK;
 
 	/**
 	 * Initializes this mushroom with a random height, preparing it to attempt to generate.
@@ -38,26 +38,26 @@ class BrownMushroomTree extends GenericTree{
 		return $id === BlockLegacyIds::GRASS || $id === BlockLegacyIds::DIRT || $id === BlockLegacyIds::MYCELIUM;
 	}
 
-	public function canPlace(int $baseX, int $baseY, int $baseZ, ChunkManager $world) : bool{
-		$worldHeight = $world->getWorldHeight();
-		for($y = $baseY; $y <= $baseY + 1 + $this->height; ++$y){
+	public function canPlace(int $base_x, int $base_y, int $base_z, ChunkManager $world) : bool{
+		$world_height = $world->getWorldHeight();
+		for($y = $base_y; $y <= $base_y + 1 + $this->height; ++$y){
 			// Space requirement is 7x7 blocks, so brown mushroom's cap
 			// can be directly touching a mushroom next to it.
 			// Since red mushrooms fits in 5x5 blocks it will never
 			// touch another huge mushroom.
 			$radius = 3;
-			if($y <= $baseY + 3){
+			if($y <= $base_y + 3){
 				$radius = 0; // radius is 0 below 4 blocks tall (only the stem to take in account)
 			}
 
 			// check for block collision on horizontal slices
-			for($x = $baseX - $radius; $x <= $baseX + $radius; ++$x){
-				for($z = $baseZ - $radius; $z <= $baseZ + $radius; ++$z){
-					if($y < 0 || $y >= $worldHeight){ // height out of range
+			for($x = $base_x - $radius; $x <= $base_x + $radius; ++$x){
+				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){
+					if($y < 0 || $y >= $world_height){ // height out of range
 						return false;
 					}
 					// skip source block check
-					if($y !== $baseY || $x !== $baseX || $z !== $baseZ){
+					if($y !== $base_y || $x !== $base_x || $z !== $base_z){
 						// we can overlap leaves around
 						if(!array_key_exists($world->getBlockAt($x, $y, $z)->getId(), $this->overridables)){
 							return false;
@@ -69,8 +69,8 @@ class BrownMushroomTree extends GenericTree{
 		return true;
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $blockX, int $blockY, int $blockZ) : bool{
-		if($this->cannotGenerateAt($blockX, $blockY, $blockZ, $world)){
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		if($this->cannotGenerateAt($source_x, $source_y, $source_z, $world)){
 			return false;
 		}
 
@@ -79,74 +79,74 @@ class BrownMushroomTree extends GenericTree{
 		// generate the stem
 		$stem = $block_factory->get($this->type, 10);
 		for($y = 0; $y < $this->height; ++$y){
-			$this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ, $stem); // stem texture
+			$this->transaction->addBlockAt($source_x, $source_y + $y, $source_z, $stem); // stem texture
 		}
 
 		// get the mushroom's cap Y start
-		$capY = $blockY + $this->height; // for brown mushroom it starts on top directly
+		$cap_y = $source_y + $this->height; // for brown mushroom it starts on top directly
 		if($this->type === BlockLegacyIds::RED_MUSHROOM_BLOCK){
-			$capY = $blockY + $this->height - 3; // for red mushroom, cap's thickness is 4 blocks
+			$cap_y = $source_y + $this->height - 3; // for red mushroom, cap's thickness is 4 blocks
 		}
 
 		// generate mushroom's cap
-		for($y = $capY; $y <= $blockY + $this->height; ++$y){ // from bottom to top of mushroom
+		for($y = $cap_y; $y <= $source_y + $this->height; ++$y){ // from bottom to top of mushroom
 			$radius = 1; // radius for the top of red mushroom
-			if($y < $blockY + $this->height){
+			if($y < $source_y + $this->height){
 				$radius = 2; // radius for red mushroom cap is 2
 			}
 			if($this->type === BlockLegacyIds::BROWN_MUSHROOM_BLOCK){
 				$radius = 3; // radius always 3 for a brown mushroom
 			}
 			// loop over horizontal slice
-			for($x = $blockX - $radius; $x <= $blockX + $radius; ++$x){
-				for($z = $blockZ - $radius; $z <= $blockZ + $radius; ++$z){
+			for($x = $source_x - $radius; $x <= $source_x + $radius; ++$x){
+				for($z = $source_z - $radius; $z <= $source_z + $radius; ++$z){
 					$data = 5; // cap texture on top
 					// cap's borders/corners treatment
-					if($x === $blockX - $radius){
+					if($x === $source_x - $radius){
 						$data = 4; // cap texture on top and west
-					}elseif($x === $blockX + $radius){
+					}elseif($x === $source_x + $radius){
 						$data = 6; // cap texture on top and east
 					}
-					if($z === $blockZ - $radius){
+					if($z === $source_z - $radius){
 						$data -= 3;
-					}elseif($z === $blockZ + $radius){
+					}elseif($z === $source_z + $radius){
 						$data += 3;
 					}
 
 					// corners shrink treatment
 					// if it's a brown mushroom we need it always
 					// it's a red mushroom, it's only applied below the top
-					if($this->type === BlockLegacyIds::BROWN_MUSHROOM_BLOCK || $y < $blockY + $this->height){
+					if($this->type === BlockLegacyIds::BROWN_MUSHROOM_BLOCK || $y < $source_y + $this->height){
 
 						// excludes the real corners of the cap structure
-						if(($x === $blockX - $radius || $x === $blockX + $radius)
-							&& ($z === $blockZ - $radius || $z === $blockZ + $radius)){
+						if(($x === $source_x - $radius || $x === $source_x + $radius)
+							&& ($z === $source_z - $radius || $z === $source_z + $radius)){
 							continue;
 						}
 
 						// mushroom's cap corners treatment
-						if($x === $blockX - ($radius - 1) && $z === $blockZ - $radius){
+						if($x === $source_x - ($radius - 1) && $z === $source_z - $radius){
 							$data = 1; // cap texture on top, west and north
-						}elseif($x === $blockX - $radius && $z === $blockZ - ($radius
+						}elseif($x === $source_x - $radius && $z === $source_z - ($radius
 								- 1)){
 							$data = 1; // cap texture on top, west and north
-						}elseif($x === $blockX + $radius - 1 && $z === $blockZ - $radius){
+						}elseif($x === $source_x + $radius - 1 && $z === $source_z - $radius){
 							$data = 3; // cap texture on top, north and east
-						}elseif($x === $blockX + $radius && $z === $blockZ - ($radius - 1)){
+						}elseif($x === $source_x + $radius && $z === $source_z - ($radius - 1)){
 							$data = 3; // cap texture on top, north and east
-						}elseif($x === $blockX - ($radius - 1) && $z === $blockZ + $radius){
+						}elseif($x === $source_x - ($radius - 1) && $z === $source_z + $radius){
 							$data = 7; // cap texture on top, south and west
-						}elseif($x === $blockX - $radius && $z === $blockZ + $radius - 1){
+						}elseif($x === $source_x - $radius && $z === $source_z + $radius - 1){
 							$data = 7; // cap texture on top, south and west
-						}elseif($x === $blockX + $radius - 1 && $z === $blockZ + $radius){
+						}elseif($x === $source_x + $radius - 1 && $z === $source_z + $radius){
 							$data = 9; // cap texture on top, east and south
-						}elseif($x === $blockX + $radius && $z === $blockZ + $radius - 1){
+						}elseif($x === $source_x + $radius && $z === $source_z + $radius - 1){
 							$data = 9; // cap texture on top, east and south
 						}
 					}
 
 					// a $data of 5 below the top layer means air
-					if($data !== 5 || $y >= $blockY + $this->height){
+					if($data !== 5 || $y >= $source_y + $this->height){
 						$this->transaction->addBlockAt($x, $y, $z, $block_factory->get($this->type, $data));
 					}
 				}

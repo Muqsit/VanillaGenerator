@@ -14,7 +14,7 @@ use pocketmine\world\World;
 abstract class TerrainObject{
 
 	/** @var int[] */
-	private static $PLANT_TYPES;
+	private static array $PLANT_TYPES;
 
 	public static function init() : void{
 		self::$PLANT_TYPES = [];
@@ -55,12 +55,12 @@ abstract class TerrainObject{
 	 *
 	 * @param ChunkManager $world the world to generate in
 	 * @param Random $random the PRNG that will choose the size and a few details of the shape
-	 * @param int $sourceX the base X coordinate
-	 * @param int $sourceY the base Y coordinate
-	 * @param int $sourceZ the base Z coordinate
+	 * @param int $source_x the base X coordinate
+	 * @param int $source_y the base Y coordinate
+	 * @param int $source_z the base Z coordinate
 	 * @return bool if successfully generated
 	 */
-	abstract public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool;
+	abstract public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool;
 }
 
 TerrainObject::init();

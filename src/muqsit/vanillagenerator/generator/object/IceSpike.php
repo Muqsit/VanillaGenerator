@@ -16,7 +16,7 @@ class IceSpike extends TerrainObject{
 	private const MAX_STEM_HEIGHT = 50;
 
 	/** @var int[] */
-	private static $MATERIALS;
+	private static array $MATERIALS;
 
 	public static function init() : void{
 		self::$MATERIALS = [];
@@ -25,26 +25,26 @@ class IceSpike extends TerrainObject{
 		}
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
-		$tipHeight = $random->nextBoundedInt(4) + 7;
-		$tipRadius = (int) ($tipHeight / 4 + $random->nextBoundedInt(2));
-		$tipOffset = $random->nextBoundedInt(4);
-		if($tipRadius > 1 && $random->nextBoundedInt(60) === 0){
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		$tip_height = $random->nextBoundedInt(4) + 7;
+		$tip_radius = (int) ($tip_height / 4 + $random->nextBoundedInt(2));
+		$tip_offset = $random->nextBoundedInt(4);
+		if($tip_radius > 1 && $random->nextBoundedInt(60) === 0){
 			// sometimes generate a giant spike
-			$tipOffset += $random->nextBoundedInt(30) + 10;
+			$tip_offset += $random->nextBoundedInt(30) + 10;
 		}
 		$succeeded = false;
-		$stemRadius = max(0, min(self::MAX_STEM_RADIUS, $tipRadius - 1));
-		for($x = -$stemRadius; $x <= $stemRadius; ++$x){
-			for($z = -$stemRadius; $z <= $stemRadius; ++$z){
+		$stem_radius = max(0, min(self::MAX_STEM_RADIUS, $tip_radius - 1));
+		for($x = -$stem_radius; $x <= $stem_radius; ++$x){
+			for($z = -$stem_radius; $z <= $stem_radius; ++$z){
 				$stackHeight = self::MAX_STEM_HEIGHT;
 				if(abs($x) === self::MAX_STEM_RADIUS && abs($z) === self::MAX_STEM_RADIUS){
 					$stackHeight = $random->nextBoundedInt(5);
 				}
-				for($y = $tipOffset - 1; $y >= -3; --$y){
-					$block = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z);
+				for($y = $tip_offset - 1; $y >= -3; --$y){
+					$block = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z);
 					if(array_key_exists($block->getId(), self::$MATERIALS)){
-						$world->setBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z, VanillaBlocks::PACKED_ICE());
+						$world->setBlockAt($source_x + $x, $source_y + $y, $source_z + $z, VanillaBlocks::PACKED_ICE());
 						--$stackHeight;
 						if($stackHeight <= 0){
 							$y -= $random->nextBoundedInt(5);
@@ -57,8 +57,8 @@ class IceSpike extends TerrainObject{
 			}
 		}
 
-		for($y = 0; $y < $tipHeight; ++$y){
-			$f = (1.0 - (float) $y / $tipHeight) * $tipRadius;
+		for($y = 0; $y < $tip_height; ++$y){
+			$f = (1.0 - (float) $y / $tip_height) * $tip_radius;
 			$radius = (int) ceil($f);
 			for($x = -$radius; $x <= $radius; ++$x){
 				$fx = -0.25 - $x;
@@ -70,13 +70,13 @@ class IceSpike extends TerrainObject{
 						continue;
 					}
 					// tip shape in top direction
-					if(array_key_exists($world->getBlockAt($sourceX + $x, $sourceY + $tipOffset + $y, $sourceZ + $z)->getId(), self::$MATERIALS)){
-						$world->setBlockAt($sourceX + $x, $sourceY + $tipOffset + $y, $sourceZ + $z, VanillaBlocks::PACKED_ICE());
+					if(array_key_exists($world->getBlockAt($source_x + $x, $source_y + $tip_offset + $y, $source_z + $z)->getId(), self::$MATERIALS)){
+						$world->setBlockAt($source_x + $x, $source_y + $tip_offset + $y, $source_z + $z, VanillaBlocks::PACKED_ICE());
 						$succeeded = true;
 					}
 					if($radius > 1 && $y !== 0){ // same shape in bottom direction
-						if(array_key_exists($world->getBlockAt($sourceX + $x, $sourceY + $tipOffset - $y, $sourceZ + $z)->getId(), self::$MATERIALS)){
-							$world->setBlockAt($sourceX + $x, $sourceY + $tipOffset - $y, $sourceZ + $z, VanillaBlocks::PACKED_ICE());
+						if(array_key_exists($world->getBlockAt($source_x + $x, $source_y + $tip_offset - $y, $source_z + $z)->getId(), self::$MATERIALS)){
+							$world->setBlockAt($source_x + $x, $source_y + $tip_offset - $y, $source_z + $z, VanillaBlocks::PACKED_ICE());
 							$succeeded = true;
 						}
 					}

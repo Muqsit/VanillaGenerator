@@ -14,43 +14,43 @@ class BlockPatch extends TerrainObject{
 	private const MIN_RADIUS = 2;
 
 	/** @var Block */
-	private $type;
+	private Block $type;
 
 	/** @var int */
-	private $horizRadius;
+	private int $horiz_radius;
 
 	/** @var int */
-	private $vertRadius;
+	private int $vert_radius;
 
 	/** @var int[] */
-	private $overridables = [];
+	private array $overridables = [];
 
 	/**
 	 * Creates a patch.
 	 * @param Block $type the ground cover block type
-	 * @param int $horizRadius the maximum radius on the horizontal plane
-	 * @param int $vertRadius the depth above and below the center
+	 * @param int $horiz_radius the maximum radius on the horizontal plane
+	 * @param int $vert_radius the depth above and below the center
 	 * @param int ...$overridables_full_id
 	 */
-	public function __construct(Block $type, int $horizRadius, int $vertRadius, int ...$overridables_full_id){
+	public function __construct(Block $type, int $horiz_radius, int $vert_radius, int ...$overridables_full_id){
 		$this->type = $type;
-		$this->horizRadius = $horizRadius;
-		$this->vertRadius = $vertRadius;
+		$this->horiz_radius = $horiz_radius;
+		$this->vert_radius = $vert_radius;
 		foreach($overridables_full_id as $full_id){
 			$this->overridables[$full_id] = $full_id;
 		}
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$succeeded = false;
-		$n = $random->nextBoundedInt($this->horizRadius - self::MIN_RADIUS) + self::MIN_RADIUS;
+		$n = $random->nextBoundedInt($this->horiz_radius - self::MIN_RADIUS) + self::MIN_RADIUS;
 		$nsquared = $n * $n;
-		for($x = $sourceX - $n; $x <= $sourceX + $n; ++$x){
-			for($z = $sourceZ - $n; $z <= $sourceZ + $n; ++$z){
-				if(($x - $sourceX) * ($x - $sourceX) + ($z - $sourceZ) * ($z - $sourceZ) > $nsquared){
+		for($x = $source_x - $n; $x <= $source_x + $n; ++$x){
+			for($z = $source_z - $n; $z <= $source_z + $n; ++$z){
+				if(($x - $source_x) * ($x - $source_x) + ($z - $source_z) * ($z - $source_z) > $nsquared){
 					continue;
 				}
-				for($y = $sourceY - $this->vertRadius; $y <= $sourceY + $this->vertRadius; ++$y){
+				for($y = $source_y - $this->vert_radius; $y <= $source_y + $this->vert_radius; ++$y){
 					$block = $world->getBlockAt($x, $y, $z);
 					if(!array_key_exists($block->getFullId(), $this->overridables)){
 						continue;

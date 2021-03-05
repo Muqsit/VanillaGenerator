@@ -22,27 +22,27 @@ class CocoaTree extends JungleTree{
 
 	private const COCOA_SIZE = [self::SIZE_SMALL, self::SIZE_MEDIUM, self::SIZE_LARGE];
 
-	public function generate(ChunkManager $world, Random $random, int $blockX, int $blockY, int $blockZ) : bool{
-		if(!parent::generate($world, $random, $blockX, $blockY, $blockZ)){
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		if(!parent::generate($world, $random, $source_x, $source_y, $source_z)){
 			return false;
 		}
 
 		// places some vines on the trunk
-		$this->addVinesOnTrunk($blockX, $blockY, $blockZ, $world, $random);
+		$this->addVinesOnTrunk($source_x, $source_y, $source_z, $world, $random);
 		// search for air around leaves to grow hanging vines
-		$this->addVinesOnLeaves($blockX, $blockY, $blockZ, $world, $random);
+		$this->addVinesOnLeaves($source_x, $source_y, $source_z, $world, $random);
 		// and maybe place some cocoa
-		$this->addCocoa($blockX, $blockY, $blockZ, $random);
+		$this->addCocoa($source_x, $source_y, $source_z, $random);
 		return true;
 	}
 
-	protected function addVinesOnLeaves(int $baseX, int $baseY, int $baseZ, ChunkManager $world, Random $random) : void{
-		for($y = $baseY - 3 + $this->height; $y <= $baseY + $this->height; ++$y){
-			$ny = $y - ($baseY + $this->height);
+	protected function addVinesOnLeaves(int $base_x, int $base_y, int $base_z, ChunkManager $world, Random $random) : void{
+		for($y = $base_y - 3 + $this->height; $y <= $base_y + $this->height; ++$y){
+			$ny = $y - ($base_y + $this->height);
 			$radius = 2 - $ny / 2;
-			for($x = $baseX - $radius; $x <= $baseX + $radius; ++$x){
+			for($x = $base_x - $radius; $x <= $base_x + $radius; ++$x){
 				$ax = (int) $x;
-				for($z = $baseZ - $radius; $z <= $baseZ + $radius; ++$z){
+				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){
 					$az = (int) $z;
 					if($world->getBlockAt($ax, $y, $az)->getId() === BlockLegacyIds::LEAVES){
 						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($ax - 1, $y, $az)->getId() === BlockLegacyIds::AIR){
@@ -63,31 +63,31 @@ class CocoaTree extends JungleTree{
 		}
 	}
 
-	private function addVinesOnTrunk(int $trunkX, int $trunkY, int $trunkZ, ChunkManager $world, Random $random) : void{
+	private function addVinesOnTrunk(int $trunk_x, int $trunk_y, int $trunk_z, ChunkManager $world, Random $random) : void{
 		for($y = 1; $y < $this->height; ++$y){
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
-				$world->getBlockAt($trunkX - 1, $trunkY + $y, $trunkZ)->getId() === BlockLegacyIds::AIR
+				$world->getBlockAt($trunk_x - 1, $trunk_y + $y, $trunk_z)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX - 1, $trunkY + $y, $trunkZ, BlockUtils::VINE(Facing::EAST));
+				$this->transaction->addBlockAt($trunk_x - 1, $trunk_y + $y, $trunk_z, BlockUtils::VINE(Facing::EAST));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
-				$world->getBlockAt($trunkX + 1, $trunkY + $y, $trunkZ)->getId() === BlockLegacyIds::AIR
+				$world->getBlockAt($trunk_x + 1, $trunk_y + $y, $trunk_z)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX + 1, $trunkY + $y, $trunkZ, BlockUtils::VINE(Facing::WEST));
+				$this->transaction->addBlockAt($trunk_x + 1, $trunk_y + $y, $trunk_z, BlockUtils::VINE(Facing::WEST));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
-				$world->getBlockAt($trunkX, $trunkY + $y, $trunkZ - 1)->getId() === BlockLegacyIds::AIR
+				$world->getBlockAt($trunk_x, $trunk_y + $y, $trunk_z - 1)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX, $trunkY + $y, $trunkZ - 1, BlockUtils::VINE(Facing::SOUTH));
+				$this->transaction->addBlockAt($trunk_x, $trunk_y + $y, $trunk_z - 1, BlockUtils::VINE(Facing::SOUTH));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
-				$world->getBlockAt($trunkX, $trunkY + $y, $trunkZ + 1)->getId() === BlockLegacyIds::AIR
+				$world->getBlockAt($trunk_x, $trunk_y + $y, $trunk_z + 1)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunkX, $trunkY + $y, $trunkZ + 1, BlockUtils::VINE(Facing::NORTH));
+				$this->transaction->addBlockAt($trunk_x, $trunk_y + $y, $trunk_z + 1, BlockUtils::VINE(Facing::NORTH));
 			}
 		}
 	}
@@ -101,14 +101,14 @@ class CocoaTree extends JungleTree{
 		}
 	}
 
-	private function addCocoa(int $sourceX, int $sourceY, int $sourceZ, Random $random) : void{
+	private function addCocoa(int $source_x, int $source_y, int $source_z, Random $random) : void{
 		if($this->height > 5 && $random->nextBoundedInt(5) === 0){
 			for($y = 0; $y < 2; ++$y){
-				foreach(self::COCOA_FACES as $cocoaFace){
+				foreach(self::COCOA_FACES as $cocoa_face){
 					if($random->nextBoundedInt(count(self::COCOA_FACES) - $y) === 0){ // higher it is, more chances there is
 						$size = self::COCOA_SIZE[$random->nextBoundedInt(count(self::COCOA_SIZE))];
-						$block = (new Vector3($sourceX, $sourceY + $this->height - 5 + $y, $sourceZ))->getSide($cocoaFace);
-						$this->transaction->addBlockAt($block->x, $block->y, $block->z, BlockUtils::COCOA($cocoaFace, $size));
+						$block = (new Vector3($source_x, $source_y + $this->height - 5 + $y, $source_z))->getSide($cocoa_face);
+						$this->transaction->addBlockAt($block->x, $block->y, $block->z, BlockUtils::COCOA($cocoa_face, $size));
 					}
 				}
 			}

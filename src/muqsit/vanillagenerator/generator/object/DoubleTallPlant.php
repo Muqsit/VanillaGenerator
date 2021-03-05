@@ -14,7 +14,7 @@ use pocketmine\world\ChunkManager;
 class DoubleTallPlant extends TerrainObject{
 
 	/** @var DoublePlant */
-	private $species;
+	private DoublePlant $species;
 
 	public function __construct(DoublePlant $species){
 		$this->species = $species;
@@ -25,23 +25,23 @@ class DoubleTallPlant extends TerrainObject{
 	 *
 	 * @param ChunkManager $world
 	 * @param Random $random
-	 * @param int $sourceX
-	 * @param int $sourceY
-	 * @param int $sourceZ
+	 * @param int $source_x
+	 * @param int $source_y
+	 * @param int $source_z
 	 * @return bool true whether least one plant was successfully generated
 	 */
-	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$placed = false;
 		$height = $world->getWorldHeight();
 		$species_top = BlockFactory::getInstance()->get($this->species->getId(), BlockLegacyMetadata::DOUBLE_PLANT_FLAG_TOP);
 		for($i = 0; $i < 64; ++$i){
-			$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$y = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
+			$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
 			$block = $world->getBlockAt($x, $y, $z);
-			$topBlock = $world->getBlockAt($x, $y + 1, $z);
-			if($y < $height && $block->getId() === BlockLegacyIds::AIR && $topBlock->getId() === BlockLegacyIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getId() === BlockLegacyIds::GRASS){
+			$top_block = $world->getBlockAt($x, $y + 1, $z);
+			if($y < $height && $block->getId() === BlockLegacyIds::AIR && $top_block->getId() === BlockLegacyIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getId() === BlockLegacyIds::GRASS){
 				$world->setBlockAt($x, $y, $z, $this->species);
 				$world->setBlockAt($x, $y + 1, $z, $species_top);
 				$placed = true;

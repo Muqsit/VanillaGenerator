@@ -21,19 +21,19 @@ class OreVein extends TerrainObject{
 	 * @return float the square of the normalized coordinate
 	 */
 	protected static function normalizedSquaredCoordinate(float $origin, float $radius, int $x) : float{
-		$squaredNormalizedX = ($x + 0.5 - $origin) / $radius;
-		$squaredNormalizedX *= $squaredNormalizedX;
-		return $squaredNormalizedX;
+		$squared_normalized_x = ($x + 0.5 - $origin) / $radius;
+		$squared_normalized_x *= $squared_normalized_x;
+		return $squared_normalized_x;
 	}
 
 	/** @var Block */
-	private $type;
+	private Block $type;
 
 	/** @var int */
-	private $amount;
+	private int $amount;
 
 	/** @var int */
-	private $targetType;
+	private int $target_type;
 
 	/**
 	 * Creates the instance for a given ore type.
@@ -43,49 +43,49 @@ class OreVein extends TerrainObject{
 	public function __construct(OreType $oreType){
 		$this->type = $oreType->getType();
 		$this->amount = $oreType->getAmount();
-		$this->targetType = $oreType->getTargetType();
+		$this->target_type = $oreType->getTargetType();
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$angle = $random->nextFloat() * M_PI;
-		$dx1 = $sourceX + sin($angle) * $this->amount / 8.0;
-		$dx2 = $sourceX - sin($angle) * $this->amount / 8.0;
-		$dz1 = $sourceZ + cos($angle) * $this->amount / 8.0;
-		$dz2 = $sourceZ - cos($angle) * $this->amount / 8.0;
-		$dy1 = $sourceY + $random->nextBoundedInt(3) - 2;
-		$dy2 = $sourceY + $random->nextBoundedInt(3) - 2;
+		$dx1 = $source_x + sin($angle) * $this->amount / 8.0;
+		$dx2 = $source_x - sin($angle) * $this->amount / 8.0;
+		$dz1 = $source_z + cos($angle) * $this->amount / 8.0;
+		$dz2 = $source_z - cos($angle) * $this->amount / 8.0;
+		$dy1 = $source_y + $random->nextBoundedInt(3) - 2;
+		$dy2 = $source_y + $random->nextBoundedInt(3) - 2;
 		$succeeded = false;
 		for($i = 0; $i < $this->amount; ++$i){
-			$originX = $dx1 + ($dx2 - $dx1) * $i / $this->amount;
-			$originY = $dy1 + ($dy2 - $dy1) * $i / $this->amount;
-			$originZ = $dz1 + ($dz2 - $dz1) * $i / $this->amount;
+			$origin_x = $dx1 + ($dx2 - $dx1) * $i / $this->amount;
+			$origin_y = $dy1 + ($dy2 - $dy1) * $i / $this->amount;
+			$origin_z = $dz1 + ($dz2 - $dz1) * $i / $this->amount;
 			$q = $random->nextFloat() * $this->amount / 16.0;
-			$radiusH = (sin($i * M_PI / $this->amount) + 1 * $q + 1) / 2.0;
-			$radiusV = (sin($i * M_PI / $this->amount) + 1 * $q + 1) / 2.0;
+			$radius_h = (sin($i * M_PI / $this->amount) + 1 * $q + 1) / 2.0;
+			$radius_v = (sin($i * M_PI / $this->amount) + 1 * $q + 1) / 2.0;
 
-			$min_x = (int) ($originX - $radiusH);
-			$max_x = (int) ($originX + $radiusH);
+			$min_x = (int) ($origin_x - $radius_h);
+			$max_x = (int) ($origin_x + $radius_h);
 
-			$min_y = (int) ($originY - $radiusV);
-			$max_y = (int) ($originY + $radiusV);
+			$min_y = (int) ($origin_y - $radius_v);
+			$max_y = (int) ($origin_y + $radius_v);
 
-			$min_z = (int) ($originZ - $radiusH);
-			$max_z = (int) ($originZ + $radiusH);
+			$min_z = (int) ($origin_z - $radius_h);
+			$max_z = (int) ($origin_z + $radius_h);
 
 			for($x = $min_x; $x <= $max_x; ++$x){
 				// scale the center of x to the range [-1, 1] within the circle
-				$squaredNormalizedX = self::normalizedSquaredCoordinate($originX, $radiusH, $x);
-				if($squaredNormalizedX >= 1){
+				$squared_normalized_x = self::normalizedSquaredCoordinate($origin_x, $radius_h, $x);
+				if($squared_normalized_x >= 1){
 					continue;
 				}
 				for($y = $min_y; $y <= $max_y; ++$y){
-					$squaredNormalizedY = self::normalizedSquaredCoordinate($originY, $radiusV, $y);
-					if($squaredNormalizedX + $squaredNormalizedY >= 1){
+					$squared_normalized_y = self::normalizedSquaredCoordinate($origin_y, $radius_v, $y);
+					if($squared_normalized_x + $squared_normalized_y >= 1){
 						continue;
 					}
 					for($z = $min_z; $z <= $max_z; ++$z){
-						$squaredNormalizedZ = self::normalizedSquaredCoordinate($originZ, $radiusH, $z);
-						if($squaredNormalizedX + $squaredNormalizedY + $squaredNormalizedZ < 1 && $world->getBlockAt($x, $y, $z)->getId() === $this->targetType){
+						$squared_normalized_z = self::normalizedSquaredCoordinate($origin_z, $radius_h, $z);
+						if($squared_normalized_x + $squared_normalized_y + $squared_normalized_z < 1 && $world->getBlockAt($x, $y, $z)->getId() === $this->target_type){
 							$world->setBlockAt($x, $y, $z, $this->type);
 							$succeeded = true;
 						}
