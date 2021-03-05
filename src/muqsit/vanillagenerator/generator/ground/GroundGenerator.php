@@ -16,17 +16,17 @@ use pocketmine\world\format\Chunk;
 class GroundGenerator{
 
 	/** @var Block */
-	protected $topMaterial;
+	protected Block $top_material;
 
 	/** @var Block */
-	protected $groundMaterial;
+	protected Block $ground_material;
 
 	/** @var int */
-	protected $bedrock_roughness = 5;
+	protected int $bedrock_roughness = 5;
 
-	public function __construct(?Block $topMaterial = null, ?Block $groundMaterial = null){
-		$this->setTopMaterial($topMaterial ?? VanillaBlocks::GRASS());
-		$this->setGroundMaterial($groundMaterial ?? VanillaBlocks::DIRT());
+	public function __construct(?Block $top_material = null, ?Block $ground_material = null){
+		$this->setTopMaterial($top_material ?? VanillaBlocks::GRASS());
+		$this->setGroundMaterial($ground_material ?? VanillaBlocks::DIRT());
 	}
 
 	public function getBedrockRoughness() : int{
@@ -37,12 +37,12 @@ class GroundGenerator{
 		$this->bedrock_roughness = $bedrock_roughness;
 	}
 
-	final protected function setTopMaterial(Block $topMaterial) : void{
-		$this->topMaterial = $topMaterial;
+	final protected function setTopMaterial(Block $top_material) : void{
+		$this->top_material = $top_material;
 	}
 
-	final protected function setGroundMaterial(Block $groundMaterial) : void{
-		$this->groundMaterial = $groundMaterial;
+	final protected function setGroundMaterial(Block $ground_material) : void{
+		$this->ground_material = $ground_material;
 	}
 
 	/**
@@ -53,19 +53,19 @@ class GroundGenerator{
 	 * @param int $x the chunk X coordinate
 	 * @param int $z the chunk Z coordinate
 	 * @param int $biome the biome this column is in
-	 * @param float $surfaceNoise the amplitude of random variation in surface height
+	 * @param float $surface_noise the amplitude of random variation in surface height
 	 */
-	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surfaceNoise) : void{
-		$seaLevel = 64;
+	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
+		$sea_level = 64;
 
-		$topMat = $this->topMaterial->getFullId();
-		$groundMat = $this->groundMaterial->getFullId();
-		$groundMatId = $this->groundMaterial->getId();
+		$top_mat = $this->top_material->getFullId();
+		$ground_mat = $this->ground_material->getFullId();
+		$ground_mat_id = $this->ground_material->getId();
 
-		$chunkX = $x;
-		$chunkZ = $z;
+		$chunk_x = $x;
+		$chunk_z = $z;
 
-		$surfaceHeight = max((int) ($surfaceNoise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
+		$surface_height = max((int) ($surface_noise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
 		$deep = -1;
 
 		$block_factory = BlockFactory::getInstance();
@@ -85,39 +85,39 @@ class GroundGenerator{
 			if($y <= $random->nextBoundedInt($this->bedrock_roughness)){
 				$chunk->setFullBlock($block_x, $y, $block_z, $bedrock);
 			}else{
-				$matId = $block_factory->fromFullBlock($chunk->getFullBlock($block_x, $y, $block_z))->getId();
-				if($matId === BlockLegacyIds::AIR){
+				$mat_id = $block_factory->fromFullBlock($chunk->getFullBlock($block_x, $y, $block_z))->getId();
+				if($mat_id === BlockLegacyIds::AIR){
 					$deep = -1;
-				}elseif($matId === BlockLegacyIds::STONE){
+				}elseif($mat_id === BlockLegacyIds::STONE){
 					if($deep === -1){
-						if($y >= $seaLevel - 5 && $y <= $seaLevel){
-							$topMat = $this->topMaterial->getFullId();
-							$groundMat = $this->groundMaterial->getFullId();
-							$groundMatId = $this->groundMaterial->getId();
+						if($y >= $sea_level - 5 && $y <= $sea_level){
+							$top_mat = $this->top_material->getFullId();
+							$ground_mat = $this->ground_material->getFullId();
+							$ground_mat_id = $this->ground_material->getId();
 						}
 
-						$deep = $surfaceHeight;
-						if($y >= $seaLevel - 2){
-							$chunk->setFullBlock($block_x, $y, $block_z, $topMat);
-						}elseif($y < $seaLevel - 8 - $surfaceHeight){
-							$topMat = $air;
-							$groundMat = $stone;
-							$groundMatId = BlockLegacyIds::STONE;
+						$deep = $surface_height;
+						if($y >= $sea_level - 2){
+							$chunk->setFullBlock($block_x, $y, $block_z, $top_mat);
+						}elseif($y < $sea_level - 8 - $surface_height){
+							$top_mat = $air;
+							$ground_mat = $stone;
+							$ground_mat_id = BlockLegacyIds::STONE;
 							$chunk->setFullBlock($block_x, $y, $block_z, $gravel);
 						}else{
-							$chunk->setFullBlock($block_x, $y, $block_z, $groundMat);
+							$chunk->setFullBlock($block_x, $y, $block_z, $ground_mat);
 						}
 					}elseif($deep > 0){
 						--$deep;
-						$chunk->setFullBlock($block_x, $y, $block_z, $groundMat);
+						$chunk->setFullBlock($block_x, $y, $block_z, $ground_mat);
 
-						if($deep === 0 && $groundMatId === BlockLegacyIds::SAND){
-							$deep = $random->nextBoundedInt(4) + max(0, $y - $seaLevel - 1);
-							$groundMat = $sandstone;
-							$groundMatId = BlockLegacyIds::SANDSTONE;
+						if($deep === 0 && $ground_mat_id === BlockLegacyIds::SAND){
+							$deep = $random->nextBoundedInt(4) + max(0, $y - $sea_level - 1);
+							$ground_mat = $sandstone;
+							$ground_mat_id = BlockLegacyIds::SANDSTONE;
 						}
 					}
-				}elseif($matId === BlockLegacyIds::STILL_WATER && $y === $seaLevel - 2 && BiomeClimateManager::isCold($biome, $chunkX, $y, $chunkZ)){
+				}elseif($mat_id === BlockLegacyIds::STILL_WATER && $y === $sea_level - 2 && BiomeClimateManager::isCold($biome, $chunk_x, $y, $chunk_z)){
 					$chunk->setFullBlock($block_x, $y, $block_z, $ice);
 				}
 			}
