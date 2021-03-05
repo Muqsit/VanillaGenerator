@@ -13,28 +13,28 @@ use pocketmine\world\format\Chunk;
 
 class FireDecorator extends Decorator{
 
-	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$amount = 1 + $random->nextBoundedInt(1 + $random->nextBoundedInt(10));
 
 		$height = $world->getWorldHeight();
-		$sourceYMargin = 8 * ($height >> 7);
+		$source_y_margin = 8 * ($height >> 7);
 
 		for($j = 0; $j < $amount; ++$j){
-			$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
-			$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
-			$sourceY = 4 + $random->nextBoundedInt($sourceYMargin);
+			$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
+			$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
+			$source_y = 4 + $random->nextBoundedInt($source_y_margin);
 
 			for($i = 0; $i < 64; ++$i){
-				$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-				$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-				$y = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
+				$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+				$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+				$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
 				$block = $world->getBlockAt($x, $y, $z);
-				$blockBelow = $world->getBlockAt($x, $y - 1, $z);
+				$block_beloow = $world->getBlockAt($x, $y - 1, $z);
 				if(
 					$y < $height &&
 					$block->getId() === BlockLegacyIds::AIR &&
-					$blockBelow->getId() === BlockLegacyIds::NETHERRACK
+					$block_beloow->getId() === BlockLegacyIds::NETHERRACK
 				){
 					$world->setBlockAt($x, $y, $z, VanillaBlocks::FIRE());
 				}
