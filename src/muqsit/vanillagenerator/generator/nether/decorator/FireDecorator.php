@@ -30,11 +30,11 @@ class FireDecorator extends Decorator{
 				$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
 				$block = $world->getBlockAt($x, $y, $z);
-				$block_beloow = $world->getBlockAt($x, $y - 1, $z);
+				$block_below = $world->getBlockAt($x, $y - 1, $z);
 				if(
 					$y < $height &&
 					$block->getId() === BlockLegacyIds::AIR &&
-					$block_beloow->getId() === BlockLegacyIds::NETHERRACK
+					$block_below->getId() === BlockLegacyIds::NETHERRACK
 				){
 					$world->setBlockAt($x, $y, $z, VanillaBlocks::FIRE());
 				}

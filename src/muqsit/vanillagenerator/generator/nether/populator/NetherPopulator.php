@@ -40,8 +40,8 @@ class NetherPopulator implements Populator{
 	/** @var MushroomDecorator */
 	private MushroomDecorator $red_mushroom_decorator;
 
-	public function __construct(int $worldHeight = World::Y_MAX){
-		$this->ore_populator = new OrePopulator($worldHeight);
+	public function __construct(int $world_height = World::Y_MAX){
+		$this->ore_populator = new OrePopulator($world_height);
 		$this->in_ground_populators[] = $this->ore_populator;
 
 		$this->fire_decorator = new FireDecorator();
