@@ -54,11 +54,11 @@ class RiverMapLayer extends MapLayer{
 	 */
 	private function generateRivers(int $x, int $z, int $size_x, int $size_z) : array{
 		$grid_x = $x - 1;
-		$gridZ = $z - 1;
+		$grid_z = $z - 1;
 		$grid_size_x = $size_x + 2;
 		$grid_size_z = $size_z + 2;
 
-		$values = $this->below_layer->generateValues($grid_x, $gridZ, $grid_size_x, $grid_size_z);
+		$values = $this->below_layer->generateValues($grid_x, $grid_z, $grid_size_x, $grid_size_z);
 		$final_values = [];
 		for($i = 0; $i < $size_z; ++$i){
 			for($j = 0; $j < $size_x; ++$j){
