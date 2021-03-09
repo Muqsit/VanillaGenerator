@@ -7,13 +7,13 @@ namespace muqsit\vanillagenerator\generator\overworld\biome;
 class BiomeClimate{
 
 	/** @var float */
-	private $temperature;
+	private float $temperature;
 
 	/** @var float */
-	private $humidity;
+	private float $humidity;
 
 	/** @var bool */
-	private $rainy;
+	private bool $rainy;
 
 	public function __construct(float $temperature, float $humidity, bool $rainy){
 		$this->temperature = $temperature;

@@ -16,7 +16,7 @@ use pocketmine\world\format\Chunk;
 class OrePopulator implements Populator{
 
 	/** @var OreTypeHolder[] */
-	private $ores = [];
+	private array $ores = [];
 
 	/**
 	 * Creates a populator for dirt, gravel, andesite, diorite, granite; and coal, iron, gold,
@@ -40,16 +40,16 @@ class OrePopulator implements Populator{
 		$this->ores[] = new OreTypeHolder($type, $value);
 	}
 
-	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		$cx = $chunkX << 4;
-		$cz = $chunkZ << 4;
+	public function populate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		$cx = $chunk_x << 4;
+		$cz = $chunk_z << 4;
 
 		foreach($this->ores as $ore_type_holder){
 			for($n = 0; $n < $ore_type_holder->value; ++$n){
-				$sourceX = $cx + $random->nextBoundedInt(16);
-				$sourceZ = $cz + $random->nextBoundedInt(16);
-				$sourceY = $ore_type_holder->type->getRandomHeight($random);
-				(new OreVein($ore_type_holder->type))->generate($world, $random, $sourceX, $sourceY, $sourceZ);
+				$source_x = $cx + $random->nextBoundedInt(16);
+				$source_z = $cz + $random->nextBoundedInt(16);
+				$source_y = $ore_type_holder->type->getRandomHeight($random);
+				(new OreVein($ore_type_holder->type))->generate($world, $random, $source_x, $source_y, $source_z);
 			}
 		}
 	}

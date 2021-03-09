@@ -9,10 +9,10 @@ use pocketmine\block\DoublePlant;
 final class DoublePlantDecoration{
 
 	/** @var DoublePlant */
-	private $block;
+	private DoublePlant $block;
 
 	/** @var int */
-	private $weight;
+	private int $weight;
 
 	public function __construct(DoublePlant $block, int $weight){
 		$this->block = $block;

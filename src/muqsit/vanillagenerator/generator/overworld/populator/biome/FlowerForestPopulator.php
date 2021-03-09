@@ -17,7 +17,7 @@ use pocketmine\world\format\Chunk;
 class FlowerForestPopulator extends ForestPopulator{
 
 	/** @var Block[] */
-	protected static $FLOWERS;
+	protected static array $FLOWERS;
 
 	protected static function initFlowers() : void{
 		self::$FLOWERS = [
@@ -35,35 +35,35 @@ class FlowerForestPopulator extends ForestPopulator{
 	}
 
 	/** @var OctaveGenerator */
-	private $noiseGen;
+	private OctaveGenerator $noise_gen;
 
 	protected function initPopulators() : void{
 		parent::initPopulators();
-		$this->treeDecorator->setAmount(6);
-		$this->flowerDecorator->setAmount(0);
-		$this->doublePlantLoweringAmount = 1;
-		$this->noiseGen = SimplexOctaveGenerator::fromRandomAndOctaves(new Random(2345), 1, 0, 0, 0);
-		$this->noiseGen->setScale(1 / 48.0);
+		$this->tree_decorator->setAmount(6);
+		$this->flower_decorator->setAmount(0);
+		$this->double_plant_lowering_amount = 1;
+		$this->noise_gen = SimplexOctaveGenerator::fromRandomAndOctaves(new Random(2345), 1, 0, 0, 0);
+		$this->noise_gen->setScale(1 / 48.0);
 	}
 
 	public function getBiomes() : ?array{
 		return [BiomeIds::MUTATED_FOREST];
 	}
 
-	public function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
+	public function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
 
-		$sourceX = $chunkX << 4;
-		$sourceZ = $chunkZ << 4;
+		$source_x = $chunk_x << 4;
+		$source_z = $chunk_z << 4;
 
 		for($i = 0; $i < 100; ++$i){
 			$x = $random->nextBoundedInt(16);
 			$z = $random->nextBoundedInt(16);
 			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
-			$noise = ($this->noiseGen->noise($x, $z, 0.5, 0, 2.0, false) + 1.0) / 2.0;
+			$noise = ($this->noise_gen->noise($x, $z, 0.5, 0, 2.0, false) + 1.0) / 2.0;
 			$noise = $noise < 0 ? 0 : ($noise > 0.9999 ? 0.9999 : $noise);
 			$flower = self::$FLOWERS[(int) ($noise * count(self::$FLOWERS))];
-			(new Flower($flower))->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z);
+			(new Flower($flower))->generate($world, $random, $source_x + $x, $y, $source_z + $z);
 		}
 	}
 }

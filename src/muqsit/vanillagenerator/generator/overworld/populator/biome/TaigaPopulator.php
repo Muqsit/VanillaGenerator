@@ -18,10 +18,10 @@ use pocketmine\world\format\Chunk;
 class TaigaPopulator extends BiomePopulator{
 
 	/** @var DoublePlantDecoration[] */
-	protected static $DOUBLE_PLANTS;
+	protected static array $DOUBLE_PLANTS;
 
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 
 	public static function init() : void{
 		parent::init();
@@ -38,39 +38,39 @@ class TaigaPopulator extends BiomePopulator{
 	}
 
 	/** @var MushroomDecorator */
-	protected $taigaBrownMushroomDecorator;
+	protected MushroomDecorator $taiga_brown_mushroom_decorator;
 
 	/** @var MushroomDecorator */
-	protected $taigaRedMushroomDecorator;
+	protected MushroomDecorator $taiga_red_mushroom_decorator;
 
 	public function __construct(){
-		$this->taigaBrownMushroomDecorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
-		$this->taigaRedMushroomDecorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
+		$this->taiga_brown_mushroom_decorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
+		$this->taiga_red_mushroom_decorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
 		parent::__construct();
 	}
 
 	protected function initPopulators() : void{
-		$this->doublePlantDecorator->setAmount(7);
-		$this->doublePlantDecorator->setDoublePlants(...self::$DOUBLE_PLANTS);
-		$this->treeDecorator->setAmount(10);
-		$this->treeDecorator->setTrees(...self::$TREES);
-		$this->tallGrassDecorator->setFernDensity(0.8);
-		$this->deadBushDecorator->setAmount(1);
-		$this->taigaBrownMushroomDecorator->setAmount(1);
-		$this->taigaBrownMushroomDecorator->setUseFixedHeightRange();
-		$this->taigaBrownMushroomDecorator->setDensity(0.25);
-		$this->taigaRedMushroomDecorator->setAmount(1);
-		$this->taigaRedMushroomDecorator->setDensity(0.125);
+		$this->double_plant_decorator->setAmount(7);
+		$this->double_plant_decorator->setDoublePlants(...self::$DOUBLE_PLANTS);
+		$this->tree_decorator->setAmount(10);
+		$this->tree_decorator->setTrees(...self::$TREES);
+		$this->tall_grass_decorator->setFernDensity(0.8);
+		$this->dead_bush_decorator->setAmount(1);
+		$this->taiga_brown_mushroom_decorator->setAmount(1);
+		$this->taiga_brown_mushroom_decorator->setUseFixedHeightRange();
+		$this->taiga_brown_mushroom_decorator->setDensity(0.25);
+		$this->taiga_red_mushroom_decorator->setAmount(1);
+		$this->taiga_red_mushroom_decorator->setDensity(0.125);
 	}
 
 	public function getBiomes() : ?array{
 		return [BiomeIds::TAIGA, BiomeIds::TAIGA_HILLS, BiomeIds::MUTATED_TAIGA, BiomeIds::TAIGA_COLD, BiomeIds::TAIGA_COLD_HILLS, BiomeIds::MUTATED_TAIGA_COLD];
 	}
 
-	protected function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
-		$this->taigaBrownMushroomDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
-		$this->taigaRedMushroomDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
+	protected function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
+		$this->taiga_brown_mushroom_decorator->populate($world, $random, $chunk_x, $chunk_z, $chunk);
+		$this->taiga_red_mushroom_decorator->populate($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
 TaigaPopulator::init();

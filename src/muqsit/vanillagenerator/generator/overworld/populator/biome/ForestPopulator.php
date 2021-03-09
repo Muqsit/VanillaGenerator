@@ -20,10 +20,10 @@ class ForestPopulator extends BiomePopulator{
 	private const BIOMES = [BiomeIds::FOREST, BiomeIds::FOREST_HILLS];
 
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 
 	/** @var DoublePlant[] */
-	private static $DOUBLE_PLANTS;
+	private static array $DOUBLE_PLANTS;
 
 	public static function init() : void{
 		parent::init();
@@ -42,23 +42,23 @@ class ForestPopulator extends BiomePopulator{
 	}
 
 	/** @var int */
-	protected $doublePlantLoweringAmount = 3;
+	protected int $double_plant_lowering_amount = 3;
 
 	protected function initPopulators() : void{
-		$this->doublePlantDecorator->setAmount(0);
-		$this->treeDecorator->setAmount(10);
-		$this->treeDecorator->setTrees(...self::$TREES);
-		$this->tallGrassDecorator->setAmount(2);
+		$this->double_plant_decorator->setAmount(0);
+		$this->tree_decorator->setAmount(10);
+		$this->tree_decorator->setTrees(...self::$TREES);
+		$this->tall_grass_decorator->setAmount(2);
 	}
 
 	public function getBiomes() : ?array{
 		return self::BIOMES;
 	}
 
-	public function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		$sourceX = $chunkX << 4;
-		$sourceZ = $chunkZ << 4;
-		$amount = $random->nextBoundedInt(5) - $this->doublePlantLoweringAmount;
+	public function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		$source_x = $chunk_x << 4;
+		$source_z = $chunk_z << 4;
+		$amount = $random->nextBoundedInt(5) - $this->double_plant_lowering_amount;
 		$i = 0;
 		while($i < $amount){
 			for($j = 0; $j < 5; ++$j, ++$i){
@@ -66,14 +66,14 @@ class ForestPopulator extends BiomePopulator{
 				$z = $random->nextBoundedInt(16);
 				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 				$species = self::$DOUBLE_PLANTS[$random->nextBoundedInt(count(self::$DOUBLE_PLANTS))];
-				if((new DoubleTallPlant($species))->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z)){
+				if((new DoubleTallPlant($species))->generate($world, $random, $source_x + $x, $y, $source_z + $z)){
 					++$i;
 					break;
 				}
 			}
 		}
 
-		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
+		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
 

@@ -20,13 +20,13 @@ class FlowerDecorator extends Decorator{
 	 * @return Block|null
 	 */
 	private static function getRandomFlower(Random $random, array $decorations) : ?Block{
-		$totalWeight = 0;
+		$total_weight = 0;
 		foreach($decorations as $decoration){
-			$totalWeight += $decoration->getWeight();
+			$total_weight += $decoration->getWeight();
 		}
 
-		if($totalWeight > 0){
-			$weight = $random->nextBoundedInt($totalWeight);
+		if($total_weight > 0){
+			$weight = $random->nextBoundedInt($total_weight);
 			foreach($decorations as $decoration){
 				$weight -= $decoration->getWeight();
 				if($weight < 0){
@@ -39,21 +39,21 @@ class FlowerDecorator extends Decorator{
 	}
 
 	/** @var FlowerDecoration[] */
-	private $flowers = [];
+	private array $flowers = [];
 
 	final public function setFlowers(FlowerDecoration ...$flowers) : void{
 		$this->flowers = $flowers;
 	}
 
-	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
-		$sourceY = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
+		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
 
 		// the flower can change on each decoration pass
 		$flower = self::getRandomFlower($random, $this->flowers);
 		if($flower !== null){
-			(new Flower($flower))->generate($world, $random, ($chunkX << 4) + $x, $sourceY, ($chunkZ << 4) + $z);
+			(new Flower($flower))->generate($world, $random, ($chunk_x << 4) + $x, $source_y, ($chunk_z << 4) + $z);
 		}
 	}
 }

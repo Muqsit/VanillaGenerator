@@ -15,25 +15,25 @@ class DeadBushDecorator extends Decorator{
 
 	private const SOIL_TYPES = [BlockLegacyIds::SAND, BlockLegacyIds::DIRT, BlockLegacyIds::HARDENED_CLAY, BlockLegacyIds::STAINED_CLAY];
 
-	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
-		$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
-		$sourceY = $random->nextBoundedInt($chunk->getHighestBlockAt($sourceX & 0x0f, $sourceZ & 0x0f) << 1);
-		while($sourceY > 0
-			&& ($world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId() === BlockLegacyIds::AIR
-				|| $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId() === BlockLegacyIds::LEAVES)){
-			--$sourceY;
+	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
+		$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
+		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($source_x & 0x0f, $source_z & 0x0f) << 1);
+		while($source_y > 0
+			&& ($world->getBlockAt($source_x, $source_y, $source_z)->getId() === BlockLegacyIds::AIR
+				|| $world->getBlockAt($source_x, $source_y, $source_z)->getId() === BlockLegacyIds::LEAVES)){
+			--$source_y;
 		}
 
 		for($i = 0; $i < 4; ++$i){
-			$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$y = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
+			$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
 			if($world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
-				$blockBelow = $world->getBlockAt($x, $y - 1, $z)->getId();
+				$block_below = $world->getBlockAt($x, $y - 1, $z)->getId();
 				foreach(self::SOIL_TYPES as $soil){
-					if($soil === $blockBelow){
+					if($soil === $block_below){
 						$world->setBlockAt($x, $y, $z, VanillaBlocks::DEAD_BUSH());
 						break;
 					}

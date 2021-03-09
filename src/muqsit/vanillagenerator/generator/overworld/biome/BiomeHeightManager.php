@@ -7,10 +7,10 @@ namespace muqsit\vanillagenerator\generator\overworld\biome;
 final class BiomeHeightManager{
 
 	/** @var BiomeHeight */
-	private static $default;
+	private static BiomeHeight $default;
 
 	/** @var BiomeHeight[] */
-	private static $heights = [];
+	private static array $heights = [];
 
 	public static function init() : void{
 		self::$default = new BiomeHeight(0.1, 0.2);

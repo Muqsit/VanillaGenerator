@@ -9,7 +9,7 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 class DesertMountainsPopulator extends DesertPopulator{
 
 	protected function initPopulators() : void{
-		$this->waterLakeDecorator->setAmount(1);
+		$this->water_lake_decorator->setAmount(1);
 	}
 
 	public function getBiomes() : ?array{
