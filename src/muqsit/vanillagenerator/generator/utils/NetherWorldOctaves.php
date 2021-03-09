@@ -43,7 +43,7 @@ class NetherWorldOctaves extends WorldOctaves{
 	 *
 	 * @phpstan-param T $height
 	 * @phpstan-param U $roughness
-	 * @phpstan-param U $roughness2
+	 * @phpstan-param U $roughness_2
 	 * @phpstan-param V $detail
 	 * @phpstan-param W $surface
 	 * @phpstan-param X $soul_sand
