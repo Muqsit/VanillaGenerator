@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator;
 
 use muqsit\vanillagenerator\generator\biomegrid\MapLayer;
+use muqsit\vanillagenerator\generator\biomegrid\utils\MapLayerPair;
 use muqsit\vanillagenerator\generator\overworld\WorldType;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use pocketmine\world\ChunkManager;
@@ -27,8 +28,8 @@ abstract class VanillaGenerator extends Generator{
 	/** @var Populator[] */
 	private array $populators = [];
 
-	/** @var MapLayer[] */
-	private array $biome_grid;
+	/** @var MapLayerPair */
+	private MapLayerPair $biome_grid;
 
 	public function __construct(int $seed, int $environment, ?string $world_type = null, array $options = []){
 		parent::__construct($seed, $options);
@@ -43,7 +44,7 @@ abstract class VanillaGenerator extends Generator{
 	 * @return int[]
 	 */
 	public function getBiomeGridAtLowerRes(int $x, int $z, int $size_x, int $size_z) : array{
-		return $this->biome_grid[1]->generateValues($x, $z, $size_x, $size_z);
+		return $this->biome_grid->low_resolution->generateValues($x, $z, $size_x, $size_z);
 	}
 
 	/**
@@ -54,7 +55,7 @@ abstract class VanillaGenerator extends Generator{
 	 * @return int[]
 	 */
 	public function getBiomeGrid(int $x, int $z, int $size_x, int $size_z) : array{
-		return $this->biome_grid[0]->generateValues($x, $z, $size_x, $size_z);
+		return $this->biome_grid->high_resolution->generateValues($x, $z, $size_x, $size_z);
 	}
 
 	protected function addPopulators(Populator ...$populators) : void{
@@ -70,7 +71,7 @@ abstract class VanillaGenerator extends Generator{
 
 	public function generateChunk(ChunkManager $world, int $chunkX, int $chunkZ) : void{
 		$biomes = new VanillaBiomeGrid();
-		$biome_values = $this->biome_grid[0]->generateValues($chunkX * 16, $chunkZ * 16, 16, 16);
+		$biome_values = $this->biome_grid->high_resolution->generateValues($chunkX * 16, $chunkZ * 16, 16, 16);
 		for($i = 0, $biome_values_c = count($biome_values); $i < $biome_values_c; ++$i){
 			$biomes->biomes[$i] = $biome_values[$i];
 		}
@@ -96,11 +97,11 @@ abstract class VanillaGenerator extends Generator{
 		return $this->populators;
 	}
 
-	public function populateChunk(ChunkManager $world, int $chunkX, int $chunkZ) : void{
+	public function populateChunk(ChunkManager $world, int $chunk_x, int $chunk_z) : void{
 		/** @var Chunk $chunk */
-		$chunk = $world->getChunk($chunkX, $chunkZ);
+		$chunk = $world->getChunk($chunk_x, $chunk_z);
 		foreach($this->populators as $populator){
-			$populator->populate($world, $this->random, $chunkX, $chunkZ, $chunk);
+			$populator->populate($world, $this->random, $chunk_x, $chunk_z, $chunk);
 		}
 	}
 

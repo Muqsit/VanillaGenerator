@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\biomegrid;
 
+use muqsit\vanillagenerator\generator\biomegrid\utils\MapLayerPair;
 use muqsit\vanillagenerator\generator\Environment;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use muqsit\vanillagenerator\generator\overworld\WorldType;
@@ -11,23 +12,17 @@ use pocketmine\utils\Random;
 
 abstract class MapLayer{
 
-	/**
-	 * @param int $seed
-	 * @param int $environment
-	 * @param string $world_type
-	 * @return MapLayer[]
-	 */
-	public static function initialize(int $seed, int $environment, string $world_type) : array{
+	public static function initialize(int $seed, int $environment, string $world_type) : MapLayerPair{
 		if($environment === Environment::OVERWORLD && $world_type === WorldType::FLAT){
-			return [new ConstantBiomeMapLayer($seed, BiomeIds::PLAINS), null];
+			return new MapLayerPair(new ConstantBiomeMapLayer($seed, BiomeIds::PLAINS), null);
 		}
 
 		if($environment === Environment::NETHER){
-			return [new ConstantBiomeMapLayer($seed, BiomeIds::HELL), null];
+			return new MapLayerPair(new ConstantBiomeMapLayer($seed, BiomeIds::HELL), null);
 		}
 
 		if($environment === Environment::THE_END){
-			return [new ConstantBiomeMapLayer($seed, BiomeIds::SKY), null];
+			return new MapLayerPair(new ConstantBiomeMapLayer($seed, BiomeIds::SKY), null);
 		}
 
 
@@ -89,7 +84,7 @@ abstract class MapLayer{
 
 		$layer = new SmoothMapLayer($seed + 1001, $layer);
 
-		return [$layer, $layer_lower_res];
+		return new MapLayerPair($layer, $layer_lower_res);
 	}
 
 	/** @var Random */

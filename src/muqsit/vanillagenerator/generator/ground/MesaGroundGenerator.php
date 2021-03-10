@@ -23,14 +23,14 @@ class MesaGroundGenerator extends GroundGenerator{
 	/** @var int[] */
 	private array $color_layer;
 
-	/** @var SimplexOctaveGenerator */
-	private SimplexOctaveGenerator $color_noise;
+	/** @var SimplexOctaveGenerator|null */
+	private ?SimplexOctaveGenerator $color_noise = null;
 
-	/** @var SimplexOctaveGenerator */
-	private SimplexOctaveGenerator $canyon_height_noise;
+	/** @var SimplexOctaveGenerator|null */
+	private ?SimplexOctaveGenerator $canyon_height_noise = null;
 
-	/** @var SimplexOctaveGenerator */
-	private SimplexOctaveGenerator $canyon_scale_noise;
+	/** @var SimplexOctaveGenerator|null */
+	private ?SimplexOctaveGenerator $canyon_scale_noise = null;
 
 	/** @var int */
 	private int $seed;
