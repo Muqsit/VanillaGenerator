@@ -15,9 +15,9 @@ use pocketmine\world\format\Chunk;
 
 class SnowPopulator implements Populator{
 
-	public function populate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		$sourceX = $chunkX << 4;
-		$sourceZ = $chunkZ << 4;
+	public function populate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		$source_x = $chunk_x << 4;
+		$source_z = $chunk_z << 4;
 
 		$block_factory = BlockFactory::getInstance();
 		$air = VanillaBlocks::AIR()->getFullId();
@@ -31,7 +31,7 @@ class SnowPopulator implements Populator{
 				$highest_y = $chunk->getHighestBlockAt($x, $z);
 				if($highest_y > 0 && $highest_y < $world_height - 1){
 					$y = $highest_y - 1;
-					if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x, $z), $sourceX + $x, $y, $sourceZ + $z)){
+					if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x, $z), $source_x + $x, $y, $source_z + $z)){
 						switch($block_factory->fromFullBlock($chunk->getFullBlock($x, $y, $z))->getId()){
 							case BlockLegacyIds::FLOWING_WATER:
 							case BlockLegacyIds::STILL_WATER:

@@ -13,16 +13,16 @@ use pocketmine\world\format\Chunk;
 
 class MelonDecorator extends Decorator{
 
-	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		$sourceX = ($chunkX << 4) + $random->nextBoundedInt(16);
-		$sourceZ = ($chunkZ << 4) + $random->nextBoundedInt(16);
+	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
+		$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
 		$sea_level = 64;
-		$sourceY = $random->nextBoundedInt($sea_level << 1);
+		$source_y = $random->nextBoundedInt($sea_level << 1);
 
 		for($i = 0; $i < 64; ++$i){
-			$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$y = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
+			$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
 			if(
 				$world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR &&

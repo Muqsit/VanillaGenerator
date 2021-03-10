@@ -24,9 +24,9 @@ abstract class OctaveGenerator extends BaseOctaveGenerator{
 		$freq = 1.0;
 		$max = 0.0;
 
-		$x *= $this->xScale;
-		$y *= $this->yScale;
-		$z *= $this->zScale;
+		$x *= $this->x_scale;
+		$y *= $this->y_scale;
+		$z *= $this->z_scale;
 
 		foreach($this->octaves as $octave){
 			$result += $octave->noise3d($x * $freq, $y * $freq, $z * $freq) * $amp;

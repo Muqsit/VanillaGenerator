@@ -26,45 +26,45 @@ class TallRedwoodTree extends RedwoodTree{
 		);
 		$this->setHeight($random->nextBoundedInt(5) + 7);
 		$this->setLeavesHeight($this->height - $random->nextBoundedInt(2) - 3);
-		$this->setMaxRadius($random->nextBoundedInt($this->height - $this->leavesHeight + 1) + 1);
+		$this->setMaxRadius($random->nextBoundedInt($this->height - $this->leaves_height + 1) + 1);
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $blockX, int $blockY, int $blockZ) : bool{
-		if($this->cannotGenerateAt($blockX, $blockY, $blockZ, $world)){
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		if($this->cannotGenerateAt($source_x, $source_y, $source_z, $world)){
 			return false;
 		}
 
 		// generate the leaves
 		$radius = 0;
-		for($y = $blockY + $this->height; $y >= $blockY + $this->leavesHeight; --$y){
+		for($y = $source_y + $this->height; $y >= $source_y + $this->leaves_height; --$y){
 			// leaves are built from top to bottom
-			for($x = $blockX - $radius; $x <= $blockX + $radius; ++$x){
-				for($z = $blockZ - $radius; $z <= $blockZ + $radius; ++$z){
+			for($x = $source_x - $radius; $x <= $source_x + $radius; ++$x){
+				for($z = $source_z - $radius; $z <= $source_z + $radius; ++$z){
 					if(
 						(
-							abs($x - $blockX) !== $radius ||
-							abs($z - $blockZ) !== $radius ||
+							abs($x - $source_x) !== $radius ||
+							abs($z - $source_z) !== $radius ||
 							$radius <= 0
 						) &&
 						$world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR
 					){
-						$this->transaction->addBlockAt($x, $y, $z, $this->leavesType);
+						$this->transaction->addBlockAt($x, $y, $z, $this->leaves_type);
 					}
 				}
 			}
-			if($radius >= 1 && $y === $blockY + $this->leavesHeight + 1){
+			if($radius >= 1 && $y === $source_y + $this->leaves_height + 1){
 				--$radius;
-			}elseif($radius < $this->maxRadius){
+			}elseif($radius < $this->max_radius){
 				++$radius;
 			}
 		}
 
 		// generate the trunk
 		for($y = 0; $y < $this->height - 1; ++$y){
-			$this->replaceIfAirOrLeaves($blockX, $blockY + $y, $blockZ, $this->logType, $world);
+			$this->replaceIfAirOrLeaves($source_x, $source_y + $y, $source_z, $this->log_type, $world);
 		}
 
-		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ, VanillaBlocks::DIRT());
+		$this->transaction->addBlockAt($source_x, $source_y - 1, $source_z, VanillaBlocks::DIRT());
 		return true;
 	}
 }

@@ -19,7 +19,7 @@ use pocketmine\world\format\Chunk;
 class JunglePopulator extends BiomePopulator{
 
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 
 	protected static function initTrees() : void{
 		self::$TREES = [
@@ -31,29 +31,29 @@ class JunglePopulator extends BiomePopulator{
 	}
 
 	/** @var MelonDecorator */
-	protected $melonDecorator;
+	protected MelonDecorator $melon_decorator;
 
 	public function __construct(){
-		$this->melonDecorator = new MelonDecorator();
+		$this->melon_decorator = new MelonDecorator();
 		parent::__construct();
 	}
 
 	protected function initPopulators() : void{
-		$this->treeDecorator->setAmount(65);
-		$this->treeDecorator->setTrees(...self::$TREES);
-		$this->flowerDecorator->setAmount(4);
-		$this->flowerDecorator->setFlowers(...self::$FLOWERS);
-		$this->tallGrassDecorator->setAmount(25);
-		$this->tallGrassDecorator->setFernDensity(0.25);
+		$this->tree_decorator->setAmount(65);
+		$this->tree_decorator->setTrees(...self::$TREES);
+		$this->flower_decorator->setAmount(4);
+		$this->flower_decorator->setFlowers(...self::$FLOWERS);
+		$this->tall_grass_decorator->setAmount(25);
+		$this->tall_grass_decorator->setFernDensity(0.25);
 	}
 
 	public function getBiomes() : ?array{
 		return [BiomeIds::JUNGLE, BiomeIds::JUNGLE_HILLS, BiomeIds::MUTATED_JUNGLE];
 	}
 
-	protected function populateOnGround(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		$sourceX = $chunkX << 4;
-		$sourceZ = $chunkZ << 4;
+	protected function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
+		$source_x = $chunk_x << 4;
+		$source_z = $chunk_z << 4;
 
 		for($i = 0; $i < 7; ++$i){
 			$x = $random->nextBoundedInt(16);
@@ -61,13 +61,13 @@ class JunglePopulator extends BiomePopulator{
 			$y = $chunk->getHighestBlockAt($x, $z);
 			$delegate = new BlockTransaction($world);
 			$bush = new JungleBush($random, $delegate);
-			if($bush->generate($world, $random, $sourceX + $x, $y, $sourceZ + $z)){
+			if($bush->generate($world, $random, $source_x + $x, $y, $source_z + $z)){
 				$delegate->apply();
 			}
 		}
 
-		parent::populateOnGround($world, $random, $chunkX, $chunkZ, $chunk);
-		$this->melonDecorator->populate($world, $random, $chunkX, $chunkZ, $chunk);
+		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
+		$this->melon_decorator->populate($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
 

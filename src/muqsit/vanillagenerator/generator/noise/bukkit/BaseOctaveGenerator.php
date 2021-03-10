@@ -7,16 +7,16 @@ namespace muqsit\vanillagenerator\generator\noise\bukkit;
 abstract class BaseOctaveGenerator{
 
 	/** @var NoiseGenerator[] */
-	protected $octaves;
+	protected array $octaves;
 
 	/** @var float */
-	protected $xScale = 1.0;
+	protected float $x_scale = 1.0;
 
 	/** @var float */
-	protected $yScale = 1.0;
+	protected float $y_scale = 1.0;
 
 	/** @var float */
-	protected $zScale = 1.0;
+	protected float $z_scale = 1.0;
 
 	/**
 	 * @param NoiseGenerator[] $octaves
@@ -45,7 +45,7 @@ abstract class BaseOctaveGenerator{
 	 * @return float X scale
 	 */
 	public function getXScale() : float{
-		return $this->xScale;
+		return $this->x_scale;
 	}
 
 	/**
@@ -54,7 +54,7 @@ abstract class BaseOctaveGenerator{
 	 * @param float $scale New X scale
 	 */
 	public function setXScale(float $scale) : void{
-		$this->xScale = $scale;
+		$this->x_scale = $scale;
 	}
 
 	/**
@@ -63,7 +63,7 @@ abstract class BaseOctaveGenerator{
 	 * @return float Y scale
 	 */
 	public function getYScale() : float{
-		return $this->yScale;
+		return $this->y_scale;
 	}
 
 	/**
@@ -72,7 +72,7 @@ abstract class BaseOctaveGenerator{
 	 * @param float $scale New Y scale
 	 */
 	public function setYScale(float $scale) : void{
-		$this->yScale = $scale;
+		$this->y_scale = $scale;
 	}
 
 	/**
@@ -81,7 +81,7 @@ abstract class BaseOctaveGenerator{
 	 * @return float Z scale
 	 */
 	public function getZScale() : float{
-		return $this->zScale;
+		return $this->z_scale;
 	}
 
 	/**
@@ -90,7 +90,7 @@ abstract class BaseOctaveGenerator{
 	 * @param float $scale New Z scale
 	 */
 	public function setZScale(float $scale) : void{
-		$this->zScale = $scale;
+		$this->z_scale = $scale;
 	}
 
 	/**

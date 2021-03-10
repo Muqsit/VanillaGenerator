@@ -8,5 +8,5 @@ use pocketmine\block\BlockLegacyIds;
 
 class RedMushroomTree extends BrownMushroomTree{
 
-	protected $type = BlockLegacyIds::RED_MUSHROOM_BLOCK;
+	protected int $type = BlockLegacyIds::RED_MUSHROOM_BLOCK;
 }

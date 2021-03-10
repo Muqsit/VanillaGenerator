@@ -11,37 +11,37 @@ use pocketmine\utils\Random;
 class OreType{
 
 	/** @var Block */
-	private $type;
+	private Block $type;
 
 	/** @var int */
-	private $minY;
+	private int $min_y;
 
 	/** @var int */
-	private $maxY;
+	private int $max_y;
 
 	/** @var int */
-	private $amount;
+	private int $amount;
 
 	/** @var int */
-	private $targetType;
+	private int $target_type;
 
 	/**
-	 * Creates an ore type. If {@code minY} and {@code maxY} are equal, then the height range is
-	 * 0 to {@code minY}*2, with greatest density around {@code minY}. Otherwise, density is uniform
+	 * Creates an ore type. If {@code min_y} and {@code max_y} are equal, then the height range is
+	 * 0 to {@code min_y}*2, with greatest density around {@code min_y}. Otherwise, density is uniform
 	 * over the height range.
 	 *
 	 * @param Block $type the block type
-	 * @param int $minY the minimum height
-	 * @param int $maxY the maximum height
+	 * @param int $min_y the minimum height
+	 * @param int $max_y the maximum height
 	 * @param int $amount the size of a vein
-	 * @param int $targetType the block this can replace
+	 * @param int $target_type the block this can replace
 	 */
-	public function __construct(Block $type, int $minY, int $maxY, int $amount, int $targetType = BlockLegacyIds::STONE){
+	public function __construct(Block $type, int $min_y, int $max_y, int $amount, int $target_type = BlockLegacyIds::STONE){
 		$this->type = $type;
-		$this->minY = $minY;
-		$this->maxY = $maxY;
+		$this->min_y = $min_y;
+		$this->max_y = $max_y;
 		$this->amount = ++$amount;
-		$this->targetType = $targetType;
+		$this->target_type = $target_type;
 	}
 
 	public function getType() : Block{
@@ -49,11 +49,11 @@ class OreType{
 	}
 
 	public function getMinY() : int{
-		return $this->minY;
+		return $this->min_y;
 	}
 
 	public function getMaxY() : int{
-		return $this->maxY;
+		return $this->max_y;
 	}
 
 	public function getAmount() : int{
@@ -61,7 +61,7 @@ class OreType{
 	}
 
 	public function getTargetType() : int{
-		return $this->targetType;
+		return $this->target_type;
 	}
 
 	/**
@@ -71,8 +71,8 @@ class OreType{
 	 * @return int a random height for this ore
 	 */
 	public function getRandomHeight(Random $random) : int{
-		return $this->minY === $this->maxY
-			? $random->nextBoundedInt($this->minY) + $random->nextBoundedInt($this->minY)
-			: $random->nextBoundedInt($this->maxY - $this->minY) + $this->minY;
+		return $this->min_y === $this->max_y
+			? $random->nextBoundedInt($this->min_y) + $random->nextBoundedInt($this->min_y)
+			: $random->nextBoundedInt($this->max_y - $this->min_y) + $this->min_y;
 	}
 }

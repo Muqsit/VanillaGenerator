@@ -37,8 +37,8 @@ class DarkOakTree extends GenericTree{
 		return $id === BlockLegacyIds::GRASS || $id === BlockLegacyIds::DIRT;
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $blockX, int $blockY, int $blockZ) : bool{
-		if($this->cannotGenerateAt($blockX, $blockY, $blockZ, $world)){
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		if($this->cannotGenerateAt($source_x, $source_y, $source_z, $world)){
 			return false;
 		}
 
@@ -52,47 +52,47 @@ class DarkOakTree extends GenericTree{
 				$dz = 0;
 			}
 		}
-		$twistHeight = $this->height - $random->nextBoundedInt(4);
-		$twistCount = $random->nextBoundedInt(3);
-		$centerX = $blockX;
-		$centerZ = $blockZ;
-		$trunkTopY = 0;
+		$twist_height = $this->height - $random->nextBoundedInt(4);
+		$twist_count = $random->nextBoundedInt(3);
+		$center_x = $source_x;
+		$center_z = $source_z;
+		$trunk_top_y = 0;
 
 		// generates the trunk
 		for($y = 0; $y < $this->height; ++$y){
 
 			// trunk twists
-			if($twistCount > 0 && $y >= $twistHeight){
-				$centerX += $dx;
-				$centerZ += $dz;
-				--$twistCount;
+			if($twist_count > 0 && $y >= $twist_height){
+				$center_x += $dx;
+				$center_z += $dz;
+				--$twist_count;
 			}
 
-			$material = $world->getBlockAt($centerX, $blockY + $y, $centerZ)->getId();
+			$material = $world->getBlockAt($center_x, $source_y + $y, $center_z)->getId();
 			if($material !== BlockLegacyIds::AIR && $material !== BlockLegacyIds::LEAVES){
 				continue;
 			}
-			$trunkTopY = $blockY + $y;
+			$trunk_top_y = $source_y + $y;
 			// SELF, SOUTH, EAST, SOUTH EAST
-			$this->transaction->addBlockAt($centerX, $blockY + $y, $centerZ, $this->logType);
-			$this->transaction->addBlockAt($centerX, $blockY + $y, $centerZ + 1, $this->logType);
-			$this->transaction->addBlockAt($centerX + 1, $blockY + $y, $centerZ, $this->logType);
-			$this->transaction->addBlockAt($centerX + 1, $blockY + $y, $centerZ + 1, $this->logType);
+			$this->transaction->addBlockAt($center_x, $source_y + $y, $center_z, $this->log_type);
+			$this->transaction->addBlockAt($center_x, $source_y + $y, $center_z + 1, $this->log_type);
+			$this->transaction->addBlockAt($center_x + 1, $source_y + $y, $center_z, $this->log_type);
+			$this->transaction->addBlockAt($center_x + 1, $source_y + $y, $center_z + 1, $this->log_type);
 		}
 
 		// generates leaves
 		for($x = -2; $x <= 0; ++$x){
 			for($z = -2; $z <= 0; ++$z){
 				if(($x !== -1 || $z !== -2) && ($x > -2 || $z > -1)){
-					$this->setLeaves($centerX + $x, $trunkTopY + 1, $centerZ + $z, $world);
-					$this->setLeaves(1 + $centerX - $x, $trunkTopY + 1, $centerZ + $z, $world);
-					$this->setLeaves($centerX + $x, $trunkTopY + 1, 1 + $centerZ - $z, $world);
-					$this->setLeaves(1 + $centerX - $x, $trunkTopY + 1, 1 + $centerZ - $z, $world);
+					$this->setLeaves($center_x + $x, $trunk_top_y + 1, $center_z + $z, $world);
+					$this->setLeaves(1 + $center_x - $x, $trunk_top_y + 1, $center_z + $z, $world);
+					$this->setLeaves($center_x + $x, $trunk_top_y + 1, 1 + $center_z - $z, $world);
+					$this->setLeaves(1 + $center_x - $x, $trunk_top_y + 1, 1 + $center_z - $z, $world);
 				}
-				$this->setLeaves($centerX + $x, $trunkTopY - 1, $centerZ + $z, $world);
-				$this->setLeaves(1 + $centerX - $x, $trunkTopY - 1, $centerZ + $z, $world);
-				$this->setLeaves($centerX + $x, $trunkTopY - 1, 1 + $centerZ - $z, $world);
-				$this->setLeaves(1 + $centerX - $x, $trunkTopY - 1, 1 + $centerZ - $z, $world);
+				$this->setLeaves($center_x + $x, $trunk_top_y - 1, $center_z + $z, $world);
+				$this->setLeaves(1 + $center_x - $x, $trunk_top_y - 1, $center_z + $z, $world);
+				$this->setLeaves($center_x + $x, $trunk_top_y - 1, 1 + $center_z - $z, $world);
+				$this->setLeaves(1 + $center_x - $x, $trunk_top_y - 1, 1 + $center_z - $z, $world);
 			}
 		}
 
@@ -100,7 +100,7 @@ class DarkOakTree extends GenericTree{
 		for($x = -3; $x <= 4; ++$x){
 			for($z = -3; $z <= 4; ++$z){
 				if(abs($x) < 3 || abs($z) < 3){
-					$this->setLeaves($centerX + $x, $trunkTopY, $centerZ + $z, $world);
+					$this->setLeaves($center_x + $x, $trunk_top_y, $center_z + $z, $world);
 				}
 			}
 		}
@@ -112,22 +112,22 @@ class DarkOakTree extends GenericTree{
 					continue;
 				}
 				for($y = 0; $y < $random->nextBoundedInt(3) + 2; ++$y){
-					$material = $world->getBlockAt($blockX + $x, $trunkTopY - $y - 1, $blockZ + $z)->getId();
+					$material = $world->getBlockAt($source_x + $x, $trunk_top_y - $y - 1, $source_z + $z)->getId();
 					if($material === BlockLegacyIds::AIR || $material === BlockLegacyIds::LEAVES){
-						$this->transaction->addBlockAt($blockX + $x, $trunkTopY - $y - 1, $blockZ + $z, $this->logType);
+						$this->transaction->addBlockAt($source_x + $x, $trunk_top_y - $y - 1, $source_z + $z, $this->log_type);
 					}
 				}
 
 				// leaves below the canopy
 				for($i = -1; $i <= 1; ++$i){
 					for($j = -1; $j <= 1; ++$j){
-						$this->setLeaves($centerX + $x + $i, $trunkTopY, $centerZ + $z + $j, $world);
+						$this->setLeaves($center_x + $x + $i, $trunk_top_y, $center_z + $z + $j, $world);
 					}
 				}
 				for($i = -2; $i <= 2; ++$i){
 					for($j = -2; $j <= 2; ++$j){
 						if(abs($i) < 2 || abs($j) < 2){
-							$this->setLeaves($centerX + $x + $i, $trunkTopY - 1, $centerZ + $z + $j, $world);
+							$this->setLeaves($center_x + $x + $i, $trunk_top_y - 1, $center_z + $z + $j, $world);
 						}
 					}
 				}
@@ -136,24 +136,24 @@ class DarkOakTree extends GenericTree{
 
 		// 50% chance to have a 4 leaves cap on the center of the canopy
 		if($random->nextBoundedInt(2) === 0){
-			$this->setLeaves($centerX, $trunkTopY + 2, $centerZ, $world);
-			$this->setLeaves($centerX + 1, $trunkTopY + 2, $centerZ, $world);
-			$this->setLeaves($centerX + 1, $trunkTopY + 2, $centerZ + 1, $world);
-			$this->setLeaves($centerX, $trunkTopY + 2, $centerZ + 1, $world);
+			$this->setLeaves($center_x, $trunk_top_y + 2, $center_z, $world);
+			$this->setLeaves($center_x + 1, $trunk_top_y + 2, $center_z, $world);
+			$this->setLeaves($center_x + 1, $trunk_top_y + 2, $center_z + 1, $world);
+			$this->setLeaves($center_x, $trunk_top_y + 2, $center_z + 1, $world);
 		}
 
 		// block below trunk is always dirt (SELF, SOUTH, EAST, SOUTH EAST)
 		$dirt = VanillaBlocks::DIRT();
-		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ, $dirt);
-		$this->transaction->addBlockAt($blockX, $blockY - 1, $blockZ + 1, $dirt);
-		$this->transaction->addBlockAt($blockX + 1, $blockY - 1, $blockZ, $dirt);
-		$this->transaction->addBlockAt($blockX + 1, $blockY - 1, $blockZ + 1, $dirt);
+		$this->transaction->addBlockAt($source_x, $source_y - 1, $source_z, $dirt);
+		$this->transaction->addBlockAt($source_x, $source_y - 1, $source_z + 1, $dirt);
+		$this->transaction->addBlockAt($source_x + 1, $source_y - 1, $source_z, $dirt);
+		$this->transaction->addBlockAt($source_x + 1, $source_y - 1, $source_z + 1, $dirt);
 		return true;
 	}
 
 	private function setLeaves(int $x, int $y, int $z, ChunkManager $world) : void{
 		if($world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
-			$this->transaction->addBlockAt($x, $y, $z, $this->leavesType);
+			$this->transaction->addBlockAt($x, $y, $z, $this->leaves_type);
 		}
 	}
 }

@@ -9,10 +9,10 @@ use muqsit\vanillagenerator\generator\object\OreType;
 final class OreTypeHolder{
 
 	/** @var OreType */
-	public $type;
+	public OreType $type;
 
 	/** @var int */
-	public $value;
+	public int $value;
 
 	public function __construct(OreType $type, int $value){
 		$this->type = $type;

@@ -12,19 +12,19 @@ use pocketmine\world\ChunkManager;
 class Flower extends TerrainObject{
 
 	/** @var Block */
-	private $block;
+	private Block $block;
 
 	public function __construct(Block $block){
 		$this->block = $block;
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$succeeded = false;
 		$height = $world->getWorldHeight();
 		for($i = 0; $i < 64; ++$i){
-			$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$y = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
+			$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
 			$block = $world->getBlockAt($x, $y, $z);
 			if($y < $height && $block->getId() === BlockLegacyIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getId() === BlockLegacyIds::GRASS){

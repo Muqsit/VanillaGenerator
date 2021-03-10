@@ -13,7 +13,7 @@ use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 class MegaSpruceTaigaPopulator extends MegaTaigaPopulator{
 
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 
 	protected static function initTrees() : void{
 		self::$TREES = [
@@ -28,7 +28,7 @@ class MegaSpruceTaigaPopulator extends MegaTaigaPopulator{
 	}
 
 	protected function initPopulators() : void{
-		$this->treeDecorator->setTrees(...self::$TREES);
+		$this->tree_decorator->setTrees(...self::$TREES);
     }
 }
 

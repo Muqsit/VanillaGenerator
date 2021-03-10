@@ -14,18 +14,18 @@ use pocketmine\world\format\Chunk;
 
 class SurfaceCaveDecorator extends Decorator{
 
-	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		if($random->nextBoundedInt(8) !== 0){
 			return;
 		}
 
-		$cx = $chunkX << 4;
-		$cz = $chunkZ << 4;
+		$cx = $chunk_x << 4;
+		$cz = $chunk_z << 4;
 
-		$startCx = $random->nextBoundedInt(16);
-		$startCz = $random->nextBoundedInt(16);
-		$startY = $chunk->getHeightMap($startCx, $startCz);
-		if($startY > 128){
+		$start_cx = $random->nextBoundedInt(16);
+		$start_cz = $random->nextBoundedInt(16);
+		$start_y = $chunk->getHeightMap($start_cx, $start_cz);
+		if($start_y > 128){
 			return;
 		}
 
@@ -35,19 +35,19 @@ class SurfaceCaveDecorator extends Decorator{
 		for($i = 0, $noise_c = count($noise); $i < $noise_c; ++$i){
 			$angles[$i] = 360.0 * $noise[$i];
 		}
-		$sectionCount = count($angles) / 2;
+		$section_count = count($angles) / 2;
 		$nodes = [];
-		$startBlockPos = new Vector3($cx + $startCx, $startY, $cz + $startCz);
-		$currentNode = $startBlockPos->asVector3();
-		$nodes[] = $currentNode->asVector3();
+		$start_block_pos = new Vector3($cx + $start_cx, $start_y, $cz + $start_cz);
+		$current_node = $start_block_pos->asVector3();
+		$nodes[] = $current_node->asVector3();
 		$length = 5;
-		for($i = 0; $i < $sectionCount; ++$i){
-			$yaw = $angles[$i + $sectionCount];
-			$deltaY = -abs((int) floor($noise[$i] * $length));
-			$deltaX = (int) floor((float) $length * cos(deg2rad($yaw)));
-			$deltaZ = (int) floor((float) $length * sin(deg2rad($yaw)));
-			$currentNode = new Vector3($deltaX, $deltaY, $deltaZ);
-			$node[] = $currentNode->floor();
+		for($i = 0; $i < $section_count; ++$i){
+			$yaw = $angles[$i + $section_count];
+			$delta_y = -abs((int) floor($noise[$i] * $length));
+			$delta_x = (int) floor((float) $length * cos(deg2rad($yaw)));
+			$delta_z = (int) floor((float) $length * sin(deg2rad($yaw)));
+			$current_node = new Vector3($delta_x, $delta_y, $delta_z);
+			$node[] = $current_node->floor();
 		}
 		foreach($nodes as $node){
 			if($node->y < 4){
@@ -60,14 +60,14 @@ class SurfaceCaveDecorator extends Decorator{
 
 	private function caveAroundRay(ChunkManager $world, Vector3 $block, Random $random) : void{
 		$radius = $random->nextBoundedInt(2) + 2;
-		$blockX = $block->x;
-		$blockY = $block->y;
-		$blockZ = $block->z;
-		for($x = $blockX - $radius; $x <= $blockX + $radius; ++$x){
-			for($y = $blockY - $radius; $y <= $blockY + $radius; ++$y){
-				for($z = $blockZ - $radius; $z <= $blockZ + $radius; ++$z){
-					$distanceSquared = ($blockX - $x) * ($blockX - $x) + ($blockY - $y) * ($blockY - $y) + ($blockZ - $z) * ($blockZ - $z);
-					if($distanceSquared < $radius * $radius){
+		$block_x = $block->x;
+		$block_y = $block->y;
+		$block_z = $block->z;
+		for($x = $block_x - $radius; $x <= $block_x + $radius; ++$x){
+			for($y = $block_y - $radius; $y <= $block_y + $radius; ++$y){
+				for($z = $block_z - $radius; $z <= $block_z + $radius; ++$z){
+					$distance_squared = ($block_x - $x) * ($block_x - $x) + ($block_y - $y) * ($block_y - $y) + ($block_z - $z) * ($block_z - $z);
+					if($distance_squared < $radius * $radius){
 						$world->setBlockAt($x, $y, $z, VanillaBlocks::AIR());
 					}
 				}

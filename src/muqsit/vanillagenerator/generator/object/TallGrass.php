@@ -12,29 +12,29 @@ use pocketmine\world\ChunkManager;
 class TallGrass extends TerrainObject{
 
 	/** @var Block */
-	private $grassType;
+	private Block $grass_type;
 
-	public function __construct(Block $grassType){
-		$this->grassType = $grassType;
+	public function __construct(Block $grass_type){
+		$this->grass_type = $grass_type;
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $sourceX, int $sourceY, int $sourceZ) : bool{
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		do{
-			$thisBlockId = $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getId();
-			--$sourceY;
-		}while(($thisBlockId === BlockLegacyIds::AIR || $thisBlockId === BlockLegacyIds::LEAVES) && $sourceY > 0);
-		++$sourceY;
+			$this_block_id = $world->getBlockAt($source_x, $source_y, $source_z)->getId();
+			--$source_y;
+		}while(($this_block_id === BlockLegacyIds::AIR || $this_block_id === BlockLegacyIds::LEAVES) && $source_y > 0);
+		++$source_y;
 		$succeeded = false;
 		$height = $world->getWorldHeight();
 		for($i = 0; $i < 128; ++$i){
-			$x = $sourceX + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$z = $sourceZ + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
-			$y = $sourceY + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
+			$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
+			$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
-			$blockType = $world->getBlockAt($x, $y, $z)->getId();
-			$blockTypeBelow = $world->getBlockAt($x, $y - 1, $z)->getId();
-			if($y < $height && $blockType === BlockLegacyIds::AIR && ($blockTypeBelow === BlockLegacyIds::GRASS || $blockTypeBelow === BlockLegacyIds::DIRT)){
-				$world->setBlockAt($x, $y, $z, $this->grassType);
+			$block_type = $world->getBlockAt($x, $y, $z)->getId();
+			$block_type_below = $world->getBlockAt($x, $y - 1, $z)->getId();
+			if($y < $height && $block_type === BlockLegacyIds::AIR && ($block_type_below === BlockLegacyIds::GRASS || $block_type_below === BlockLegacyIds::DIRT)){
+				$world->setBlockAt($x, $y, $z, $this->grass_type);
 				$succeeded = true;
 			}
 		}

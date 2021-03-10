@@ -23,19 +23,19 @@ class NetherWorldOctaves extends WorldOctaves{
 	 *
 	 * @phpstan-var X
 	 */
-	public $soul_sand;
+	public OctaveGenerator $soul_sand;
 
 	/**
 	 * @var OctaveGenerator
 	 *
 	 * @phpstan-var Y
 	 */
-	public $gravel;
+	public OctaveGenerator $gravel;
 
 	/**
 	 * @param OctaveGenerator $height
 	 * @param OctaveGenerator $roughness
-	 * @param OctaveGenerator $roughness2
+	 * @param OctaveGenerator $roughness_2
 	 * @param OctaveGenerator $detail
 	 * @param OctaveGenerator $surface
 	 * @param OctaveGenerator $soul_sand
@@ -43,7 +43,7 @@ class NetherWorldOctaves extends WorldOctaves{
 	 *
 	 * @phpstan-param T $height
 	 * @phpstan-param U $roughness
-	 * @phpstan-param U $roughness2
+	 * @phpstan-param U $roughness_2
 	 * @phpstan-param V $detail
 	 * @phpstan-param W $surface
 	 * @phpstan-param X $soul_sand
@@ -52,13 +52,13 @@ class NetherWorldOctaves extends WorldOctaves{
 	public function __construct(
 		OctaveGenerator $height,
 		OctaveGenerator $roughness,
-		OctaveGenerator $roughness2,
+		OctaveGenerator $roughness_2,
 		OctaveGenerator $detail,
 		OctaveGenerator $surface,
 		OctaveGenerator $soul_sand,
 		OctaveGenerator $gravel
 	){
-		parent::__construct($height, $roughness, $roughness2, $detail, $surface);
+		parent::__construct($height, $roughness, $roughness_2, $detail, $surface);
 		$this->soul_sand = $soul_sand;
 		$this->gravel = $gravel;
 	}

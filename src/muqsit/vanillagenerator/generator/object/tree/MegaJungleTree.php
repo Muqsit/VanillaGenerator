@@ -34,18 +34,18 @@ class MegaJungleTree extends GenericTree{
 		return $id === BlockLegacyIds::GRASS || $id === BlockLegacyIds::DIRT;
 	}
 
-	public function canPlace(int $baseX, int $baseY, int $baseZ, ChunkManager $world) : bool{
-		for($y = $baseY; $y <= $baseY + 1 + $this->height; ++$y){
+	public function canPlace(int $base_x, int $base_y, int $base_z, ChunkManager $world) : bool{
+		for($y = $base_y; $y <= $base_y + 1 + $this->height; ++$y){
 			// Space requirement
 			$radius = 2; // default radius if above first block
-			if($y === $baseY){
+			if($y === $base_y){
 				$radius = 1; // radius at source block y is 1 (only trunk)
-			}elseif($y >= $baseY + 1 + $this->height - 2){
+			}elseif($y >= $base_y + 1 + $this->height - 2){
 				$radius = 2; // max radius starting at leaves bottom
 			}
 			// check for block collision on horizontal slices
-			for($x = $baseX - $radius; $x <= $baseX + $radius; ++$x){
-				for($z = $baseZ - $radius; $z <= $baseZ + $radius; ++$z){
+			for($x = $base_x - $radius; $x <= $base_x + $radius; ++$x){
+				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){
 					if($y >= 0 && $y < World::Y_MAX){
 						// we can overlap some blocks around
 						if(!array_key_exists($world->getBlockAt($x, $y, $z)->getId(), $this->overridables)){
@@ -60,19 +60,19 @@ class MegaJungleTree extends GenericTree{
 		return true;
 	}
 
-	public function generate(ChunkManager $world, Random $random, int $blockX, int $blockY, int $blockZ) : bool{
-		if($this->cannotGenerateAt($blockX, $blockY, $blockZ, $world)){
+	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
+		if($this->cannotGenerateAt($source_x, $source_y, $source_z, $world)){
 			return false;
 		}
 
 		// generates the canopy leaves
 		for($y = -2; $y <= 0; ++$y){
-			$this->generateLeaves($blockX + 0, $blockY + $this->height + $y, $blockZ, 3 - $y, false, $world);
+			$this->generateLeaves($source_x + 0, $source_y + $this->height + $y, $source_z, 3 - $y, false, $world);
 		}
 
 		// generates the branches
-		$branchHeight = $this->height - 2 - $random->nextBoundedInt(4);
-		while($branchHeight > $this->height / 2){ // branching start at least at middle height
+		$branch_height = $this->height - 2 - $random->nextBoundedInt(4);
+		while($branch_height > $this->height / 2){ // branching start at least at middle height
 			$x = 0;
 			$z = 0;
 			// generates a branch
@@ -81,99 +81,99 @@ class MegaJungleTree extends GenericTree{
 				// branches are always longer when facing south or east (positive X or positive Z)
 				$x = (int) (cos($d) * $i + 1.5);
 				$z = (int) (sin($d) * $i + 1.5);
-				$this->transaction->addBlockAt($blockX + $x, (int) ($blockY + $branchHeight - 3 + $i / 2), $blockZ + $z, $this->logType);
+				$this->transaction->addBlockAt($source_x + $x, (int) ($source_y + $branch_height - 3 + $i / 2), $source_z + $z, $this->log_type);
 			}
 			// generates leaves for this branch
-			for($y = $branchHeight - ($random->nextBoundedInt(2) + 1); $y <= $branchHeight; ++$y){
-				$this->generateLeaves($blockX + $x, $blockY + $y, $blockZ + $z, 1 - ($y - $branchHeight), true, $world);
+			for($y = $branch_height - ($random->nextBoundedInt(2) + 1); $y <= $branch_height; ++$y){
+				$this->generateLeaves($source_x + $x, $source_y + $y, $source_z + $z, 1 - ($y - $branch_height), true, $world);
 			}
-			$branchHeight -= $random->nextBoundedInt(4) + 2;
+			$branch_height -= $random->nextBoundedInt(4) + 2;
 		}
 
 		// generates the trunk
-		$this->generateTrunk($world, $blockX, $blockY, $blockZ);
+		$this->generateTrunk($world, $source_x, $source_y, $source_z);
 
 		// add some vines on the trunk
-		$this->addVinesOnTrunk($world, $blockX, $blockY, $blockZ, $random);
+		$this->addVinesOnTrunk($world, $source_x, $source_y, $source_z, $random);
 
 		// blocks below trunk are always dirt
-		$this->generateDirtBelowTrunk($blockX, $blockY, $blockZ);
+		$this->generateDirtBelowTrunk($source_x, $source_y, $source_z);
 		return true;
 	}
 
-	protected function generateLeaves(int $sourceX, int $sourceY, int $sourceZ, int $radius, bool $odd, ChunkManager $world) : void{
+	protected function generateLeaves(int $source_x, int $source_y, int $source_z, int $radius, bool $odd, ChunkManager $world) : void{
 		$n = 1;
 		if($odd){
 			$n = 0;
 		}
-		for($x = $sourceX - $radius; $x <= $sourceX + $radius + $n; ++$x){
-			$radiusX = $x - $sourceX;
-			for($z = $sourceZ - $radius; $z <= $sourceZ + $radius + $n; ++$z){
-				$radiusZ = $z - $sourceZ;
+		for($x = $source_x - $radius; $x <= $source_x + $radius + $n; ++$x){
+			$radius_x = $x - $source_x;
+			for($z = $source_z - $radius; $z <= $source_z + $radius + $n; ++$z){
+				$radius_z = $z - $source_z;
 
-				$sqX = $radiusX * $radiusX;
-				$sqZ = $radiusZ * $radiusZ;
-				$sqR = $radius * $radius;
-				$sqXb = ($radiusX - $n) * ($radiusX - $n);
-				$sqZb = ($radiusZ - $n) * ($radiusZ - $n);
+				$sq_x = $radius_x * $radius_x;
+				$sq_z = $radius_z * $radius_z;
+				$sq_r = $radius * $radius;
+				$sq_xb = ($radius_x - $n) * ($radius_x - $n);
+				$sq_zb = ($radius_z - $n) * ($radius_z - $n);
 
-				if($sqX + $sqZ <= $sqR || $sqXb + $sqZb <= $sqR || $sqX + $sqZb <= $sqR || $sqXb + $sqZ <= $sqR){
-					$this->replaceIfAirOrLeaves($x, $sourceY, $z, $this->leavesType, $world);
+				if($sq_x + $sq_z <= $sq_r || $sq_xb + $sq_zb <= $sq_r || $sq_x + $sq_zb <= $sq_r || $sq_xb + $sq_z <= $sq_r){
+					$this->replaceIfAirOrLeaves($x, $source_y, $z, $this->leaves_type, $world);
 				}
 			}
 		}
 	}
 
-	protected function generateTrunk(ChunkManager $world, int $blockX, int $blockY, int $blockZ) : void{
+	protected function generateTrunk(ChunkManager $world, int $block_x, int $block_y, int $block_z) : void{
 		// SELF, SOUTH, EAST, SOUTH EAST
 		for($y = 0; $y < $this->height + -1; ++$y){
-			$type = $world->getBlockAt($blockX + 0, $blockY + $y, $blockZ + 0)->getId();
+			$type = $world->getBlockAt($block_x + 0, $block_y + $y, $block_z + 0)->getId();
 			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
-				$this->transaction->addBlockAt($blockX + 0, $blockY + $y, $blockZ, $this->logType);
+				$this->transaction->addBlockAt($block_x + 0, $block_y + $y, $block_z, $this->log_type);
 			}
-			$type = $world->getBlockAt($blockX + 0, $blockY + $y, $blockZ + 1)->getId();
+			$type = $world->getBlockAt($block_x + 0, $block_y + $y, $block_z + 1)->getId();
 			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
-				$this->transaction->addBlockAt($blockX + 0, $blockY + $y, $blockZ + 1, $this->logType);
+				$this->transaction->addBlockAt($block_x + 0, $block_y + $y, $block_z + 1, $this->log_type);
 			}
-			$type = $world->getBlockAt($blockX + 1, $blockY + $y, $blockZ + 0)->getId();
+			$type = $world->getBlockAt($block_x + 1, $block_y + $y, $block_z + 0)->getId();
 			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
-				$this->transaction->addBlockAt($blockX + 1, $blockY + $y, $blockZ, $this->logType);
+				$this->transaction->addBlockAt($block_x + 1, $block_y + $y, $block_z, $this->log_type);
 			}
-			$type = $world->getBlockAt($blockX + 1, $blockY + $y, $blockZ + 1)->getId();
+			$type = $world->getBlockAt($block_x + 1, $block_y + $y, $block_z + 1)->getId();
 			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
-				$this->transaction->addBlockAt($blockX + 1, $blockY + $y, $blockZ + 1, $this->logType);
+				$this->transaction->addBlockAt($block_x + 1, $block_y + $y, $block_z + 1, $this->log_type);
 			}
 		}
 	}
 
-	protected function generateDirtBelowTrunk(int $blockX, int $blockY, int $blockZ) : void{
+	protected function generateDirtBelowTrunk(int $block_x, int $block_y, int $block_z) : void{
 		// SELF, SOUTH, EAST, SOUTH EAST
 		$dirt = VanillaBlocks::DIRT();
-		$this->transaction->addBlockAt($blockX + 0, $blockY + -1, $blockZ, $dirt);
-		$this->transaction->addBlockAt($blockX + 0, $blockY + -1, $blockZ + 1, $dirt);
-		$this->transaction->addBlockAt($blockX + 1, $blockY + -1, $blockZ, $dirt);
-		$this->transaction->addBlockAt($blockX + 1, $blockY + -1, $blockZ + 1, $dirt);
+		$this->transaction->addBlockAt($block_x + 0, $block_y + -1, $block_z, $dirt);
+		$this->transaction->addBlockAt($block_x + 0, $block_y + -1, $block_z + 1, $dirt);
+		$this->transaction->addBlockAt($block_x + 1, $block_y + -1, $block_z, $dirt);
+		$this->transaction->addBlockAt($block_x + 1, $block_y + -1, $block_z + 1, $dirt);
 	}
 
-	private function addVinesOnTrunk(ChunkManager $world, int $blockX, int $blockY, int $blockZ, Random $random) : void{
+	private function addVinesOnTrunk(ChunkManager $world, int $block_x, int $block_y, int $block_z, Random $random) : void{
 		for($y = 1; $y < $this->height; ++$y){
-			$this->maybePlaceVine($world, $blockX + -1, $blockY + $y, $blockZ + 0, Facing::EAST, $random);
-			$this->maybePlaceVine($world, $blockX + 0, $blockY + $y, $blockZ + -1, Facing::SOUTH, $random);
-			$this->maybePlaceVine($world, $blockX + 2, $blockY + $y, $blockZ + 0, Facing::WEST, $random);
-			$this->maybePlaceVine($world, $blockX + 1, $blockY + $y, $blockZ + -1, Facing::SOUTH, $random);
-			$this->maybePlaceVine($world, $blockX + 2, $blockY + $y, $blockZ + 1, Facing::WEST, $random);
-			$this->maybePlaceVine($world, $blockX + 1, $blockY + $y, $blockZ + 2, Facing::NORTH, $random);
-			$this->maybePlaceVine($world, $blockX + -1, $blockY + $y, $blockZ + 1, Facing::EAST, $random);
-			$this->maybePlaceVine($world, $blockX + 0, $blockY + $y, $blockZ + 2, Facing::NORTH, $random);
+			$this->maybePlaceVine($world, $block_x + -1, $block_y + $y, $block_z + 0, Facing::EAST, $random);
+			$this->maybePlaceVine($world, $block_x + 0, $block_y + $y, $block_z + -1, Facing::SOUTH, $random);
+			$this->maybePlaceVine($world, $block_x + 2, $block_y + $y, $block_z + 0, Facing::WEST, $random);
+			$this->maybePlaceVine($world, $block_x + 1, $block_y + $y, $block_z + -1, Facing::SOUTH, $random);
+			$this->maybePlaceVine($world, $block_x + 2, $block_y + $y, $block_z + 1, Facing::WEST, $random);
+			$this->maybePlaceVine($world, $block_x + 1, $block_y + $y, $block_z + 2, Facing::NORTH, $random);
+			$this->maybePlaceVine($world, $block_x + -1, $block_y + $y, $block_z + 1, Facing::EAST, $random);
+			$this->maybePlaceVine($world, $block_x + 0, $block_y + $y, $block_z + 2, Facing::NORTH, $random);
 		}
 	}
 
-	private function maybePlaceVine(ChunkManager $world, int $absoluteX, int $absoluteY, int $absoluteZ, int $facingDirection, Random $random) : void{
+	private function maybePlaceVine(ChunkManager $world, int $absolute_x, int $absolute_y, int $absolute_z, int $face_direction, Random $random) : void{
 		if(
 			$random->nextBoundedInt(3) !== 0 &&
-			$world->getBlockAt($absoluteX, $absoluteY, $absoluteZ)->getId() === BlockLegacyIds::AIR
+			$world->getBlockAt($absolute_x, $absolute_y, $absolute_z)->getId() === BlockLegacyIds::AIR
 		){
-			$this->transaction->addBlockAt($absoluteX, $absoluteY, $absoluteZ, BlockUtils::VINE($facingDirection));
+			$this->transaction->addBlockAt($absolute_x, $absolute_y, $absolute_z, BlockUtils::VINE($face_direction));
 		}
 	}
 

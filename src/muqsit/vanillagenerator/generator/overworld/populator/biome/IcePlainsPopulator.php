@@ -11,7 +11,7 @@ use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 class IcePlainsPopulator extends BiomePopulator{
 	
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 	
 	protected static function initTrees() : void{
 		self::$TREES = [
@@ -24,9 +24,9 @@ class IcePlainsPopulator extends BiomePopulator{
 	}
 	
 	protected function initPopulators() : void{
-		$this->treeDecorator->setAmount(0);
-		$this->treeDecorator->setTrees(...self::$TREES);
-		$this->flowerDecorator->setAmount(0);
+		$this->tree_decorator->setAmount(0);
+		$this->tree_decorator->setTrees(...self::$TREES);
+		$this->flower_decorator->setAmount(0);
     }
 }
 

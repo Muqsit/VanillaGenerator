@@ -10,17 +10,17 @@ use pocketmine\utils\Random;
 final class BiomeClimateManager{
 
 	/** @var SimplexOctaveGenerator */
-	private static $noiseGen;
+	private static SimplexOctaveGenerator $noise_gen;
 
 	/** @var BiomeClimate */
-	private static $default;
+	private static BiomeClimate $default;
 
 	/** @var BiomeClimate[] */
-	private static $climates = [];
+	private static array $climates = [];
 
 	public static function init() : void{
-		self::$noiseGen = SimplexOctaveGenerator::fromRandomAndOctaves(new Random(1234), 1, 0, 0, 0);
-		self::$noiseGen->setScale(1 / 8.0);
+		self::$noise_gen = SimplexOctaveGenerator::fromRandomAndOctaves(new Random(1234), 1, 0, 0, 0);
+		self::$noise_gen->setScale(1 / 8.0);
 
 		self::$default = new BiomeClimate(0.5, 0.5, true);
 
@@ -101,8 +101,8 @@ final class BiomeClimateManager{
 		self::register(new BiomeClimate(0.5, 0.5, false), BiomeIds::SKY);
 	}
 
-	public static function register(BiomeClimate $climate, int ...$biomeIds) : void{
-		foreach($biomeIds as $biomeId){
+	public static function register(BiomeClimate $climate, int ...$biome_ids) : void{
+		foreach($biome_ids as $biomeId){
 			self::$climates[$biomeId] = $climate;
 		}
 	}
@@ -138,7 +138,7 @@ final class BiomeClimateManager{
 	private static function getVariatedTemperature(int $biome, int $x, int $y, int $z) : float{
 		$temp = self::get($biome)->getTemperature();
 		if($y > 64){
-			$variation = self::$noiseGen->noise($x, $z, 0, 0.5, 2.0, false) * 4.0;
+			$variation = self::$noise_gen->noise($x, $z, 0, 0.5, 2.0, false) * 4.0;
 			return $temp - ($variation + (float) ($y - 64)) * 0.05 / 30.0;
 		}
 

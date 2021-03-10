@@ -9,10 +9,10 @@ use pocketmine\block\Block;
 final class FlowerDecoration{
 
 	/** @var Block */
-	private $block;
+	private Block $block;
 
 	/** @var int */
-	private $weight;
+	private int $weight;
 
 	public function __construct(Block $block, int $weight){
 		$this->block = $block;

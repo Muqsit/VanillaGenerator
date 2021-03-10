@@ -12,7 +12,7 @@ use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 class JungleEdgePopulator extends JunglePopulator{
 
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 
 	protected static function initTrees() : void{
 		self::$TREES = [
@@ -22,8 +22,8 @@ class JungleEdgePopulator extends JunglePopulator{
 	}
 
 	protected function initPopulators() : void{
-		$this->treeDecorator->setAmount(2);
-		$this->treeDecorator->setTrees(...self::$TREES);
+		$this->tree_decorator->setAmount(2);
+		$this->tree_decorator->setTrees(...self::$TREES);
 	}
 
 	public function getBiomes() : ?array{

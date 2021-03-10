@@ -35,18 +35,18 @@ class DoublePlantDecorator extends Decorator{
 	}
 
 	/** @var DoublePlantDecoration[] */
-	private $doublePlants = [];
+	private array $doublePlants = [];
 
 	final public function setDoublePlants(DoublePlantDecoration ...$doublePlants) : void{
 		$this->doublePlants = $doublePlants;
 	}
 
-	public function decorate(ChunkManager $world, Random $random, int $chunkX, int $chunkZ, Chunk $chunk) : void{
+	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
-		$sourceY = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
+		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 
 		$species = self::getRandomDoublePlant($random, $this->doublePlants);
-		(new DoubleTallPlant($species))->generate($world, $random, ($chunkX << 4) + $x, $sourceY, ($chunkZ << 4) + $z);
+		(new DoubleTallPlant($species))->generate($world, $random, ($chunk_x << 4) + $x, $source_y, ($chunk_z << 4) + $z);
 	}
 }

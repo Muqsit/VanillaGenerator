@@ -10,96 +10,96 @@ use function array_key_exists;
 class RiverMapLayer extends MapLayer{
 
 	/** @var int[] */
-	private static $OCEANS = [BiomeIds::OCEAN => 0, BiomeIds::DEEP_OCEAN => 0];
+	private static array $OCEANS = [BiomeIds::OCEAN => 0, BiomeIds::DEEP_OCEAN => 0];
 
 	/** @var int[] */
-	private static $SPECIAL_RIVERS = [
+	private static array $SPECIAL_RIVERS = [
 		BiomeIds::ICE_FLATS => BiomeIds::FROZEN_RIVER,
 		BiomeIds::MUSHROOM_ISLAND => BiomeIds::MUSHROOM_ISLAND_SHORE,
 		BiomeIds::MUSHROOM_ISLAND_SHORE => BiomeIds::MUSHROOM_ISLAND_SHORE
 	];
 
 	/** @var int */
-	private static $CLEAR_VALUE = 0;
+	private static int $CLEAR_VALUE = 0;
 
 	/** @var int */
-	private static $RIVER_VALUE = 1;
+	private static int $RIVER_VALUE = 1;
 
 	/** @var MapLayer */
-	private $belowLayer;
+	private MapLayer $below_layer;
 
-	/** @var MapLayer */
-	private $mergeLayer;
+	/** @var MapLayer|null */
+	private ?MapLayer $merge_layer;
 
-	public function __construct(int $seed, MapLayer $belowLayer, ?MapLayer $mergeLayer = null){
+	public function __construct(int $seed, MapLayer $below_layer, ?MapLayer $merge_layer = null){
 		parent::__construct($seed);
-		$this->belowLayer = $belowLayer;
-		$this->mergeLayer = $mergeLayer;
+		$this->below_layer = $below_layer;
+		$this->merge_layer = $merge_layer;
 	}
 
-	public function generateValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		if($this->mergeLayer === null){
-			return $this->generateRivers($x, $z, $sizeX, $sizeZ);
+	public function generateValues(int $x, int $z, int $size_x, int $size_z) : array{
+		if($this->merge_layer === null){
+			return $this->generateRivers($x, $z, $size_x, $size_z);
 		}
 
-		return $this->mergeRivers($x, $z, $sizeX, $sizeZ);
+		return $this->mergeRivers($x, $z, $size_x, $size_z);
 	}
 
 	/**
 	 * @param int $x
 	 * @param int $z
-	 * @param int $sizeX
-	 * @param int $sizeZ
+	 * @param int $size_x
+	 * @param int $size_z
 	 * @return int[]
 	 */
-	private function generateRivers(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		$gridX = $x - 1;
-		$gridZ = $z - 1;
-		$gridSizeX = $sizeX + 2;
-		$gridSizeZ = $sizeZ + 2;
+	private function generateRivers(int $x, int $z, int $size_x, int $size_z) : array{
+		$grid_x = $x - 1;
+		$grid_z = $z - 1;
+		$grid_size_x = $size_x + 2;
+		$grid_size_z = $size_z + 2;
 
-		$values = $this->belowLayer->generateValues($gridX, $gridZ, $gridSizeX, $gridSizeZ);
-		$finalValues = [];
-		for($i = 0; $i < $sizeZ; ++$i){
-			for($j = 0; $j < $sizeX; ++$j){
+		$values = $this->below_layer->generateValues($grid_x, $grid_z, $grid_size_x, $grid_size_z);
+		$final_values = [];
+		for($i = 0; $i < $size_z; ++$i){
+			for($j = 0; $j < $size_x; ++$j){
 				// This applies rivers using Von Neumann neighborhood
-				$centerVal = $values[$j + 1 + ($i + 1) * $gridSizeX] & 1;
-				$upperVal = $values[$j + 1 + $i * $gridSizeX] & 1;
-				$lowerVal = $values[$j + 1 + ($i + 2) * $gridSizeX] & 1;
-				$leftVal = $values[$j + ($i + 1) * $gridSizeX] & 1;
-				$rightVal = $values[$j + 2 + ($i + 1) * $gridSizeX] & 1;
+				$center_val = $values[$j + 1 + ($i + 1) * $grid_size_x] & 1;
+				$upper_val = $values[$j + 1 + $i * $grid_size_x] & 1;
+				$lower_val = $values[$j + 1 + ($i + 2) * $grid_size_x] & 1;
+				$left_val = $values[$j + ($i + 1) * $grid_size_x] & 1;
+				$right_val = $values[$j + 2 + ($i + 1) * $grid_size_x] & 1;
 				$val = self::$CLEAR_VALUE;
-				if($centerVal !== $upperVal || $centerVal !== $lowerVal || $centerVal !== $leftVal || $centerVal !== $rightVal){
+				if($center_val !== $upper_val || $center_val !== $lower_val || $center_val !== $left_val || $center_val !== $right_val){
 					$val = self::$RIVER_VALUE;
 				}
-				$finalValues[$j + $i * $sizeX] = $val;
+				$final_values[$j + $i * $size_x] = $val;
 			}
 		}
-		return $finalValues;
+		return $final_values;
 	}
 
 	/**
 	 * @param int $x
 	 * @param int $z
-	 * @param int $sizeX
-	 * @param int $sizeZ
+	 * @param int $size_x
+	 * @param int $size_z
 	 * @return int[]
 	 */
-	private function mergeRivers(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		$values = $this->belowLayer->generateValues($x, $z, $sizeX, $sizeZ);
-		$mergeValues = $this->mergeLayer->generateValues($x, $z, $sizeX, $sizeZ);
+	private function mergeRivers(int $x, int $z, int $size_x, int $size_z) : array{
+		$values = $this->below_layer->generateValues($x, $z, $size_x, $size_z);
+		$merge_values = $this->merge_layer->generateValues($x, $z, $size_x, $size_z);
 
-		$finalValues = [];
-		for($i = 0; $i < $sizeX * $sizeZ; ++$i){
-			$val = $mergeValues[$i];
-			if(array_key_exists($mergeValues[$i], self::$OCEANS)){
-				$val = $mergeValues[$i];
+		$final_values = [];
+		for($i = 0; $i < $size_x * $size_z; ++$i){
+			$val = $merge_values[$i];
+			if(array_key_exists($merge_values[$i], self::$OCEANS)){
+				$val = $merge_values[$i];
 			}elseif($values[$i] === self::$RIVER_VALUE){
-				$val = self::$SPECIAL_RIVERS[$mergeValues[$i]] ?? BiomeIds::RIVER;
+				$val = self::$SPECIAL_RIVERS[$merge_values[$i]] ?? BiomeIds::RIVER;
 			}
-			$finalValues[$i] = $val;
+			$final_values[$i] = $val;
 		}
 
-		return $finalValues;
+		return $final_values;
 	}
 }

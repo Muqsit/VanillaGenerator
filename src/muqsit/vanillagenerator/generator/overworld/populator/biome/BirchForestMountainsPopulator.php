@@ -14,7 +14,7 @@ class BirchForestMountainsPopulator extends ForestPopulator{
 	private const BIOMES = [BiomeIds::MUTATED_BIRCH_FOREST, BiomeIds::MUTATED_BIRCH_FOREST_HILLS];
 
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 
 	protected static function initTrees() : void{
 		self::$TREES = [
@@ -24,7 +24,7 @@ class BirchForestMountainsPopulator extends ForestPopulator{
 	}
 
 	protected function initPopulators() : void{
-		$this->treeDecorator->setTrees(...self::$TREES);
+		$this->tree_decorator->setTrees(...self::$TREES);
 	}
 
 	public function getBiomes() : ?array{

@@ -14,10 +14,10 @@ use pocketmine\block\VanillaBlocks;
 class SavannaPopulator extends BiomePopulator{
 
 	/** @var DoublePlantDecoration[] */
-	protected static $DOUBLE_PLANTS;
+	protected static array $DOUBLE_PLANTS;
 
 	/** @var TreeDecoration[] */
-	protected static $TREES;
+	protected static array $TREES;
 
 	public static function init() : void{
 		parent::init();
@@ -34,12 +34,12 @@ class SavannaPopulator extends BiomePopulator{
 	}
 
 	protected function initPopulators() : void{
-		$this->doublePlantDecorator->setAmount(7);
-		$this->doublePlantDecorator->setDoublePlants(...self::$DOUBLE_PLANTS);
-		$this->treeDecorator->setAmount(1);
-		$this->treeDecorator->setTrees(...self::$TREES);
-		$this->flowerDecorator->setAmount(4);
-		$this->tallGrassDecorator->setAmount(20);
+		$this->double_plant_decorator->setAmount(7);
+		$this->double_plant_decorator->setDoublePlants(...self::$DOUBLE_PLANTS);
+		$this->tree_decorator->setAmount(1);
+		$this->tree_decorator->setTrees(...self::$TREES);
+		$this->flower_decorator->setAmount(4);
+		$this->tall_grass_decorator->setAmount(20);
 	}
 
 	public function getBiomes() : ?array{

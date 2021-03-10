@@ -10,90 +10,90 @@ class ZoomMapLayer extends MapLayer{
 	public const BLURRY = 1;
 
 	/** @var MapLayer */
-	private $belowLayer;
+	private MapLayer $below_layer;
 
 	/** @var int */
-	private $zoomType;
+	private int $zoom_type;
 
-	public function __construct(int $seed, MapLayer $belowLayer, int $zoomType = self::NORMAL){
+	public function __construct(int $seed, MapLayer $below_layer, int $zoom_type = self::NORMAL){
 		parent::__construct($seed);
-		$this->belowLayer = $belowLayer;
-		$this->zoomType = $zoomType;
+		$this->below_layer = $below_layer;
+		$this->zoom_type = $zoom_type;
 	}
 
-	public function generateValues(int $x, int $z, int $sizeX, int $sizeZ) : array{
-		$gridX = $x >> 1;
-		$gridZ = $z >> 1;
-		$gridSizeX = ($sizeX >> 1) + 2;
-		$gridSizeZ = ($sizeZ >> 1) + 2;
-		$values = $this->belowLayer->generateValues($gridX, $gridZ, $gridSizeX, $gridSizeZ);
+	public function generateValues(int $x, int $z, int $size_x, int $size_z) : array{
+		$grid_x = $x >> 1;
+		$grid_z = $z >> 1;
+		$grid_size_x = ($size_x >> 1) + 2;
+		$grid_size_z = ($size_z >> 1) + 2;
+		$values = $this->below_layer->generateValues($grid_x, $grid_z, $grid_size_x, $grid_size_z);
 
-		$zoomSizeX = $gridSizeX - 1 << 1;
-		// $zoomSizeZ = $gridSizeZ - 1 << 1;
-		$tmpValues = [];
-		for($i = 0; $i < $gridSizeZ - 1; ++$i){
-			$n = $i * 2 * $zoomSizeX;
-			$upperLeftVal = $values[$i * $gridSizeX];
-			$lowerLeftVal = $values[($i + 1) * $gridSizeX];
-			for($j = 0; $j < $gridSizeX - 1; ++$j){
-				$this->setCoordsSeed($gridX + $j << 1, $gridZ + $i << 1);
-				$tmpValues[$n] = $upperLeftVal;
-				$tmpValues[$n + $zoomSizeX] = $this->nextInt(2) > 0 ? $upperLeftVal : $lowerLeftVal;
-				$upperRightVal = $values[$j + 1 + $i * $gridSizeX];
-				$lowerRightVal = $values[$j + 1 + ($i + 1) * $gridSizeX];
-				$tmpValues[$n + 1] = $this->nextInt(2) > 0 ? $upperLeftVal : $upperRightVal;
-				$tmpValues[$n + 1 + $zoomSizeX] = $this->getNearest($upperLeftVal, $upperRightVal, $lowerLeftVal, $lowerRightVal);
-				$upperLeftVal = $upperRightVal;
-				$lowerLeftVal = $lowerRightVal;
+		$zoom_size_x = $grid_size_x - 1 << 1;
+		// $zoom_size_z = $grid_size_z - 1 << 1;
+		$tmp_values = [];
+		for($i = 0; $i < $grid_size_z - 1; ++$i){
+			$n = $i * 2 * $zoom_size_x;
+			$upper_left_val = $values[$i * $grid_size_x];
+			$lower_left_val = $values[($i + 1) * $grid_size_x];
+			for($j = 0; $j < $grid_size_x - 1; ++$j){
+				$this->setCoordsSeed($grid_x + $j << 1, $grid_z + $i << 1);
+				$tmp_values[$n] = $upper_left_val;
+				$tmp_values[$n + $zoom_size_x] = $this->nextInt(2) > 0 ? $upper_left_val : $lower_left_val;
+				$upper_right_val = $values[$j + 1 + $i * $grid_size_x];
+				$lower_right_val = $values[$j + 1 + ($i + 1) * $grid_size_x];
+				$tmp_values[$n + 1] = $this->nextInt(2) > 0 ? $upper_left_val : $upper_right_val;
+				$tmp_values[$n + 1 + $zoom_size_x] = $this->getNearest($upper_left_val, $upper_right_val, $lower_left_val, $lower_right_val);
+				$upper_left_val = $upper_right_val;
+				$lower_left_val = $lower_right_val;
 				$n += 2;
 			}
 		}
 
-		$finalValues = [];
-		for($i = 0; $i < $sizeZ; ++$i){
-			for($j = 0; $j < $sizeX; ++$j){
-				$finalValues[$j + $i * $sizeX] = $tmpValues[$j + ($i + ($z & 1)) * $zoomSizeX + ($x & 1)];
+		$final_values = [];
+		for($i = 0; $i < $size_z; ++$i){
+			for($j = 0; $j < $size_x; ++$j){
+				$final_values[$j + $i * $size_x] = $tmp_values[$j + ($i + ($z & 1)) * $zoom_size_x + ($x & 1)];
 			}
 		}
 
-		return $finalValues;
+		return $final_values;
 	}
 
-	private function getNearest(int $upperLeftVal, int $upperRightVal, int $lowerLeftVal, int $lowerRightVal) : int{
-		if($this->zoomType === self::NORMAL){
-			if($upperRightVal === $lowerLeftVal && $lowerLeftVal === $lowerRightVal){
-				return $upperRightVal;
+	private function getNearest(int $upper_left_val, int $upper_right_val, int $lower_left_val, int $lower_right_val) : int{
+		if($this->zoom_type === self::NORMAL){
+			if($upper_right_val === $lower_left_val && $lower_left_val === $lower_right_val){
+				return $upper_right_val;
 			}
-			if($upperLeftVal === $upperRightVal && $upperLeftVal === $lowerLeftVal){
-				return $upperLeftVal;
+			if($upper_left_val === $upper_right_val && $upper_left_val === $lower_left_val){
+				return $upper_left_val;
 			}
-			if($upperLeftVal === $upperRightVal && $upperLeftVal === $lowerRightVal){
-				return $upperLeftVal;
+			if($upper_left_val === $upper_right_val && $upper_left_val === $lower_right_val){
+				return $upper_left_val;
 			}
-			if($upperLeftVal === $lowerLeftVal && $upperLeftVal === $lowerRightVal){
-				return $upperLeftVal;
+			if($upper_left_val === $lower_left_val && $upper_left_val === $lower_right_val){
+				return $upper_left_val;
 			}
-			if($upperLeftVal === $upperRightVal && $lowerLeftVal !== $lowerRightVal){
-				return $upperLeftVal;
+			if($upper_left_val === $upper_right_val && $lower_left_val !== $lower_right_val){
+				return $upper_left_val;
 			}
-			if($upperLeftVal === $lowerLeftVal && $upperRightVal !== $lowerRightVal){
-				return $upperLeftVal;
+			if($upper_left_val === $lower_left_val && $upper_right_val !== $lower_right_val){
+				return $upper_left_val;
 			}
-			if($upperLeftVal === $lowerRightVal && $upperRightVal !== $lowerLeftVal){
-				return $upperLeftVal;
+			if($upper_left_val === $lower_right_val && $upper_right_val !== $lower_left_val){
+				return $upper_left_val;
 			}
-			if($upperRightVal === $lowerLeftVal && $upperLeftVal !== $lowerRightVal){
-				return $upperRightVal;
+			if($upper_right_val === $lower_left_val && $upper_left_val !== $lower_right_val){
+				return $upper_right_val;
 			}
-			if($upperRightVal === $lowerRightVal && $upperLeftVal !== $lowerLeftVal){
-				return $upperRightVal;
+			if($upper_right_val === $lower_right_val && $upper_left_val !== $lower_left_val){
+				return $upper_right_val;
 			}
-			if($lowerLeftVal === $lowerRightVal && $upperLeftVal !== $upperRightVal){
-				return $lowerLeftVal;
+			if($lower_left_val === $lower_right_val && $upper_left_val !== $upper_right_val){
+				return $lower_left_val;
 			}
 		}
 
-		$values = [$upperLeftVal, $upperRightVal, $lowerLeftVal, $lowerRightVal];
+		$values = [$upper_left_val, $upper_right_val, $lower_left_val, $lower_right_val];
 		return $values[$this->nextInt(count($values))];
 	}
 }

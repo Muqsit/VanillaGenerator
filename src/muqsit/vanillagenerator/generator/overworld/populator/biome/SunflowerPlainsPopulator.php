@@ -11,7 +11,7 @@ use pocketmine\block\VanillaBlocks;
 class SunflowerPlainsPopulator extends PlainsPopulator{
 
 	/** @var DoublePlantDecoration[] */
-	private static $DOUBLE_PLANTS;
+	private static array $DOUBLE_PLANTS;
 
 	public static function init() : void{
 		parent::init();
@@ -21,8 +21,8 @@ class SunflowerPlainsPopulator extends PlainsPopulator{
 	}
 
 	protected function initPopulators() : void{
-		$this->doublePlantDecorator->setAmount(10);
-		$this->doublePlantDecorator->setDoublePlants(...self::$DOUBLE_PLANTS);
+		$this->double_plant_decorator->setAmount(10);
+		$this->double_plant_decorator->setDoublePlants(...self::$DOUBLE_PLANTS);
 	}
 
 	public function getBiomes() : ?array{
