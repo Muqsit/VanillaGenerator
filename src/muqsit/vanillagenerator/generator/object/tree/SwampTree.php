@@ -85,6 +85,7 @@ class SwampTree extends CocoaTree{
 			--$source_y;
 		}
 
+		++$source_y;
 		if($this->cannotGenerateAt($source_x, $source_y, $source_z, $world)){
 			return false;
 		}
