@@ -32,8 +32,8 @@ class MesaGroundGenerator extends GroundGenerator{
 	/** @var SimplexOctaveGenerator|null */
 	private ?SimplexOctaveGenerator $canyon_scale_noise = null;
 
-	/** @var int */
-	private int $seed;
+	/** @var int|null */
+	private ?int $seed = null;
 
 	public function __construct(int $type = self::NORMAL){
 		parent::__construct(VanillaBlocks::RED_SAND(), VanillaBlocks::ORANGE_STAINED_CLAY());
