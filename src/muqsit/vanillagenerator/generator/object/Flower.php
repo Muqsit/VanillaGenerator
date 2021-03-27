@@ -20,7 +20,7 @@ class Flower extends TerrainObject{
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$succeeded = false;
-		$height = $world->getWorldHeight();
+		$height = $world->getMaxY();
 		for($i = 0; $i < 64; ++$i){
 			$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
 			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);

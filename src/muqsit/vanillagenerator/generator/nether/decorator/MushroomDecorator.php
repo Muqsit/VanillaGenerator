@@ -32,7 +32,7 @@ class MushroomDecorator extends Decorator{
 	}
 
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
-		$height = $world->getWorldHeight();
+		$height = $world->getMaxY();
 
 		$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
 		$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);

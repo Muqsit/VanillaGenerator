@@ -24,7 +24,7 @@ class SnowPopulator implements Populator{
 		$grass = VanillaBlocks::GRASS()->getFullId();
 		$snow_layer = VanillaBlocks::SNOW_LAYER()->getFullId();
 
-		$world_height = $world->getWorldHeight();
+		$world_height = $world->getMaxY();
 
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){

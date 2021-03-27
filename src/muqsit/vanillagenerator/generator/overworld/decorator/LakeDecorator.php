@@ -40,7 +40,7 @@ class LakeDecorator extends Decorator{
 		if($random->nextBoundedInt($this->rarity) === 0){
 			$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
 			$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
-			$source_y = $random->nextBoundedInt($world->getWorldHeight() - $this->base_offset) + $this->base_offset;
+			$source_y = $random->nextBoundedInt($world->getMaxY() - $this->base_offset) + $this->base_offset;
 			if($this->type->getId() === BlockLegacyIds::STILL_LAVA && ($source_y >= 64 || $random->nextBoundedInt(10) > 0)){
 				return;
 			}

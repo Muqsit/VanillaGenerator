@@ -16,7 +16,7 @@ class FireDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$amount = 1 + $random->nextBoundedInt(1 + $random->nextBoundedInt(10));
 
-		$height = $world->getWorldHeight();
+		$height = $world->getMaxY();
 		$source_y_margin = 8 * ($height >> 7);
 
 		for($j = 0; $j < $amount; ++$j){

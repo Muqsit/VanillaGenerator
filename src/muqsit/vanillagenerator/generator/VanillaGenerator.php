@@ -105,7 +105,7 @@ abstract class VanillaGenerator extends Generator{
 		}
 	}
 
-	public function getWorldHeight() : int{
+	public function getMaxY() : int{
 		return World::Y_MAX;
 	}
 }

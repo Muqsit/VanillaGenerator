@@ -114,7 +114,7 @@ class GenericTree extends TerrainObject{
 				$radius = 2; // max radius starting at leaves bottom
 			}
 			// check for block collision on horizontal slices
-			$height = $world->getWorldHeight();
+			$height = $world->getMaxY();
 			for($x = $base_x - $radius; $x <= $base_x + $radius; ++$x){
 				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){
 					if($y >= 0 && $y < $height){

@@ -107,7 +107,7 @@ class SwampTree extends CocoaTree{
 			}
 		}
 
-		$world_height = $world->getWorldHeight();
+		$world_height = $world->getMaxY();
 		// generate the trunk
 		for($y = 0; $y < $this->height; ++$y){
 			if($source_y + $y < $world_height){

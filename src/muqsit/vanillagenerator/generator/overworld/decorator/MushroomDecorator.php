@@ -49,7 +49,7 @@ class MushroomDecorator extends Decorator{
 			$source_y = $chunk->getHighestBlockAt($source_x & 0x0f, $source_z & 0x0f);
 			$source_y = $this->fixed_height_range ? $source_y : $random->nextBoundedInt($source_y << 1);
 
-			$height = $world->getWorldHeight();
+			$height = $world->getMaxY();
 			for($i = 0; $i < 64; ++$i){
 				$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
 				$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);

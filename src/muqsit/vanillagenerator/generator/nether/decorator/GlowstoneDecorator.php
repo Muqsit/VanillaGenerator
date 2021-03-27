@@ -27,7 +27,7 @@ class GlowstoneDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$amount = $this->variable_amount ? 1 + $random->nextBoundedInt(1 + $random->nextBoundedInt(10)) : 10;
 
-		$height = $world->getWorldHeight();
+		$height = $world->getMaxY();
 		$source_y_margin = 8 * ($height >> 7);
 
 		for($i = 0; $i < $amount; ++$i){

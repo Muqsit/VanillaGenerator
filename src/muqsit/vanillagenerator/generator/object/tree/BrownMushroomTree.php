@@ -39,7 +39,7 @@ class BrownMushroomTree extends GenericTree{
 	}
 
 	public function canPlace(int $base_x, int $base_y, int $base_z, ChunkManager $world) : bool{
-		$world_height = $world->getWorldHeight();
+		$world_height = $world->getMaxY();
 		for($y = $base_y; $y <= $base_y + 1 + $this->height; ++$y){
 			// Space requirement is 7x7 blocks, so brown mushroom's cap
 			// can be directly touching a mushroom next to it.

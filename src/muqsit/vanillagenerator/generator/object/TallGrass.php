@@ -25,7 +25,7 @@ class TallGrass extends TerrainObject{
 		}while(($this_block_id === BlockLegacyIds::AIR || $this_block_id === BlockLegacyIds::LEAVES) && $source_y > 0);
 		++$source_y;
 		$succeeded = false;
-		$height = $world->getWorldHeight();
+		$height = $world->getMaxY();
 		for($i = 0; $i < 128; ++$i){
 			$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
 			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);

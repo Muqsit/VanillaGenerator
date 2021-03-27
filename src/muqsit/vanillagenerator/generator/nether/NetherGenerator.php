@@ -44,7 +44,7 @@ class NetherGenerator extends VanillaGenerator{
 
 	public function __construct(int $seed, array $options = []){
 		parent::__construct($seed, Environment::NETHER, null, $options);
-		$this->addPopulators(new NetherPopulator($this->getWorldHeight())); // This isn't faithful to original code. Was $world->getWorldHeight()
+		$this->addPopulators(new NetherPopulator($this->getMaxY())); // This isn't faithful to original code. Was $world->getWorldHeight()
 	}
 
 	public function getBedrockRoughness() : int{
@@ -55,7 +55,7 @@ class NetherGenerator extends VanillaGenerator{
 		$this->bedrock_roughness = $bedrock_roughness;
 	}
 
-	public function getWorldHeight() : int{
+	public function getMaxY() : int{
 		return 128;
 	}
 
@@ -250,7 +250,7 @@ class NetherGenerator extends VanillaGenerator{
 
 		$surface_height = (int) ($surface_noise / 3.0 + 3.0 + $this->random->nextFloat() * 0.25);
 		$deep = -1;
-		$world_height = $this->getWorldHeight();
+		$world_height = $this->getMaxY();
 		$world_height_m1 = $world_height - 1;
 
 		$block_bedrock = VanillaBlocks::BEDROCK()->getFullId();

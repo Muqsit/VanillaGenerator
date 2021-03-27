@@ -114,7 +114,7 @@ class BigOakTree extends GenericTree{
 			$dx = (float) $target->x / $max_distance;
 			$dy = (float) $target->y / $max_distance;
 			$dz = (float) $target->z / $max_distance;
-			$height = $world->getWorldHeight();
+			$height = $world->getMaxY();
 			for($i = 0; $i <= $max_distance; ++$i, ++$n){
 				$target = $from->add(0.5 + $i * $dx, 0.5 + $i * $dy, 0.5 + $i * $dz);
 				$target_floorY = $target->getFloorY();
