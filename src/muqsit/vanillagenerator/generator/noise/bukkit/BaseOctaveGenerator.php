@@ -9,13 +9,8 @@ abstract class BaseOctaveGenerator{
 	/** @var NoiseGenerator[] */
 	protected array $octaves;
 
-	/** @var float */
 	protected float $x_scale = 1.0;
-
-	/** @var float */
 	protected float $y_scale = 1.0;
-
-	/** @var float */
 	protected float $z_scale = 1.0;
 
 	/**

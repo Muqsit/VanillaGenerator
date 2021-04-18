@@ -30,7 +30,6 @@ class JunglePopulator extends BiomePopulator{
 		];
 	}
 
-	/** @var MelonDecorator */
 	protected MelonDecorator $melon_decorator;
 
 	public function __construct(){

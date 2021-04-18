@@ -11,7 +11,6 @@ use pocketmine\world\ChunkManager;
 
 class TallGrass extends TerrainObject{
 
-	/** @var Block */
 	private Block $grass_type;
 
 	public function __construct(Block $grass_type){

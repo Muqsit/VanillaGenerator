@@ -37,10 +37,7 @@ class TaigaPopulator extends BiomePopulator{
 		];
 	}
 
-	/** @var MushroomDecorator */
 	protected MushroomDecorator $taiga_brown_mushroom_decorator;
-
-	/** @var MushroomDecorator */
 	protected MushroomDecorator $taiga_red_mushroom_decorator;
 
 	public function __construct(){

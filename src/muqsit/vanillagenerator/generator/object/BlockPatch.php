@@ -13,13 +13,8 @@ class BlockPatch extends TerrainObject{
 
 	private const MIN_RADIUS = 2;
 
-	/** @var Block */
 	private Block $type;
-
-	/** @var int */
 	private int $horiz_radius;
-
-	/** @var int */
 	private int $vert_radius;
 
 	/** @var int[] */

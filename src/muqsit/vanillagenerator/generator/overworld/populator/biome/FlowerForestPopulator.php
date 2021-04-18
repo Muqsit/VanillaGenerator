@@ -34,7 +34,6 @@ class FlowerForestPopulator extends ForestPopulator{
 		];
 	}
 
-	/** @var OctaveGenerator */
 	private OctaveGenerator $noise_gen;
 
 	protected function initPopulators() : void{

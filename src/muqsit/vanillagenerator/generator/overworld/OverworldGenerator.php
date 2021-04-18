@@ -112,10 +112,7 @@ class OverworldGenerator extends VanillaGenerator{
 	protected const DENSITY_FILL_SEA_MODE = 0;
 	protected const DENSITY_FILL_OFFSET = 0.0;
 
-	/** @var GroundGenerator */
 	private GroundGenerator $ground_gen;
-
-	/** @var string */
 	private string $type = WorldType::NORMAL;
 
 	public function __construct(int $seed, array $options = []){

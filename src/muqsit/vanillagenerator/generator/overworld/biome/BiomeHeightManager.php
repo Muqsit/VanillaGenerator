@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\overworld\biome;
 
 final class BiomeHeightManager{
 
-	/** @var BiomeHeight */
 	private static BiomeHeight $default;
 
 	/** @var BiomeHeight[] */

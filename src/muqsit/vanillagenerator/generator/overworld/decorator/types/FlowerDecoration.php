@@ -8,10 +8,7 @@ use pocketmine\block\Block;
 
 final class FlowerDecoration{
 
-	/** @var Block */
 	private Block $block;
-
-	/** @var int */
 	private int $weight;
 
 	public function __construct(Block $block, int $weight){

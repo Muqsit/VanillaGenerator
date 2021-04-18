@@ -334,13 +334,8 @@ class SimplexNoise extends PerlinNoise{
 // (array access is a lot slower than member access)
 final class Grad{
 
-	/** @var float */
 	public float $x;
-
-	/** @var float */
 	public float $y;
-
-	/** @var float */
 	public float $z;
 
 	public function __construct(float $x, float $y, float $z){

@@ -9,7 +9,6 @@ use pocketmine\utils\Random;
 
 final class BiomeClimateManager{
 
-	/** @var SimplexOctaveGenerator */
 	private static SimplexOctaveGenerator $noise_gen;
 
 	/** @var BiomeClimate */

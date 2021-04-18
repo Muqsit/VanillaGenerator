@@ -33,7 +33,6 @@ class MegaTaigaPopulator extends TaigaPopulator{
 		return [BiomeIds::REDWOOD_TAIGA, BiomeIds::REDWOOD_TAIGA_HILLS];
 	}
 
-	/** @var StoneBoulderDecorator */
 	protected StoneBoulderDecorator $stone_boulder_decorator;
 
 	public function __construct(){

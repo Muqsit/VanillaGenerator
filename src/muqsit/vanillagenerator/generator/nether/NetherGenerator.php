@@ -39,7 +39,6 @@ class NetherGenerator extends VanillaGenerator{
 		return ($k << 6) | ($j << 3) | $i;
 	}
 
-	/** @var int */
 	protected int $bedrock_roughness = 5;
 
 	public function __construct(int $seed, array $options = []){

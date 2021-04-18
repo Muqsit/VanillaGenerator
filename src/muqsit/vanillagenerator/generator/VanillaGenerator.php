@@ -18,17 +18,12 @@ use pocketmine\world\World;
  */
 abstract class VanillaGenerator extends Generator{
 
-	/**
-	 * @var WorldOctaves|null
-	 *
-	 * @phpstan-var T
-	 */
+	/** @phpstan-var T */
 	private ?WorldOctaves $octave_cache = null;
 
 	/** @var Populator[] */
 	private array $populators = [];
 
-	/** @var MapLayerPair */
 	private MapLayerPair $biome_grid;
 
 	public function __construct(int $seed, int $environment, ?string $world_type = null, array $options = []){

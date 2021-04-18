@@ -6,10 +6,7 @@ namespace muqsit\vanillagenerator\generator\overworld\biome;
 
 class BiomeHeight{
 
-	/** @var float */
 	private float $height;
-
-	/** @var float */
 	private float $scale;
 
 	public function __construct(float $height, float $scale){

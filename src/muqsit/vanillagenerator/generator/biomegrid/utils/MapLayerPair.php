@@ -8,10 +8,7 @@ use muqsit\vanillagenerator\generator\biomegrid\MapLayer;
 
 final class MapLayerPair{
 
-	/** @var MapLayer */
 	public MapLayer $high_resolution;
-
-	/** @var MapLayer|null */
 	public ?MapLayer $low_resolution;
 
 	public function __construct(MapLayer $high_resolution, ?MapLayer $low_resolution){

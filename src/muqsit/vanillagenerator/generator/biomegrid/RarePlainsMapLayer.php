@@ -12,7 +12,6 @@ class RarePlainsMapLayer extends MapLayer{
 	/** @var int[] */
 	private static array $RARE_PLAINS = [BiomeIds::PLAINS => BiomeIds::MUTATED_PLAINS];
 
-	/** @var MapLayer */
 	private MapLayer $below_layer;
 
 	public function __construct(int $seed, MapLayer $below_layer){

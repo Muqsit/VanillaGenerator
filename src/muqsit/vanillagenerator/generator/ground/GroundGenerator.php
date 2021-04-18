@@ -15,13 +15,8 @@ use pocketmine\world\format\Chunk;
 
 class GroundGenerator{
 
-	/** @var Block */
 	protected Block $top_material;
-
-	/** @var Block */
 	protected Block $ground_material;
-
-	/** @var int */
 	protected int $bedrock_roughness = 5;
 
 	public function __construct(?Block $top_material = null, ?Block $ground_material = null){

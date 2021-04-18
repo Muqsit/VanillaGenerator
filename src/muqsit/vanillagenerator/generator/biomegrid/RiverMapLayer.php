@@ -19,16 +19,10 @@ class RiverMapLayer extends MapLayer{
 		BiomeIds::MUSHROOM_ISLAND_SHORE => BiomeIds::MUSHROOM_ISLAND_SHORE
 	];
 
-	/** @var int */
 	private static int $CLEAR_VALUE = 0;
-
-	/** @var int */
 	private static int $RIVER_VALUE = 1;
 
-	/** @var MapLayer */
 	private MapLayer $below_layer;
-
-	/** @var MapLayer|null */
 	private ?MapLayer $merge_layer;
 
 	public function __construct(int $seed, MapLayer $below_layer, ?MapLayer $merge_layer = null){

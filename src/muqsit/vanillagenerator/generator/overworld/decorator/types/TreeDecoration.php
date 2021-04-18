@@ -6,10 +6,7 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator\types;
 
 final class TreeDecoration{
 
-	/** @var string */
 	private string $class;
-
-	/** @var int */
 	private int $weight;
 
 	public function __construct(string $class, int $weight){

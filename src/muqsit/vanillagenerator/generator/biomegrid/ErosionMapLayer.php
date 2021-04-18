@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\biomegrid;
 
 class ErosionMapLayer extends MapLayer{
 
-	/** @var MapLayer */
 	private MapLayer $below_layer;
 
 	public function __construct(int $seed, MapLayer $below_layer){

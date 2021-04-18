@@ -35,13 +35,8 @@ class SwamplandPopulator extends BiomePopulator{
 		];
 	}
 
-	/** @var MushroomDecorator */
 	private MushroomDecorator $swampland_brown_mushroom_decorator;
-
-	/** @var MushroomDecorator */
 	private MushroomDecorator $swampland_red_mushroom_decorator;
-
-	/** @var WaterLilyDecorator */
 	private WaterLilyDecorator $waterlily_decorator;
 
 	public function __construct(){
