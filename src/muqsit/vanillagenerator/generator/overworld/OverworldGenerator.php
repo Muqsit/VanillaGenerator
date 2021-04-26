@@ -115,8 +115,8 @@ class OverworldGenerator extends VanillaGenerator{
 	private GroundGenerator $ground_gen;
 	private string $type = WorldType::NORMAL;
 
-	public function __construct(int $seed, array $options = []){
-		parent::__construct($seed, Environment::OVERWORLD, null, $options);
+	public function __construct(int $seed, string $preset){
+		parent::__construct($seed, Environment::OVERWORLD, null, $preset);
 		$this->ground_gen = new GroundGenerator();
 		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}

@@ -26,8 +26,8 @@ abstract class VanillaGenerator extends Generator{
 
 	private MapLayerPair $biome_grid;
 
-	public function __construct(int $seed, int $environment, ?string $world_type = null, array $options = []){
-		parent::__construct($seed, $options);
+	public function __construct(int $seed, int $environment, ?string $world_type = null, string $preset = ""){
+		parent::__construct($seed, $preset);
 		$this->biome_grid = MapLayer::initialize($seed, $environment, $world_type ?? WorldType::NORMAL);
 	}
 
