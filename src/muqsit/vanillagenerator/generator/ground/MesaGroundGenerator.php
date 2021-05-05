@@ -7,6 +7,7 @@ namespace muqsit\vanillagenerator\generator\ground;
 use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -36,7 +37,7 @@ class MesaGroundGenerator extends GroundGenerator{
 	private ?int $seed = null;
 
 	public function __construct(int $type = self::NORMAL){
-		parent::__construct(VanillaBlocks::RED_SAND(), VanillaBlocks::ORANGE_STAINED_CLAY());
+		parent::__construct(VanillaBlocks::RED_SAND(), VanillaBlocks::STAINED_CLAY()->setColor(DyeColor::ORANGE()));
 		$this->type = $type;
 		$this->color_layer = array_fill(0, 64, 0);
 	}
