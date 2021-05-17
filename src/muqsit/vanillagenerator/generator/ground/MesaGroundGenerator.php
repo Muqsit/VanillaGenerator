@@ -18,22 +18,14 @@ class MesaGroundGenerator extends GroundGenerator{
 	public const BRYCE = 1;
 	public const FOREST = 2;
 
-	/** @var int */
 	private int $type;
 
 	/** @var int[] */
 	private array $color_layer;
 
-	/** @var SimplexOctaveGenerator|null */
 	private ?SimplexOctaveGenerator $color_noise = null;
-
-	/** @var SimplexOctaveGenerator|null */
 	private ?SimplexOctaveGenerator $canyon_height_noise = null;
-
-	/** @var SimplexOctaveGenerator|null */
 	private ?SimplexOctaveGenerator $canyon_scale_noise = null;
-
-	/** @var int|null */
 	private ?int $seed = null;
 
 	public function __construct(int $type = self::NORMAL){

@@ -15,10 +15,7 @@ class BigOakTree extends GenericTree{
 
 	private const LEAF_DENSITY = 1.0;
 
-	/** @var int */
 	private int $max_leaf_distance = 5;
-
-	/** @var int */
 	private int $trunk_height;
 
 	public function __construct(Random $random, BlockTransaction $transaction){
@@ -175,16 +172,9 @@ class BigOakTree extends GenericTree{
 
 final class LeafNode{
 
-	/** @var int */
 	public int $x;
-
-	/** @var int */
 	public int $y;
-
-	/** @var int */
 	public int $z;
-
-	/** @var int */
 	public int $branch_y;
 
 	public function __construct(int $x, int $y, int $z, int $branch_y){

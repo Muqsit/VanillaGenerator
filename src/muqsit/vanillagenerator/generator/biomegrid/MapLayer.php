@@ -87,10 +87,7 @@ abstract class MapLayer{
 		return new MapLayerPair($layer, $layer_lower_res);
 	}
 
-	/** @var Random */
 	private Random $random;
-
-	/** @var int */
 	private int $seed;
 
 	public function __construct(int $seed){

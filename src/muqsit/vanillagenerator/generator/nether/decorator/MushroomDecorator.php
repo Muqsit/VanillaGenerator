@@ -24,7 +24,6 @@ class MushroomDecorator extends Decorator{
 		}
 	}
 
-	/** @var Block */
 	private Block $type;
 
 	public function __construct(Block $type){

@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\biomegrid;
 
 class ConstantBiomeMapLayer extends MapLayer{
 
-	/** @var int */
 	private int $biome;
 
 	public function __construct(int $seed, int $biome){

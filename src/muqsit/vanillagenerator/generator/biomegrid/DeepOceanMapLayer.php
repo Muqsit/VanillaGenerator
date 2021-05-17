@@ -8,7 +8,6 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 
 class DeepOceanMapLayer extends MapLayer{
 
-	/** @var MapLayer */
 	private MapLayer $below_layer;
 
 	public function __construct(int $seed, MapLayer $below_layer){

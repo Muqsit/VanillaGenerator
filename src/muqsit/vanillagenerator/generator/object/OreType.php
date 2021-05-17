@@ -10,19 +10,10 @@ use pocketmine\utils\Random;
 
 class OreType{
 
-	/** @var Block */
 	private Block $type;
-
-	/** @var int */
 	private int $min_y;
-
-	/** @var int */
 	private int $max_y;
-
-	/** @var int */
 	private int $amount;
-
-	/** @var int */
 	private int $target_type;
 
 	/**

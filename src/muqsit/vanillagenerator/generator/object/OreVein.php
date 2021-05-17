@@ -26,13 +26,8 @@ class OreVein extends TerrainObject{
 		return $squared_normalized_x;
 	}
 
-	/** @var Block */
 	private Block $type;
-
-	/** @var int */
 	private int $amount;
-
-	/** @var int */
 	private int $target_type;
 
 	/**

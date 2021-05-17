@@ -18,12 +18,8 @@ class WhittakerMapLayer extends MapLayer{
 		self::$MAP[self::COLD_DRY] = new Climate(3, [2, 4], 1);
 	}
 
-	/** @var MapLayer */
 	private MapLayer $below_layer;
-
-	/** @var int */
 	private int $type;
-
 
 	public function __construct(int $seed, MapLayer $below_layer, int $type){
 		parent::__construct($seed);
@@ -107,13 +103,11 @@ class WhittakerMapLayer extends MapLayer{
 
 class Climate{
 
-	/** @var int */
 	public int $value;
 
 	/** @var int[] */
 	public array $cross_types;
 
-	/** @var int */
 	public int $final_value;
 
 	/**

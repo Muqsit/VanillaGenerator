@@ -15,10 +15,7 @@ use function array_key_exists;
 
 class RedwoodTree extends GenericTree{
 
-	/** @var int */
 	protected int $max_radius;
-
-	/** @var int */
 	protected int $leaves_height;
 
 	public function __construct(Random $random, BlockTransaction $transaction){

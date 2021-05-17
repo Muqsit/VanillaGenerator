@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\noise\bukkit;
 
 class PerlinNoiseGenerator extends BasePerlinNoiseGenerator{
 
-	/** @var PerlinNoiseGenerator|null */
 	private static ?PerlinNoiseGenerator $instance;
 
 	/**

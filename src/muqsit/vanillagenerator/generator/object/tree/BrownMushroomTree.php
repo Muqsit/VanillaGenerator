@@ -14,7 +14,6 @@ use function array_key_exists;
 
 class BrownMushroomTree extends GenericTree{
 
-	/** @var int */
 	protected int $type = BlockLegacyIds::BROWN_MUSHROOM_BLOCK;
 
 	/**

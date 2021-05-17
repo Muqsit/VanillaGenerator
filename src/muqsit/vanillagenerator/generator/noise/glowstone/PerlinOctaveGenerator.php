@@ -41,13 +41,8 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 		return new PerlinOctaveGenerator(self::createOctaves($random, $octaves), $size_x, $size_y, $size_z);
 	}
 
-	/** @var int */
 	protected int $size_x;
-
-	/** @var int */
 	protected int $size_y;
-
-	/** @var int */
 	protected int $size_z;
 
 	/** @var float[] */

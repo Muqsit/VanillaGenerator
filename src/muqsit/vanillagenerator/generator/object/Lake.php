@@ -30,7 +30,6 @@ class Lake extends TerrainObject{
 		}
 	}
 
-	/** @var Block */
 	private Block $type;
 
 	public function __construct(Block $type){

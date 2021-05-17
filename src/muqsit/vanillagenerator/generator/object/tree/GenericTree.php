@@ -18,16 +18,9 @@ use function array_key_exists;
 
 class GenericTree extends TerrainObject{
 
-	/** @var BlockTransaction */
 	protected BlockTransaction $transaction;
-
-	/** @var int */
 	protected int $height;
-
-	/** @var Block */
 	protected Block $log_type;
-
-	/** @var Block */
 	protected Block $leaves_type;
 
 	/** @var int[] */

@@ -9,7 +9,6 @@ use pocketmine\utils\Random;
 
 class NoiseMapLayer extends MapLayer{
 
-	/** @var SimplexOctaveGenerator */
 	private SimplexOctaveGenerator $noise_gen;
 
 	public function __construct(int $seed){

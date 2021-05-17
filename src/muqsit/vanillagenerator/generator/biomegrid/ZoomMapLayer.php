@@ -9,10 +9,7 @@ class ZoomMapLayer extends MapLayer{
 	public const NORMAL = 0;
 	public const BLURRY = 1;
 
-	/** @var MapLayer */
 	private MapLayer $below_layer;
-
-	/** @var int */
 	private int $zoom_type;
 
 	public function __construct(int $seed, MapLayer $below_layer, int $zoom_type = self::NORMAL){

@@ -11,7 +11,6 @@ use pocketmine\world\ChunkManager;
 
 class Flower extends TerrainObject{
 
-	/** @var Block */
 	private Block $block;
 
 	public function __construct(Block $block){

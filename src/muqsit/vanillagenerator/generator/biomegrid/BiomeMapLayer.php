@@ -29,7 +29,6 @@ class BiomeMapLayer extends MapLayer{
 	/** @var int[] */
 	private static array $WET_LARGE = [BiomeIds::JUNGLE];
 
-	/** @var MapLayer */
 	private MapLayer $below_layer;
 
 	public function __construct(int $seed, MapLayer $below_layer){

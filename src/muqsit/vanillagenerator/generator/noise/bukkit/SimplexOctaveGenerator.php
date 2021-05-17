@@ -23,7 +23,6 @@ class SimplexOctaveGenerator extends BaseOctaveGenerator{
 		return $result;
 	}
 
-	/** @var float */
 	private float $w_scale = 1.0;
 
 	/**

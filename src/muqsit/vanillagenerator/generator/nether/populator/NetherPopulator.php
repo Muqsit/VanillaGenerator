@@ -22,22 +22,11 @@ class NetherPopulator implements Populator{
 	/** @var Populator[] */
 	private array $on_ground_populators = [];
 
-	/** @var OrePopulator */
 	private OrePopulator $ore_populator;
-
-	/** @var FireDecorator */
 	private FireDecorator $fire_decorator;
-
-	/** @var GlowstoneDecorator */
 	private GlowstoneDecorator $glowstone_decorator_1;
-
-	/** @var GlowstoneDecorator */
 	private GlowstoneDecorator $glowstone_decorator_2;
-
-	/** @var MushroomDecorator */
 	private MushroomDecorator $brown_mushroom_decorator;
-
-	/** @var MushroomDecorator */
 	private MushroomDecorator $red_mushroom_decorator;
 
 	public function __construct(int $world_height = World::Y_MAX){

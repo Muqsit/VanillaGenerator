@@ -11,7 +11,6 @@ use pocketmine\world\ChunkManager;
 
 class MegaRedwoodTree extends MegaJungleTree{
 
-	/** @var int */
 	protected int $leaves_height;
 
 	public function __construct(Random $random, BlockTransaction $transaction){

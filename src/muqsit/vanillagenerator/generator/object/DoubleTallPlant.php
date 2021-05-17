@@ -11,7 +11,6 @@ use pocketmine\world\ChunkManager;
 
 class DoubleTallPlant extends TerrainObject{
 
-	/** @var DoublePlant */
 	private DoublePlant $species;
 
 	public function __construct(DoublePlant $species){

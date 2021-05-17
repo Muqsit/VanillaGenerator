@@ -43,10 +43,7 @@ class SimplexNoiseGenerator extends BasePerlinNoiseGenerator{
 		[2, 1, 0, 3], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [3, 1, 0, 2], [0, 0, 0, 0], [3, 2, 0, 1], [3, 2, 1, 0]
 	];
 
-	/** @var float */
 	protected static float $offset_w;
-
-	/** @var SimplexNoiseGenerator|null */
 	private static ?SimplexNoiseGenerator $instance;
 
 	/**

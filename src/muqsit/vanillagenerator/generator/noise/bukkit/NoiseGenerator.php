@@ -9,13 +9,8 @@ abstract class NoiseGenerator{
 	/** @var int[] */
 	protected array $perm = [];
 
-	/** @var float */
 	protected float $offset_x;
-
-	/** @var float */
 	protected float $offset_y;
-
-	/** @var float */
 	protected float $offset_z;
 
 	public static function floor(float $x) : int{
