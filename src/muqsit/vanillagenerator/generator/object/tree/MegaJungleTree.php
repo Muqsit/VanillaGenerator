@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object\tree;
 
-use muqsit\vanillagenerator\generator\utils\BlockUtils;
 use pocketmine\block\Block;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\utils\TreeType;
@@ -173,7 +172,7 @@ class MegaJungleTree extends GenericTree{
 			$random->nextBoundedInt(3) !== 0 &&
 			$world->getBlockAt($absolute_x, $absolute_y, $absolute_z)->getId() === BlockLegacyIds::AIR
 		){
-			$this->transaction->addBlockAt($absolute_x, $absolute_y, $absolute_z, BlockUtils::VINE($face_direction));
+			$this->transaction->addBlockAt($absolute_x, $absolute_y, $absolute_z, VanillaBlocks::VINES()->setFace($face_direction, true));
 		}
 	}
 

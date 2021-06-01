@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object\tree;
 
-use muqsit\vanillagenerator\generator\utils\BlockUtils;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
@@ -69,25 +69,25 @@ class CocoaTree extends JungleTree{
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunk_x - 1, $trunk_y + $y, $trunk_z)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunk_x - 1, $trunk_y + $y, $trunk_z, BlockUtils::VINE(Facing::EAST));
+				$this->transaction->addBlockAt($trunk_x - 1, $trunk_y + $y, $trunk_z, VanillaBlocks::VINES()->setFace(Facing::EAST, true));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunk_x + 1, $trunk_y + $y, $trunk_z)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunk_x + 1, $trunk_y + $y, $trunk_z, BlockUtils::VINE(Facing::WEST));
+				$this->transaction->addBlockAt($trunk_x + 1, $trunk_y + $y, $trunk_z, VanillaBlocks::VINES()->setFace(Facing::WEST, true));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunk_x, $trunk_y + $y, $trunk_z - 1)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunk_x, $trunk_y + $y, $trunk_z - 1, BlockUtils::VINE(Facing::SOUTH));
+				$this->transaction->addBlockAt($trunk_x, $trunk_y + $y, $trunk_z - 1, VanillaBlocks::VINES()->setFace(Facing::SOUTH, true));
 			}
 			if(
 				$random->nextBoundedInt(3) !== 0 &&
 				$world->getBlockAt($trunk_x, $trunk_y + $y, $trunk_z + 1)->getId() === BlockLegacyIds::AIR
 			){
-				$this->transaction->addBlockAt($trunk_x, $trunk_y + $y, $trunk_z + 1, BlockUtils::VINE(Facing::NORTH));
+				$this->transaction->addBlockAt($trunk_x, $trunk_y + $y, $trunk_z + 1, VanillaBlocks::VINES()->setFace(Facing::NORTH, true));
 			}
 		}
 	}
@@ -97,7 +97,7 @@ class CocoaTree extends JungleTree{
 			if($world->getBlockAt($x, $y - $i, $z)->getId() !== BlockLegacyIds::AIR){
 				break;
 			}
-			$this->transaction->addBlockAt($x, $y - $i, $z, BlockUtils::VINE($face));
+			$this->transaction->addBlockAt($x, $y - $i, $z, VanillaBlocks::VINES()->setFace($face, true));
 		}
 	}
 
@@ -108,7 +108,7 @@ class CocoaTree extends JungleTree{
 					if($random->nextBoundedInt(count(self::COCOA_FACES) - $y) === 0){ // higher it is, more chances there is
 						$size = self::COCOA_SIZE[$random->nextBoundedInt(count(self::COCOA_SIZE))];
 						$block = (new Vector3($source_x, $source_y + $this->height - 5 + $y, $source_z))->getSide($cocoa_face);
-						$this->transaction->addBlockAt($block->x, $block->y, $block->z, BlockUtils::COCOA($cocoa_face, $size));
+						$this->transaction->addBlockAt($block->x, $block->y, $block->z, VanillaBlocks::COCOA_POD()->setFacing($cocoa_face)->setAge($size));
 					}
 				}
 			}
