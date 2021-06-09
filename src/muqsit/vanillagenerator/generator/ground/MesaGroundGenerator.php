@@ -81,7 +81,7 @@ class MesaGroundGenerator extends GroundGenerator{
 		$ground_set = false;
 
 		$grass = VanillaBlocks::GRASS();
-		$coarse_dirt = VanillaBlocks::COARSE_DIRT();
+		$coarse_dirt = VanillaBlocks::DIRT()->setCoarse(true);
 
 		for($y = 255; $y >= 0; --$y){
 			if($y < (int) $bryce_canyon_height && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){

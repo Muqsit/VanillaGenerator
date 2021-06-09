@@ -15,7 +15,7 @@ class DirtAndStonePatchGroundGenerator extends GroundGenerator{
 			$this->setTopMaterial(VanillaBlocks::STONE());
 			$this->setGroundMaterial(VanillaBlocks::STONE());
 		}elseif($surface_noise > -0.5){
-			$this->setTopMaterial(VanillaBlocks::COARSE_DIRT());
+			$this->setTopMaterial(VanillaBlocks::DIRT()->setCoarse(true));
 			$this->setGroundMaterial(VanillaBlocks::DIRT());
 		}else{
 			$this->setTopMaterial(VanillaBlocks::GRASS());

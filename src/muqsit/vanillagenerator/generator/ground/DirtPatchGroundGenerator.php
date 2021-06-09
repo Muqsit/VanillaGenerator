@@ -12,7 +12,7 @@ class DirtPatchGroundGenerator extends GroundGenerator{
 
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
 		if($surface_noise > 1.75){
-			$this->setTopMaterial(VanillaBlocks::COARSE_DIRT());
+			$this->setTopMaterial(VanillaBlocks::DIRT()->setCoarse(true));
 		}elseif($surface_noise > -0.95){
 			$this->setTopMaterial(VanillaBlocks::PODZOL());
 		}else{

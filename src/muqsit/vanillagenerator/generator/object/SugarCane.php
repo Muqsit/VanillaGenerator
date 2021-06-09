@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object;
 
 use pocketmine\block\BlockLegacyIds;
-use pocketmine\block\BlockLegacyMetadata;
+use pocketmine\block\Dirt;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
@@ -41,7 +41,7 @@ class SugarCane extends TerrainObject{
 			if($block_id === BlocKLegacyIds::SUGARCANE_BLOCK
 				|| $block_id === BlocKLegacyIds::GRASS
 				|| $block_id === BlocKLegacyIds::SAND
-				|| ($block_id === BlocKLegacyIds::DIRT && $block->getMeta() === BlockLegacyMetadata::DIRT_NORMAL)
+				|| ($block instanceof Dirt && !$block->isCoarse())
 			){
 				$cane_block = $world->getBlockAt($source_x, $source_y + $n, $source_z);
 				if($cane_block->getId() !== BlockLegacyIds::AIR && $world->getBlockAt($source_x, $source_y + $n + 1, $source_z)->getId() !== BlockLegacyIds::AIR){
