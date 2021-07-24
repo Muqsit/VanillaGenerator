@@ -12,18 +12,18 @@ class BiomeEdgeMapLayer extends MapLayer{
 
 	/** @var int[] */
 	private static array $MESA_EDGES = [
-		BiomeIds::MESA_ROCK => BiomeIds::MESA,
-		BiomeIds::MESA_CLEAR_ROCK => BiomeIds::MESA
+		BiomeIds::MESA_PLATEAU_STONE => BiomeIds::MESA,
+		BiomeIds::MESA_PLATEAU => BiomeIds::MESA
 	];
 
 	/** @var int[] */
 	private static array $MEGA_TAIGA_EDGES = [
-		BiomeIds::REDWOOD_TAIGA => BiomeIds::TAIGA
+		BiomeIds::MEGA_TAIGA => BiomeIds::TAIGA
 	];
 
 	/** @var int[] */
 	private static array $DESERT_EDGES = [
-		BiomeIds::DESERT => BiomeIdS::EXTREME_HILLS_WITH_TREES
+		BiomeIds::DESERT => BiomeIdS::EXTREME_HILLS_PLUS_TREES
 	];
 
 	/** @var int[] */
@@ -43,8 +43,8 @@ class BiomeEdgeMapLayer extends MapLayer{
 		self::$EDGES = [
 			new BiomeEdgeEntry(self::$MESA_EDGES),
 			new BiomeEdgeEntry(self::$MEGA_TAIGA_EDGES),
-			new BiomeEdgeEntry(self::$DESERT_EDGES, [BiomeIds::ICE_FLATS]),
-			new BiomeEdgeEntry(self::$SWAMP1_EDGES, [BiomeIds::DESERT, BiomeIds::TAIGA_COLD, BiomeIds::ICE_FLATS]),
+			new BiomeEdgeEntry(self::$DESERT_EDGES, [BiomeIds::ICE_PLAINS]),
+			new BiomeEdgeEntry(self::$SWAMP1_EDGES, [BiomeIds::DESERT, BiomeIds::COLD_TAIGA, BiomeIds::ICE_PLAINS]),
 			new BiomeEdgeEntry(self::$SWAMP2_EDGES, [BiomeIds::JUNGLE])
 		];
 	}

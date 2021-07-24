@@ -43,7 +43,7 @@ class SavannaPopulator extends BiomePopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::SAVANNA, BiomeIds::SAVANNA_ROCK];
+		return [BiomeIds::SAVANNA, BiomeIds::SAVANNA_PLATEAU];
 	}
 }
 SavannaPopulator::init();

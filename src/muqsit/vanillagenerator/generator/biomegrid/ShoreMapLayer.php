@@ -15,23 +15,23 @@ class ShoreMapLayer extends MapLayer{
 	/** @var int[] */
 	private static array $SPECIAL_SHORES = [
 		BiomeIds::EXTREME_HILLS => BiomeIds::STONE_BEACH,
-		BiomeIds::EXTREME_HILLS_WITH_TREES => BiomeIds::STONE_BEACH,
-		BiomeIds::MUTATED_EXTREME_HILLS => BiomeIds::STONE_BEACH,
-		BiomeIds::MUTATED_EXTREME_HILLS_WITH_TREES => BiomeIds::STONE_BEACH,
-		BiomeIds::ICE_FLATS => BiomeIds::COLD_BEACH,
+		BiomeIds::EXTREME_HILLS_PLUS_TREES => BiomeIds::STONE_BEACH,
+		BiomeIds::EXTREME_HILLS_MUTATED => BiomeIds::STONE_BEACH,
+		BiomeIds::EXTREME_HILLS_PLUS_TREES_MUTATED => BiomeIds::STONE_BEACH,
+		BiomeIds::ICE_PLAINS => BiomeIds::COLD_BEACH,
 		BiomeIds::ICE_MOUNTAINS => BiomeIds::COLD_BEACH,
-		BiomeIds::MUTATED_ICE_FLATS => BiomeIds::COLD_BEACH,
-		BiomeIds::TAIGA_COLD => BiomeIds::COLD_BEACH,
-		BiomeIds::TAIGA_COLD_HILLS => BiomeIds::COLD_BEACH,
-		BiomeIds::MUTATED_TAIGA_COLD => BiomeIds::COLD_BEACH,
+		BiomeIds::ICE_PLAINS_SPIKES => BiomeIds::COLD_BEACH,
+		BiomeIds::COLD_TAIGA => BiomeIds::COLD_BEACH,
+		BiomeIds::COLD_TAIGA_HILLS => BiomeIds::COLD_BEACH,
+		BiomeIds::COLD_TAIGA_MUTATED => BiomeIds::COLD_BEACH,
 		BiomeIds::MUSHROOM_ISLAND => BiomeIds::MUSHROOM_ISLAND_SHORE,
 		BiomeIds::SWAMPLAND => BiomeIds::SWAMPLAND,
 		BiomeIds::MESA => BiomeIds::MESA,
-		BiomeIds::MESA_ROCK => BiomeIds::MESA_ROCK,
-		BiomeIds::MUTATED_MESA_ROCK => BiomeIds::MUTATED_MESA_ROCK,
-		BiomeIds::MESA_CLEAR_ROCK => BiomeIds::MESA_CLEAR_ROCK,
-		BiomeIds::MUTATED_MESA_CLEAR_ROCK => BiomeIds::MUTATED_MESA_CLEAR_ROCK,
-		BiomeIds::MUTATED_MESA => BiomeIds::MUTATED_MESA
+		BiomeIds::MESA_PLATEAU_STONE => BiomeIds::MESA_PLATEAU_STONE,
+		BiomeIds::MESA_PLATEAU_STONE_MUTATED => BiomeIds::MESA_PLATEAU_STONE_MUTATED,
+		BiomeIds::MESA_PLATEAU => BiomeIds::MESA_PLATEAU,
+		BiomeIds::MESA_PLATEAU_MUTATED => BiomeIds::MESA_PLATEAU_MUTATED,
+		BiomeIds::MESA_BRYCE => BiomeIds::MESA_BRYCE
 	];
 
 	private MapLayer $below_layer;

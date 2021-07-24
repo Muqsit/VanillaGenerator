@@ -14,7 +14,7 @@ use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 
 class RoofedForestPopulator extends ForestPopulator{
 
-	private const BIOMES = [BiomeIds::ROOFED_FOREST, BiomeIds::MUTATED_ROOFED_FOREST];
+	private const BIOMES = [BiomeIds::ROOFED_FOREST, BiomeIds::ROOFED_FOREST_MUTATED];
 
 	/** @var TreeDecoration[] */
 	protected static array $TREES;

@@ -46,7 +46,7 @@ class FlowerForestPopulator extends ForestPopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::MUTATED_FOREST];
+		return [BiomeIds::FLOWER_FOREST];
 	}
 
 	public function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{

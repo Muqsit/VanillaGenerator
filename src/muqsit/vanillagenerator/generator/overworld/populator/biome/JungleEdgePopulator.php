@@ -27,7 +27,7 @@ class JungleEdgePopulator extends JunglePopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::JUNGLE_EDGE, BiomeIds::MUTATED_JUNGLE_EDGE];
+		return [BiomeIds::JUNGLE_EDGE, BiomeIds::JUNGLE_EDGE_MUTATED];
 	}
 }
 JungleEdgePopulator::init();

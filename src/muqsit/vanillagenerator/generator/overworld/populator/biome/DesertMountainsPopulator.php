@@ -13,6 +13,6 @@ class DesertMountainsPopulator extends DesertPopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::MUTATED_DESERT];
+		return [BiomeIds::DESERT_MUTATED];
 	}
 }

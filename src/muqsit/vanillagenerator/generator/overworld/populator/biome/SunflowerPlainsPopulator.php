@@ -26,7 +26,7 @@ class SunflowerPlainsPopulator extends PlainsPopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::MUTATED_PLAINS];
+		return [BiomeIds::SUNFLOWER_PLAINS];
 	}
 }
 

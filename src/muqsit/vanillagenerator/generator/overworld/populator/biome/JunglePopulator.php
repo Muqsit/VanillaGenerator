@@ -47,7 +47,7 @@ class JunglePopulator extends BiomePopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::JUNGLE, BiomeIds::JUNGLE_HILLS, BiomeIds::MUTATED_JUNGLE];
+		return [BiomeIds::JUNGLE, BiomeIds::JUNGLE_HILLS, BiomeIds::JUNGLE_MUTATED];
 	}
 
 	protected function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{

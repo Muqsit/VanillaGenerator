@@ -16,19 +16,19 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 	/** @var int[] */
 	private static array $MESA_EDGES = [
 		BiomeIds::MESA => BiomeIds::DESERT,
-		BiomeIds::MUTATED_MESA => BiomeIds::DESERT,
-		BiomeIds::MESA_ROCK => BiomeIds::DESERT,
-		BiomeIds::MUTATED_MESA_ROCK => BiomeIds::DESERT,
-		BiomeIds::MESA_CLEAR_ROCK => BiomeIds::DESERT,
-		BiomeIds::MUTATED_MESA_CLEAR_ROCK => BiomeIds::DESERT
+		BiomeIds::MESA_BRYCE => BiomeIds::DESERT,
+		BiomeIds::MESA_PLATEAU_STONE => BiomeIds::DESERT,
+		BiomeIds::MESA_PLATEAU_STONE_MUTATED => BiomeIds::DESERT,
+		BiomeIds::MESA_PLATEAU => BiomeIds::DESERT,
+		BiomeIds::MESA_PLATEAU_MUTATED => BiomeIds::DESERT
 	];
 
 	/** @var int[] */
 	private static array $JUNGLE_EDGES = [
 		BiomeIds::JUNGLE => BiomeIds::JUNGLE_EDGE,
 		BiomeIds::JUNGLE_HILLS => BiomeIds::JUNGLE_EDGE,
-		BiomeIds::MUTATED_JUNGLE => BiomeIds::JUNGLE_EDGE,
-		BiomeIds::MUTATED_JUNGLE_EDGE => BiomeIds::JUNGLE_EDGE
+		BiomeIds::JUNGLE_MUTATED => BiomeIds::JUNGLE_EDGE,
+		BiomeIds::JUNGLE_EDGE_MUTATED => BiomeIds::JUNGLE_EDGE
 	];
 
 	/** @var BiomeEdgeEntry[] */
@@ -38,7 +38,7 @@ class BiomeThinEdgeMapLayer extends MapLayer{
 		self::$OCEANS = array_flip(self::$OCEANS);
 		self::$EDGES = [
 			new BiomeEdgeEntry(self::$MESA_EDGES),
-			new BiomeEdgeEntry(self::$JUNGLE_EDGES, [BiomeIds::JUNGLE, BiomeIds::JUNGLE_HILLS, BiomeIds::MUTATED_JUNGLE, BiomeIds::MUTATED_JUNGLE_EDGE, BiomeIds::FOREST, BiomeIds::TAIGA])
+			new BiomeEdgeEntry(self::$JUNGLE_EDGES, [BiomeIds::JUNGLE, BiomeIds::JUNGLE_HILLS, BiomeIds::JUNGLE_MUTATED, BiomeIds::JUNGLE_EDGE_MUTATED, BiomeIds::FOREST, BiomeIds::TAIGA])
 		];
 	}
 

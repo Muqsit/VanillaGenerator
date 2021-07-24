@@ -20,7 +20,7 @@ class IcePlainsPopulator extends BiomePopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::ICE_FLATS, BiomeIds::ICE_MOUNTAINS];
+		return [BiomeIds::ICE_PLAINS, BiomeIds::ICE_MOUNTAINS];
 	}
 	
 	protected function initPopulators() : void{

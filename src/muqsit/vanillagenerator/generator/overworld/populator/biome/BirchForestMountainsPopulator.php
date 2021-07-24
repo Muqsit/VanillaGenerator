@@ -11,7 +11,7 @@ use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 
 class BirchForestMountainsPopulator extends ForestPopulator{
 
-	private const BIOMES = [BiomeIds::MUTATED_BIRCH_FOREST, BiomeIds::MUTATED_BIRCH_FOREST_HILLS];
+	private const BIOMES = [BiomeIds::BIRCH_FOREST_MUTATED, BiomeIds::BIRCH_FOREST_HILLS_MUTATED];
 
 	/** @var TreeDecoration[] */
 	protected static array $TREES;

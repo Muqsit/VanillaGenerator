@@ -15,6 +15,6 @@ class SavannaMountainsPopulator extends SavannaPopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::MUTATED_SAVANNA, BiomeIds::MUTATED_SAVANNA_ROCK];
+		return [BiomeIds::SAVANNA_MUTATED, BiomeIds::SAVANNA_PLATEAU_MUTATED];
 	}
 }

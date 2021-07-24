@@ -61,17 +61,17 @@ class OverworldGenerator extends VanillaGenerator{
 	}
 
 	public static function init() : void{
-		self::setBiomeSpecificGround(new SandyGroundGenerator(), BiomeIds::BEACH, BiomeIds::COLD_BEACH, BiomeIds::DESERT, BiomeIds::DESERT_HILLS, BiomeIds::MUTATED_DESERT);
+		self::setBiomeSpecificGround(new SandyGroundGenerator(), BiomeIds::BEACH, BiomeIds::COLD_BEACH, BiomeIds::DESERT, BiomeIds::DESERT_HILLS, BiomeIds::DESERT_MUTATED);
 		self::setBiomeSpecificGround(new RockyGroundGenerator(), BiomeIds::STONE_BEACH);
-		self::setBiomeSpecificGround(new SnowyGroundGenerator(), BiomeIds::MUTATED_ICE_FLATS);
+		self::setBiomeSpecificGround(new SnowyGroundGenerator(), BiomeIds::ICE_PLAINS_SPIKES);
 		self::setBiomeSpecificGround(new MycelGroundGenerator(), BiomeIds::MUSHROOM_ISLAND, BiomeIds::MUSHROOM_ISLAND_SHORE);
 		self::setBiomeSpecificGround(new StonePatchGroundGenerator(), BiomeIds::EXTREME_HILLS);
-		self::setBiomeSpecificGround(new GravelPatchGroundGenerator(), BiomeIds::MUTATED_EXTREME_HILLS, BiomeIds::MUTATED_EXTREME_HILLS_WITH_TREES);
-		self::setBiomeSpecificGround(new DirtAndStonePatchGroundGenerator(), BiomeIds::MUTATED_SAVANNA, BiomeIds::MUTATED_SAVANNA_ROCK);
-		self::setBiomeSpecificGround(new DirtPatchGroundGenerator(), BiomeIds::REDWOOD_TAIGA, BiomeIds::REDWOOD_TAIGA_HILLS, BiomeIds::MUTATED_REDWOOD_TAIGA, BiomeIds::MUTATED_REDWOOD_TAIGA_HILLS);
-		self::setBiomeSpecificGround(new MesaGroundGenerator(), BiomeIds::MESA, BiomeIds::MESA_CLEAR_ROCK, BiomeIds::MESA_ROCK);
-		self::setBiomeSpecificGround(new MesaGroundGenerator(MesaGroundGenerator::BRYCE), BiomeIds::MUTATED_MESA);
-		self::setBiomeSpecificGround(new MesaGroundGenerator(MesaGroundGenerator::FOREST), BiomeIds::MESA_ROCK, BiomeIds::MUTATED_MESA_ROCK);
+		self::setBiomeSpecificGround(new GravelPatchGroundGenerator(), BiomeIds::EXTREME_HILLS_MUTATED, BiomeIds::EXTREME_HILLS_PLUS_TREES_MUTATED);
+		self::setBiomeSpecificGround(new DirtAndStonePatchGroundGenerator(), BiomeIds::SAVANNA_MUTATED, BiomeIds::SAVANNA_PLATEAU_MUTATED);
+		self::setBiomeSpecificGround(new DirtPatchGroundGenerator(), BiomeIds::MEGA_TAIGA, BiomeIds::MEGA_TAIGA_HILLS, BiomeIds::REDWOOD_TAIGA_MUTATED, BiomeIds::REDWOOD_TAIGA_HILLS_MUTATED);
+		self::setBiomeSpecificGround(new MesaGroundGenerator(), BiomeIds::MESA, BiomeIds::MESA_PLATEAU, BiomeIds::MESA_PLATEAU_STONE);
+		self::setBiomeSpecificGround(new MesaGroundGenerator(MesaGroundGenerator::BRYCE), BiomeIds::MESA_BRYCE);
+		self::setBiomeSpecificGround(new MesaGroundGenerator(MesaGroundGenerator::FOREST), BiomeIds::MESA_PLATEAU_STONE, BiomeIds::MESA_PLATEAU_STONE_MUTATED);
 
 		// fill a 5x5 array with values that acts as elevation weight on chunk neighboring,
 		// this can be viewed as a parabolic field: the center gets the more weight, and the

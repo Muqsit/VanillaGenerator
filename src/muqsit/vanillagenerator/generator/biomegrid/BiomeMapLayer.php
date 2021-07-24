@@ -18,13 +18,13 @@ class BiomeMapLayer extends MapLayer{
 	private static array $DRY = [BiomeIds::PLAINS, BiomeIds::FOREST, BiomeIds::TAIGA, BiomeIds::EXTREME_HILLS];
 
 	/** @var int[] */
-	private static array $COLD = [BiomeIds::ICE_FLATS, BiomeIds::ICE_FLATS, BiomeIds::TAIGA_COLD];
+	private static array $COLD = [BiomeIds::ICE_PLAINS, BiomeIds::ICE_PLAINS, BiomeIds::COLD_TAIGA];
 
 	/** @var int[] */
-	private static array $WARM_LARGE = [BiomeIds::MESA_ROCK, BiomeIds::MESA_ROCK, BiomeIds::MESA_CLEAR_ROCK];
+	private static array $WARM_LARGE = [BiomeIds::MESA_PLATEAU_STONE, BiomeIds::MESA_PLATEAU_STONE, BiomeIds::MESA_PLATEAU];
 
 	/** @var int[] */
-	private static array $DRY_LARGE = [BiomeIds::REDWOOD_TAIGA];
+	private static array $DRY_LARGE = [BiomeIds::MEGA_TAIGA];
 
 	/** @var int[] */
 	private static array $WET_LARGE = [BiomeIds::JUNGLE];

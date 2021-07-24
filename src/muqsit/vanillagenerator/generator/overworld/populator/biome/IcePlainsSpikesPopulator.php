@@ -27,6 +27,6 @@ class IcePlainsSpikesPopulator extends IcePlainsPopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::MUTATED_ICE_FLATS];
+		return [BiomeIds::ICE_PLAINS_SPIKES];
 	}
 }

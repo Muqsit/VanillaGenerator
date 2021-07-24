@@ -25,78 +25,78 @@ final class BiomeClimateManager{
 
 		self::register(new BiomeClimate(0.8, 0.4, true),
 			BiomeIds::PLAINS,
-			BiomeIds::MUTATED_PLAINS,
+			BiomeIds::SUNFLOWER_PLAINS,
 			BiomeIds::BEACH
 		);
 
 		self::register(new BiomeClimate(2.0, 0.0, false),
 			BiomeIds::DESERT,
 			BiomeIds::DESERT_HILLS,
-			BiomeIds::MUTATED_DESERT,
+			BiomeIds::DESERT_MUTATED,
 			BiomeIds::MESA,
-			BiomeIds::MUTATED_MESA,
-			BiomeIds::MESA_CLEAR_ROCK,
-			BiomeIds::MESA_ROCK,
-			BiomeIds::MUTATED_MESA_CLEAR_ROCK,
-			BiomeIds::MUTATED_MESA_ROCK,
+			BiomeIds::MESA_BRYCE,
+			BiomeIds::MESA_PLATEAU,
+			BiomeIds::MESA_PLATEAU_STONE,
+			BiomeIds::MESA_PLATEAU_MUTATED,
+			BiomeIds::MESA_PLATEAU_STONE_MUTATED,
 			BiomeIds::HELL
 		);
 
 		self::register(new BiomeClimate(0.2, 0.3, true),
 			BiomeIds::EXTREME_HILLS,
-			BiomeIds::EXTREME_HILLS_WITH_TREES,
-			BiomeIds::MUTATED_EXTREME_HILLS,
-			BiomeIds::MUTATED_EXTREME_HILLS_WITH_TREES,
+			BiomeIds::EXTREME_HILLS_PLUS_TREES,
+			BiomeIds::EXTREME_HILLS_MUTATED,
+			BiomeIds::EXTREME_HILLS_PLUS_TREES_MUTATED,
 			BiomeIds::STONE_BEACH,
-			BiomeIds::SMALLER_EXTREME_HILLS
+			BiomeIds::EXTREME_HILLS_EDGE
 		);
 
 		self::register(new BiomeClimate(0.7, 0.8, true),
 			BiomeIds::FOREST,
 			BiomeIds::FOREST_HILLS,
-			BiomeIds::MUTATED_FOREST,
+			BiomeIds::FLOWER_FOREST,
 			BiomeIds::ROOFED_FOREST,
-			BiomeIds::MUTATED_ROOFED_FOREST
+			BiomeIds::ROOFED_FOREST_MUTATED
 		);
 
 		self::register(new BiomeClimate(0.6, 0.6, true),
 			BiomeIds::BIRCH_FOREST,
 			BiomeIds::BIRCH_FOREST_HILLS,
-			BiomeIds::MUTATED_BIRCH_FOREST,
-			BiomeIds::MUTATED_BIRCH_FOREST_HILLS
+			BiomeIds::BIRCH_FOREST_MUTATED,
+			BiomeIds::BIRCH_FOREST_HILLS_MUTATED
 		);
 
 		self::register(new BiomeClimate(0.25, 0.8, true),
 			BiomeIds::TAIGA,
 			BiomeIds::TAIGA_HILLS,
-			BiomeIds::MUTATED_TAIGA,
-			BiomeIds::MUTATED_REDWOOD_TAIGA,
-			BiomeIds::MUTATED_REDWOOD_TAIGA_HILLS
+			BiomeIds::TAIGA_MUTATED,
+			BiomeIds::REDWOOD_TAIGA_MUTATED,
+			BiomeIds::REDWOOD_TAIGA_HILLS_MUTATED
 		);
 
 		self::register(new BiomeClimate(0.8, 0.9, true),
 			BiomeIds::SWAMPLAND,
-			BiomeIds::MUTATED_SWAMPLAND
+			BiomeIds::SWAMPLAND_MUTATED
 		);
 
 		self::register(new BiomeClimate(0.0, 0.5, true),
-			BiomeIds::ICE_FLATS,
+			BiomeIds::ICE_PLAINS,
 			BiomeIds::ICE_MOUNTAINS,
-			BiomeIds::MUTATED_ICE_FLATS,
+			BiomeIds::ICE_PLAINS_SPIKES,
 			BiomeIds::FROZEN_RIVER,
 			BiomeIds::FROZEN_OCEAN
 		);
 
 		self::register(new BiomeClimate(0.9, 1.0, true), BiomeIds::MUSHROOM_ISLAND, BiomeIds::MUSHROOM_ISLAND_SHORE);
 		self::register(new BiomeClimate(0.05, 0.3, true), BiomeIds::COLD_BEACH);
-		self::register(new BiomeClimate(0.95, 0.9, true), BiomeIds::JUNGLE_HILLS, BiomeIds::MUTATED_JUNGLE);
-		self::register(new BiomeClimate(0.95, 0.8, true), BiomeIds::JUNGLE_EDGE, BiomeIds::MUTATED_JUNGLE_EDGE);
-		self::register(new BiomeClimate(-0.5, 0.4, true), BiomeIds::TAIGA_COLD, BiomeIds::TAIGA_COLD_HILLS, BiomeIds::MUTATED_TAIGA_COLD);
-		self::register(new BiomeClimate(0.3, 0.8, true), BiomeIds::REDWOOD_TAIGA, BiomeIds::REDWOOD_TAIGA_HILLS);
+		self::register(new BiomeClimate(0.95, 0.9, true), BiomeIds::JUNGLE_HILLS, BiomeIds::JUNGLE_MUTATED);
+		self::register(new BiomeClimate(0.95, 0.8, true), BiomeIds::JUNGLE_EDGE, BiomeIds::JUNGLE_EDGE_MUTATED);
+		self::register(new BiomeClimate(-0.5, 0.4, true), BiomeIds::COLD_TAIGA, BiomeIds::COLD_TAIGA_HILLS, BiomeIds::COLD_TAIGA_MUTATED);
+		self::register(new BiomeClimate(0.3, 0.8, true), BiomeIds::MEGA_TAIGA, BiomeIds::MEGA_TAIGA_HILLS);
 		self::register(new BiomeClimate(1.2, 0.0, false), BiomeIds::SAVANNA);
-		self::register(new BiomeClimate(1.1, 0.0, false), BiomeIds::MUTATED_SAVANNA);
-		self::register(new BiomeClimate(1.0, 0.0, false), BiomeIds::SAVANNA_ROCK);
-		self::register(new BiomeClimate(0.5, 0.0, false), BiomeIds::MUTATED_SAVANNA_ROCK);
+		self::register(new BiomeClimate(1.1, 0.0, false), BiomeIds::SAVANNA_MUTATED);
+		self::register(new BiomeClimate(1.0, 0.0, false), BiomeIds::SAVANNA_PLATEAU);
+		self::register(new BiomeClimate(0.5, 0.0, false), BiomeIds::SAVANNA_PLATEAU_MUTATED);
 		self::register(new BiomeClimate(0.5, 0.5, false), BiomeIds::SKY);
 	}
 

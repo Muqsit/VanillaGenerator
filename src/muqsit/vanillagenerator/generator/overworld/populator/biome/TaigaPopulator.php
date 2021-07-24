@@ -61,7 +61,7 @@ class TaigaPopulator extends BiomePopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::TAIGA, BiomeIds::TAIGA_HILLS, BiomeIds::MUTATED_TAIGA, BiomeIds::TAIGA_COLD, BiomeIds::TAIGA_COLD_HILLS, BiomeIds::MUTATED_TAIGA_COLD];
+		return [BiomeIds::TAIGA, BiomeIds::TAIGA_HILLS, BiomeIds::TAIGA_MUTATED, BiomeIds::COLD_TAIGA, BiomeIds::COLD_TAIGA_HILLS, BiomeIds::COLD_TAIGA_MUTATED];
 	}
 
 	protected function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{

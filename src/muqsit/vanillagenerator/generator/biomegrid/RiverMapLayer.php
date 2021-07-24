@@ -14,7 +14,7 @@ class RiverMapLayer extends MapLayer{
 
 	/** @var int[] */
 	private static array $SPECIAL_RIVERS = [
-		BiomeIds::ICE_FLATS => BiomeIds::FROZEN_RIVER,
+		BiomeIds::ICE_PLAINS => BiomeIds::FROZEN_RIVER,
 		BiomeIds::MUSHROOM_ISLAND => BiomeIds::MUSHROOM_ISLAND_SHORE,
 		BiomeIds::MUSHROOM_ISLAND_SHORE => BiomeIds::MUSHROOM_ISLAND_SHORE
 	];

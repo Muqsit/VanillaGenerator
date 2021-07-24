@@ -24,7 +24,7 @@ class MegaSpruceTaigaPopulator extends MegaTaigaPopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::MUTATED_REDWOOD_TAIGA, BiomeIds::MUTATED_REDWOOD_TAIGA_HILLS];
+		return [BiomeIds::REDWOOD_TAIGA_MUTATED, BiomeIds::REDWOOD_TAIGA_HILLS_MUTATED];
 	}
 
 	protected function initPopulators() : void{

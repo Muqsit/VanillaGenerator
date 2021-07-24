@@ -10,7 +10,7 @@ use function array_key_exists;
 class RarePlainsMapLayer extends MapLayer{
 
 	/** @var int[] */
-	private static array $RARE_PLAINS = [BiomeIds::PLAINS => BiomeIds::MUTATED_PLAINS];
+	private static array $RARE_PLAINS = [BiomeIds::PLAINS => BiomeIds::SUNFLOWER_PLAINS];
 
 	private MapLayer $below_layer;
 

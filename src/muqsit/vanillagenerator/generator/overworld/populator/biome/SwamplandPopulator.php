@@ -62,7 +62,7 @@ class SwamplandPopulator extends BiomePopulator{
 	}
 
 	public function getBiomes() : ?array{
-		return [BiomeIds::SWAMPLAND, BiomeIds::MUTATED_SWAMPLAND];
+		return [BiomeIds::SWAMPLAND, BiomeIds::SWAMPLAND_MUTATED];
 	}
 
 	protected function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{

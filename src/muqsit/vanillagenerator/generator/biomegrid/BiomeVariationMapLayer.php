@@ -20,16 +20,16 @@ class BiomeVariationMapLayer extends MapLayer{
 		BiomeIds::BIRCH_FOREST => [BiomeIds::BIRCH_FOREST_HILLS],
 		BiomeIds::ROOFED_FOREST => [BiomeIds::PLAINS],
 		BiomeIds::TAIGA => [BiomeIds::TAIGA_HILLS],
-		BiomeIds::REDWOOD_TAIGA => [BiomeIds::REDWOOD_TAIGA_HILLS],
-		BiomeIds::TAIGA_COLD => [BiomeIds::TAIGA_COLD_HILLS],
+		BiomeIds::MEGA_TAIGA => [BiomeIds::MEGA_TAIGA_HILLS],
+		BiomeIds::COLD_TAIGA => [BiomeIds::COLD_TAIGA_HILLS],
 		BiomeIds::PLAINS => [BiomeIds::FOREST, BiomeIds::FOREST, BiomeIds::FOREST_HILLS],
-		BiomeIds::ICE_FLATS => [BiomeIds::ICE_MOUNTAINS],
+		BiomeIds::ICE_PLAINS => [BiomeIds::ICE_MOUNTAINS],
 		BiomeIds::JUNGLE => [BiomeIds::JUNGLE_HILLS],
 		BiomeIds::OCEAN => [BiomeIds::DEEP_OCEAN],
-		BiomeIds::EXTREME_HILLS => [BiomeIds::EXTREME_HILLS_WITH_TREES],
-		BiomeIds::SAVANNA => [BiomeIds::SAVANNA_ROCK],
-		BiomeIds::MESA_ROCK => [BiomeIds::MESA],
-		BiomeIds::MESA_CLEAR_ROCK => [BiomeIds::MESA],
+		BiomeIds::EXTREME_HILLS => [BiomeIds::EXTREME_HILLS_PLUS_TREES],
+		BiomeIds::SAVANNA => [BiomeIds::SAVANNA_PLATEAU],
+		BiomeIds::MESA_PLATEAU_STONE => [BiomeIds::MESA],
+		BiomeIds::MESA_PLATEAU => [BiomeIds::MESA],
 		BiomeIds::MESA => [BiomeIds::MESA]
 	];
 
