@@ -36,10 +36,10 @@ use function array_key_exists;
 class OverworldGenerator extends VanillaGenerator{
 
 	/** @var float[] */
-	private static array $ELEVATION_WEIGHT = [];
+	protected static array $ELEVATION_WEIGHT = [];
 
 	/** @var GroundGenerator[] */
-	private static array $GROUND_MAP = [];
+	protected static array $GROUND_MAP = [];
 
 	/**
 	 * @param int $x 0-4
@@ -88,7 +88,7 @@ class OverworldGenerator extends VanillaGenerator{
 		}
 	}
 
-	private static function setBiomeSpecificGround(GroundGenerator $gen, int ...$biomes) : void{
+	protected static function setBiomeSpecificGround(GroundGenerator $gen, int ...$biomes) : void{
 		foreach($biomes as $biome){
 			self::$GROUND_MAP[$biome] = $gen;
 		}
@@ -181,7 +181,7 @@ class OverworldGenerator extends VanillaGenerator{
 		return new WorldOctaves($height, $roughness, $roughness2, $detail, $surface);
 	}
 
-	private function generateRawTerrain(ChunkManager $world, int $chunk_x, int $chunk_z) : void{
+	protected function generateRawTerrain(ChunkManager $world, int $chunk_x, int $chunk_z) : void{
 		$density = $this->generateTerrainDensity($chunk_x, $chunk_z);
 
 		$sea_level = 64;
@@ -283,7 +283,7 @@ class OverworldGenerator extends VanillaGenerator{
 	 * @param int $z
 	 * @return float[]
 	 */
-	private function generateTerrainDensity(int $x, int $z) : array{
+	protected function generateTerrainDensity(int $x, int $z) : array{
 		$density = [];
 
 		// Scaling chunk x and z coordinates (4x, see below)
