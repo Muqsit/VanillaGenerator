@@ -7,6 +7,7 @@ namespace muqsit\vanillagenerator\generator;
 use muqsit\vanillagenerator\generator\biomegrid\MapLayer;
 use muqsit\vanillagenerator\generator\biomegrid\utils\MapLayerPair;
 use muqsit\vanillagenerator\generator\overworld\WorldType;
+use muqsit\vanillagenerator\generator\utils\preset\GeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -26,8 +27,8 @@ abstract class VanillaGenerator extends Generator{
 
 	private MapLayerPair $biome_grid;
 
-	public function __construct(int $seed, int $environment, ?string $world_type = null, string $preset = ""){
-		parent::__construct($seed, $preset);
+	public function __construct(int $seed, int $environment, ?string $world_type, GeneratorPreset $preset){
+		parent::__construct($seed, $preset->toString());
 		$this->biome_grid = MapLayer::initialize($seed, $environment, $world_type ?? WorldType::NORMAL);
 	}
 

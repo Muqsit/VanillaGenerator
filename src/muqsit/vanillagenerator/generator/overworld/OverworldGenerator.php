@@ -21,6 +21,8 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeHeightManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use muqsit\vanillagenerator\generator\overworld\populator\OverworldPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\SnowPopulator;
+use muqsit\vanillagenerator\generator\utils\preset\GeneratorPreset;
+use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
@@ -115,8 +117,14 @@ class OverworldGenerator extends VanillaGenerator{
 	private GroundGenerator $ground_gen;
 	private string $type = WorldType::NORMAL;
 
-	public function __construct(int $seed, string $preset){
-		parent::__construct($seed, Environment::OVERWORLD, null, $preset);
+	public function __construct(int $seed, string $preset_string){
+		$preset = SimpleGeneratorPreset::parse($preset_string);
+		parent::__construct(
+			$seed,
+			$preset->exists("environment") ? Environment::fromString($preset->getString("environment")) : Environment::OVERWORLD,
+			$preset->exists("worldtype") ? WorldType::fromString($preset->getString("worldtype")) : null,
+			$preset
+		);
 		$this->ground_gen = new GroundGenerator();
 		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}

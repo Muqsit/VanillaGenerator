@@ -7,7 +7,10 @@ namespace muqsit\vanillagenerator\generator\nether;
 use muqsit\vanillagenerator\generator\Environment;
 use muqsit\vanillagenerator\generator\nether\populator\NetherPopulator;
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
+use muqsit\vanillagenerator\generator\overworld\WorldType;
 use muqsit\vanillagenerator\generator\utils\NetherWorldOctaves;
+use muqsit\vanillagenerator\generator\utils\preset\GeneratorPreset;
+use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
 use pocketmine\block\VanillaBlocks;
@@ -41,8 +44,14 @@ class NetherGenerator extends VanillaGenerator{
 
 	protected int $bedrock_roughness = 5;
 
-	public function __construct(int $seed, string $preset){
-		parent::__construct($seed, Environment::NETHER, null, $preset);
+	public function __construct(int $seed, string $preset_string){
+		$preset = SimpleGeneratorPreset::parse($preset_string);
+		parent::__construct(
+			$seed,
+			$preset->exists("environment") ? Environment::fromString($preset->getString("environment")) : Environment::NETHER,
+			$preset->exists("worldtype") ? WorldType::fromString($preset->getString("worldtype")) : null,
+			$preset
+		);
 		$this->addPopulators(new NetherPopulator($this->getMaxY())); // This isn't faithful to original code. Was $world->getWorldHeight()
 	}
 
