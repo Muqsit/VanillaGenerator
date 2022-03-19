@@ -10,7 +10,3 @@ worlds:
   generator: vanilla_nether
 ```
 You _may_ be required to delete your existing world for the generator type to change.
-
-## PLEASE DON'T
-create an "Incompatible API version" _error_ issue. This plugin is written for API 4.0.0. I will NOT be backporting it to API 3.0.0.
-Yes, you are free to backport it yourself. No, I don't know when API 4.0.0 releases. The issue tracker is NOT a method to reach out to me regarding "Why" and "How" questions.
