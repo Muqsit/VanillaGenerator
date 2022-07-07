@@ -14,16 +14,15 @@ use pocketmine\world\format\Chunk;
 
 class UnderwaterDecorator extends Decorator{
 
-	private Block $type;
 	private int $horiz_radius;
 	private int $vert_radius;
 
 	/** @var int[] */
 	private array $overridables;
 
-	public function __construct(Block $type){
-		$this->type = $type;
-	}
+	public function __construct(
+		private Block $type
+	){}
 
 	/**
 	 * Updates the size of this decorator.

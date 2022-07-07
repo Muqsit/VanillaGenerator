@@ -8,13 +8,10 @@ use pocketmine\block\Block;
 
 final class FlowerDecoration{
 
-	private Block $block;
-	private int $weight;
-
-	public function __construct(Block $block, int $weight){
-		$this->block = $block;
-		$this->weight = $weight;
-	}
+	public function __construct(
+		private Block $block,
+		private int $weight
+	){}
 
 	public function getBlock() : Block{
 		return $this->block;

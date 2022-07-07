@@ -12,11 +12,9 @@ use pocketmine\world\ChunkManager;
 
 class TallGrass extends TerrainObject{
 
-	private Block $grass_type;
-
-	public function __construct(Block $grass_type){
-		$this->grass_type = $grass_type;
-	}
+	public function __construct(
+		private Block $grass_type
+	){}
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		do{

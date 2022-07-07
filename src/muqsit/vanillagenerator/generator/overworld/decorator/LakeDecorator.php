@@ -14,10 +14,6 @@ use pocketmine\world\format\Chunk;
 
 class LakeDecorator extends Decorator{
 
-	private Block $type;
-	private int $rarity;
-	private int $base_offset;
-
 	/**
 	 * Creates a lake decorator.
 	 *
@@ -25,11 +21,11 @@ class LakeDecorator extends Decorator{
 	 * @param int $rarity
 	 * @param int $base_offset
 	 */
-	public function __construct(Block $type, int $rarity, int $base_offset = 0){
-		$this->type = $type;
-		$this->rarity = $rarity;
-		$this->base_offset = $base_offset;
-	}
+	public function __construct(
+		private Block $type,
+		private int $rarity,
+		private int $base_offset = 0
+	){}
 
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		if($random->nextBoundedInt($this->rarity) === 0){

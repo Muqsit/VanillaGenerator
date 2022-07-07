@@ -11,11 +11,9 @@ use pocketmine\world\ChunkManager;
 
 class Flower extends TerrainObject{
 
-	private Block $block;
-
-	public function __construct(Block $block){
-		$this->block = $block;
-	}
+	public function __construct(
+		private Block $block
+	){}
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$succeeded = false;

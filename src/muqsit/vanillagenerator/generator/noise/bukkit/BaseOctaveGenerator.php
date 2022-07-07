@@ -6,9 +6,6 @@ namespace muqsit\vanillagenerator\generator\noise\bukkit;
 
 abstract class BaseOctaveGenerator{
 
-	/** @var NoiseGenerator[] */
-	protected array $octaves;
-
 	protected float $x_scale = 1.0;
 	protected float $y_scale = 1.0;
 	protected float $z_scale = 1.0;
@@ -16,9 +13,9 @@ abstract class BaseOctaveGenerator{
 	/**
 	 * @param NoiseGenerator[] $octaves
 	 */
-	protected function __construct(array $octaves){
-		$this->octaves = $octaves;
-	}
+	protected function __construct(
+		protected array $octaves
+	){}
 
 	/**
 	 * Sets the scale used for all coordinates passed to this generator.

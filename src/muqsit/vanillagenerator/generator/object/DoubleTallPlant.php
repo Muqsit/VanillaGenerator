@@ -11,11 +11,9 @@ use pocketmine\world\ChunkManager;
 
 class DoubleTallPlant extends TerrainObject{
 
-	private DoublePlant $species;
-
-	public function __construct(DoublePlant $species){
-		$this->species = $species;
-	}
+	public function __construct(
+		private DoublePlant $species
+	){}
 
 	/**
 	 * Generates up to 64 plants around the given point.

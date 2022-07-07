@@ -32,11 +32,9 @@ class Lake extends TerrainObject{
 		}
 	}
 
-	private Block $type;
-
-	public function __construct(Block $type){
-		$this->type = $type;
-	}
+	public function __construct(
+		private Block $type
+	){}
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$succeeded = false;

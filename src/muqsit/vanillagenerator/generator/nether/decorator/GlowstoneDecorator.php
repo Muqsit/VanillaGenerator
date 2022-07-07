@@ -17,11 +17,9 @@ class GlowstoneDecorator extends Decorator{
 
 	private const SIDES = [Facing::EAST, Facing::WEST, Facing::DOWN, Facing::UP, Facing::SOUTH, Facing::NORTH];
 
-	private bool $variable_amount;
-
-	public function __construct(bool $variable_amount = false){
-		$this->variable_amount = $variable_amount;
-	}
+	public function __construct(
+		private bool $variable_amount = false
+	){}
 
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$amount = $this->variable_amount ? 1 + $random->nextBoundedInt(1 + $random->nextBoundedInt(10)) : 10;

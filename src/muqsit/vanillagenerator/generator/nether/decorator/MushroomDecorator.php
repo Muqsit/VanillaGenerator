@@ -24,11 +24,9 @@ class MushroomDecorator extends Decorator{
 		}
 	}
 
-	private Block $type;
-
-	public function __construct(Block $type){
-		$this->type = $type;
-	}
+	public function __construct(
+		private Block $type
+	){}
 
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$height = $world->getMaxY();

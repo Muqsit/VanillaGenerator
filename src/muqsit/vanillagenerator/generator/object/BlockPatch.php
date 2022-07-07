@@ -13,10 +13,6 @@ class BlockPatch extends TerrainObject{
 
 	private const MIN_RADIUS = 2;
 
-	private Block $type;
-	private int $horiz_radius;
-	private int $vert_radius;
-
 	/** @var int[] */
 	private array $overridables = [];
 
@@ -27,10 +23,12 @@ class BlockPatch extends TerrainObject{
 	 * @param int $vert_radius the depth above and below the center
 	 * @param int ...$overridables_full_id
 	 */
-	public function __construct(Block $type, int $horiz_radius, int $vert_radius, int ...$overridables_full_id){
-		$this->type = $type;
-		$this->horiz_radius = $horiz_radius;
-		$this->vert_radius = $vert_radius;
+	public function __construct(
+		private Block $type,
+		private int $horiz_radius,
+		private int $vert_radius,
+		int ...$overridables_full_id
+	){
 		foreach($overridables_full_id as $full_id){
 			$this->overridables[$full_id] = $full_id;
 		}

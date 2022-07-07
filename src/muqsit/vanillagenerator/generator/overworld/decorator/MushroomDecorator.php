@@ -14,7 +14,6 @@ use pocketmine\world\format\Chunk;
 
 class MushroomDecorator extends Decorator{
 
-	private Block $type;
 	private bool $fixed_height_range = false;
 	private float $density = 0.0;
 
@@ -23,9 +22,9 @@ class MushroomDecorator extends Decorator{
 	 *
 	 * @param Block $type {@link Material#BROWN_MUSHROOM} or {@link Material#RED_MUSHROOM}
 	 */
-	public function __construct(Block $type){
-		$this->type = $type;
-	}
+	public function __construct(
+		private Block $type
+	){}
 
 	public function setUseFixedHeightRange() : MushroomDecorator{
 		$this->fixed_height_range = true;
