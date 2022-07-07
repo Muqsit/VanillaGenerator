@@ -17,11 +17,6 @@ class MushroomDecorator extends Decorator{
 	private bool $fixed_height_range = false;
 	private float $density = 0.0;
 
-	/**
-	 * Creates a mushroom decorator for the overworld.
-	 *
-	 * @param Block $type {@link Material#BROWN_MUSHROOM} or {@link Material#RED_MUSHROOM}
-	 */
 	public function __construct(
 		private Block $type
 	){}

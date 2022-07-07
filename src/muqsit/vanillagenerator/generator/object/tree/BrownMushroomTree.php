@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object\tree;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\RedMushroomBlock;
 use pocketmine\block\utils\MushroomBlockType;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object\tree;
 
-use pocketmine\block\utils\TreeType;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;

@@ -9,7 +9,6 @@ use muqsit\vanillagenerator\generator\nether\populator\NetherPopulator;
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
 use muqsit\vanillagenerator\generator\overworld\WorldType;
 use muqsit\vanillagenerator\generator\utils\NetherWorldOctaves;
-use muqsit\vanillagenerator\generator\utils\preset\GeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;

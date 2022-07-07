@@ -7,7 +7,6 @@ namespace muqsit\vanillagenerator\generator\object\tree;
 use pocketmine\block\Block;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Leaves;
-use pocketmine\block\utils\TreeType;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Facing;
 use pocketmine\utils\Random;

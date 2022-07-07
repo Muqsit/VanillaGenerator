@@ -21,7 +21,6 @@ use muqsit\vanillagenerator\generator\overworld\biome\BiomeHeightManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use muqsit\vanillagenerator\generator\overworld\populator\OverworldPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\SnowPopulator;
-use muqsit\vanillagenerator\generator\utils\preset\GeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;

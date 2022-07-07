@@ -14,13 +14,6 @@ use pocketmine\world\format\Chunk;
 
 class LakeDecorator extends Decorator{
 
-	/**
-	 * Creates a lake decorator.
-	 *
-	 * @param Block $type
-	 * @param int $rarity
-	 * @param int $base_offset
-	 */
 	public function __construct(
 		private Block $type,
 		private int $rarity,
