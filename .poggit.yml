@@ -2,6 +2,7 @@
 build-by-default: true
 branches:
 - master
+- pm5
 projects:
   VanillaGenerator:
     path: ""
