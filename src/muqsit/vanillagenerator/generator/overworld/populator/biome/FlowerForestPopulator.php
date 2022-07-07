@@ -17,10 +17,10 @@ use pocketmine\world\format\Chunk;
 class FlowerForestPopulator extends ForestPopulator{
 
 	/** @var Block[] */
-	protected static array $FLOWERS;
+	private static array $FOREST_FLOWERS;
 
 	protected static function initFlowers() : void{
-		self::$FLOWERS = [
+		self::$FOREST_FLOWERS = [
 			VanillaBlocks::POPPY(),
 			VanillaBlocks::POPPY(),
 			VanillaBlocks::DANDELION(),
@@ -61,7 +61,7 @@ class FlowerForestPopulator extends ForestPopulator{
 			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 			$noise = ($this->noise_gen->noise($x, $z, 0.5, 0, 2.0, false) + 1.0) / 2.0;
 			$noise = $noise < 0 ? 0 : ($noise > 0.9999 ? 0.9999 : $noise);
-			$flower = self::$FLOWERS[(int) ($noise * count(self::$FLOWERS))];
+			$flower = self::$FOREST_FLOWERS[(int) ($noise * count(self::$FOREST_FLOWERS))];
 			(new Flower($flower))->generate($world, $random, $source_x + $x, $y, $source_z + $z);
 		}
 	}

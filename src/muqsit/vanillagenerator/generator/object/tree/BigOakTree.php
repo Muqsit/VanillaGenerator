@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object\tree;
 
 use pocketmine\block\BlockFactory;
+use pocketmine\math\Axis;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
@@ -62,7 +63,7 @@ class BigOakTree extends GenericTree{
 					for($z = -$node_distance; $z <= $node_distance; ++$z){
 						$size_x = abs($x) + 0.5;
 						$size_z = abs($z) + 0.5;
-						if($size_x * $size_x + $size_z * $size_z <= $size * $size && array_key_exists($world->getBlockAt($node->x + $x, $node->y + $y, $node->z + $z)->getId(), $this->overridables)){
+						if($size_x * $size_x + $size_z * $size_z <= $size * $size && array_key_exists($world->getBlockAt($node->x + $x, $node->y + $y, $node->z + $z)->getTypeId(), $this->overridables)){
 							$this->transaction->addBlockAt($node->x + $x, $node->y + $y, $node->z + $z, $this->leaves_type);
 						}
 					}
@@ -93,8 +94,8 @@ class BigOakTree extends GenericTree{
 						$x = abs($branch->getFloorX() - $base->getFloorX());
 						$z = abs($branch->getFloorZ() - $base->getFloorZ());
 						$max = max($x, $z);
-						$direction = $max > 0 ? ($max === $x ? 4 : 8) : 0; // EAST / SOUTH
-						$this->transaction->addBlockAt($branch->getFloorX(), $branch->getFloorY(), $branch->getFloorZ(), $block_factory->get($this->log_type->getId(), $this->log_type->getMeta() | $direction));
+						$direction = $max > 0 ? ($max === $x ? Axis::X : Axis::Z) : Axis::Y;
+						$this->transaction->addBlockAt($branch->getFloorX(), $branch->getFloorY(), $branch->getFloorZ(), $this->getLogType()->setAxis($direction));
 					}
 				}
 			}
@@ -115,7 +116,7 @@ class BigOakTree extends GenericTree{
 			for($i = 0; $i <= $max_distance; ++$i, ++$n){
 				$target = $from->add(0.5 + $i * $dx, 0.5 + $i * $dy, 0.5 + $i * $dz);
 				$target_floorY = $target->getFloorY();
-				if($target_floorY < 0 || $target_floorY > $height || !array_key_exists($world->getBlockAt($target->getFloorX(), $target->getFloorY(), $target->getFloorZ())->getId(), $this->overridables)){
+				if($target_floorY < 0 || $target_floorY > $height || !array_key_exists($world->getBlockAt($target->getFloorX(), $target->getFloorY(), $target->getFloorZ())->getTypeId(), $this->overridables)){
 					return $n;
 				}
 			}

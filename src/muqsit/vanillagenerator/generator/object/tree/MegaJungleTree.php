@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object\tree;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
+use pocketmine\block\Leaves;
 use pocketmine\block\utils\TreeType;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Facing;
@@ -25,12 +26,12 @@ class MegaJungleTree extends GenericTree{
 	public function __construct(Random $random, BlockTransaction $transaction){
 		parent::__construct($random, $transaction);
 		$this->setHeight($random->nextBoundedInt(20) + $random->nextBoundedInt(3) + 10);
-		$this->setType(TreeType::JUNGLE());
+		$this->setType(VanillaBlocks::JUNGLE_LOG(), VanillaBlocks::JUNGLE_LEAVES());
 	}
 
 	public function canPlaceOn(Block $soil) : bool{
-		$id = $soil->getId();
-		return $id === BlockLegacyIds::GRASS || $id === BlockLegacyIds::DIRT;
+		$id = $soil->getTypeId();
+		return $id === BlockTypeIds::GRASS || $id === BlockTypeIds::DIRT;
 	}
 
 	public function canPlace(int $base_x, int $base_y, int $base_z, ChunkManager $world) : bool{
@@ -47,7 +48,7 @@ class MegaJungleTree extends GenericTree{
 				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){
 					if($y >= 0 && $y < World::Y_MAX){
 						// we can overlap some blocks around
-						if(!array_key_exists($world->getBlockAt($x, $y, $z)->getId(), $this->overridables)){
+						if(!array_key_exists($world->getBlockAt($x, $y, $z)->getTypeId(), $this->overridables)){
 							return false;
 						}
 					}else{ // height out of range
@@ -126,20 +127,20 @@ class MegaJungleTree extends GenericTree{
 	protected function generateTrunk(ChunkManager $world, int $block_x, int $block_y, int $block_z) : void{
 		// SELF, SOUTH, EAST, SOUTH EAST
 		for($y = 0; $y < $this->height + -1; ++$y){
-			$type = $world->getBlockAt($block_x + 0, $block_y + $y, $block_z + 0)->getId();
-			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
+			$type = $world->getBlockAt($block_x + 0, $block_y + $y, $block_z + 0);
+			if($type->getTypeId() === BlockTypeIds::AIR || $type instanceof Leaves){
 				$this->transaction->addBlockAt($block_x + 0, $block_y + $y, $block_z, $this->log_type);
 			}
-			$type = $world->getBlockAt($block_x + 0, $block_y + $y, $block_z + 1)->getId();
-			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
+			$type = $world->getBlockAt($block_x + 0, $block_y + $y, $block_z + 1);
+			if($type->getTypeId() === BlockTypeIds::AIR || $type instanceof Leaves){
 				$this->transaction->addBlockAt($block_x + 0, $block_y + $y, $block_z + 1, $this->log_type);
 			}
-			$type = $world->getBlockAt($block_x + 1, $block_y + $y, $block_z + 0)->getId();
-			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
+			$type = $world->getBlockAt($block_x + 1, $block_y + $y, $block_z + 0);
+			if($type->getTypeId() === BlockTypeIds::AIR || $type instanceof Leaves){
 				$this->transaction->addBlockAt($block_x + 1, $block_y + $y, $block_z, $this->log_type);
 			}
-			$type = $world->getBlockAt($block_x + 1, $block_y + $y, $block_z + 1)->getId();
-			if($type === BlockLegacyIds::AIR || $type === BlockLegacyIds::LEAVES){
+			$type = $world->getBlockAt($block_x + 1, $block_y + $y, $block_z + 1);
+			if($type->getTypeId() === BlockTypeIds::AIR || $type instanceof Leaves){
 				$this->transaction->addBlockAt($block_x + 1, $block_y + $y, $block_z + 1, $this->log_type);
 			}
 		}
@@ -170,7 +171,7 @@ class MegaJungleTree extends GenericTree{
 	private function maybePlaceVine(ChunkManager $world, int $absolute_x, int $absolute_y, int $absolute_z, int $face_direction, Random $random) : void{
 		if(
 			$random->nextBoundedInt(3) !== 0 &&
-			$world->getBlockAt($absolute_x, $absolute_y, $absolute_z)->getId() === BlockLegacyIds::AIR
+			$world->getBlockAt($absolute_x, $absolute_y, $absolute_z)->getTypeId() === BlockTypeIds::AIR
 		){
 			$this->transaction->addBlockAt($absolute_x, $absolute_y, $absolute_z, VanillaBlocks::VINES()->setFace($face_direction, true));
 		}

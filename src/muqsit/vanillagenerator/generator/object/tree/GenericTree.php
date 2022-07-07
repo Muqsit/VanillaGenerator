@@ -6,10 +6,10 @@ namespace muqsit\vanillagenerator\generator\object\tree;
 
 use muqsit\vanillagenerator\generator\object\TerrainObject;
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockLegacyIds;
-use pocketmine\block\utils\TreeType;
+use pocketmine\block\BlockTypeIds;
+use pocketmine\block\Leaves;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\block\Wood;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
@@ -20,8 +20,8 @@ class GenericTree extends TerrainObject{
 
 	protected BlockTransaction $transaction;
 	protected int $height;
-	protected Block $log_type;
-	protected Block $leaves_type;
+	protected Wood $log_type;
+	protected Leaves $leaves_type;
 
 	/** @var int[] */
 	protected array $overridables;
@@ -35,17 +35,39 @@ class GenericTree extends TerrainObject{
 	public function __construct(Random $random, BlockTransaction $transaction){
 		$this->transaction = $transaction;
 		$this->setOverridables(
-			BlockLegacyIds::AIR,
-			BlockLegacyIds::LEAVES,
-			BlockLegacyIds::GRASS,
-			BlockLegacyIds::DIRT,
-			BlockLegacyIds::LOG,
-			BlockLegacyIds::LOG2,
-			BlockLegacyIds::SAPLING,
-			BlockLegacyIds::VINE
+			BlockTypeIds::AIR,
+			BlockTypeIds::ACACIA_LEAVES,
+			BlockTypeIds::BIRCH_LEAVES,
+			BlockTypeIds::DARK_OAK_LEAVES,
+			BlockTypeIds::JUNGLE_LEAVES,
+			BlockTypeIds::OAK_LEAVES,
+			BlockTypeIds::SPRUCE_LEAVES,
+			BlockTypeIds::GRASS,
+			BlockTypeIds::DIRT,
+			BlockTypeIds::ACACIA_WOOD,
+			BlockTypeIds::BIRCH_WOOD,
+			BlockTypeIds::DARK_OAK_WOOD,
+			BlockTypeIds::JUNGLE_WOOD,
+			BlockTypeIds::OAK_WOOD,
+			BlockTypeIds::SPRUCE_WOOD,
+			BlockTypeIds::ACACIA_SAPLING,
+			BlockTypeIds::BIRCH_SAPLING,
+			BlockTypeIds::DARK_OAK_SAPLING,
+			BlockTypeIds::JUNGLE_SAPLING,
+			BlockTypeIds::OAK_SAPLING,
+			BlockTypeIds::SPRUCE_SAPLING,
+			BlockTypeIds::VINES
 		);
 		$this->setHeight($random->nextBoundedInt(3) + 4);
-		$this->setType(TreeType::OAK());
+		$this->setType(VanillaBlocks::OAK_LOG(), VanillaBlocks::OAK_LEAVES());
+	}
+
+	public function getLogType() : Wood{
+		return clone $this->log_type;
+	}
+
+	public function getLeavesType() : Leaves{
+		return clone $this->leaves_type;
 	}
 
 	final protected function setOverridables(int ...$overridables) : void{
@@ -58,14 +80,10 @@ class GenericTree extends TerrainObject{
 
 	/**
 	 * Sets the block data values for this tree's blocks.
-	 *
-	 * @param TreeType $type
 	 */
-	final protected function setType(TreeType $type) : void{
-		$magic_number = $type->getMagicNumber();
-		$block_factory = BlockFactory::getInstance();
-		$this->log_type = $block_factory->get($magic_number >= 4 ? BlockLegacyIds::LOG2 : BlockLegacyIds::LOG, $magic_number & 0x3);
-		$this->leaves_type = $block_factory->get($magic_number >= 4 ? BlockLegacyIds::LEAVES2 : BlockLegacyIds::LEAVES, $magic_number & 0x3);
+	final protected function setType(Wood $log_type, Leaves $leaves_type) : void{
+		$this->log_type = $log_type;
+		$this->leaves_type = $leaves_type;
 	}
 
 	/**
@@ -84,8 +102,8 @@ class GenericTree extends TerrainObject{
 	 * @return bool whether this tree can grow on the type of block below it; false otherwise
 	 */
 	public function canPlaceOn(Block $soil) : bool{
-		$type = $soil->getId();
-		return $type === BlockLegacyIds::GRASS || $type === BlockLegacyIds::DIRT || $type === BlockLegacyIds::FARMLAND;
+		$type = $soil->getTypeId();
+		return $type === BlockTypeIds::GRASS || $type === BlockTypeIds::DIRT || $type === BlockTypeIds::FARMLAND;
 	}
 
 	/**
@@ -112,7 +130,7 @@ class GenericTree extends TerrainObject{
 				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){
 					if($y >= 0 && $y < $height){
 						// we can overlap some blocks around
-						if(!array_key_exists($world->getBlockAt($x, $y, $z)->getId(), $this->overridables)){
+						if(!array_key_exists($world->getBlockAt($x, $y, $z)->getTypeId(), $this->overridables)){
 							return false;
 						}
 					}else{ // height out of range
@@ -193,8 +211,8 @@ class GenericTree extends TerrainObject{
 	 * @param ChunkManager $world the world we are generating in
 	 */
 	protected function replaceIfAirOrLeaves(int $x, int $y, int $z, Block $new_material, ChunkManager $world) : void{
-		$old_material = $world->getBlockAt($x, $y, $z)->getId();
-		if($old_material === BlockLegacyIds::AIR || $old_material === BlockLegacyIds::LEAVES){
+		$old_material = $world->getBlockAt($x, $y, $z);
+		if($old_material->getTypeId() === BlockTypeIds::AIR || $old_material instanceof Leaves){
 			$this->transaction->addBlockAt($x, $y, $z, $new_material);
 		}
 	}

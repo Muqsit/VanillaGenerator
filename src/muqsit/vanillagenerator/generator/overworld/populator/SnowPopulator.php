@@ -7,7 +7,7 @@ namespace muqsit\vanillagenerator\generator\overworld\populator;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use muqsit\vanillagenerator\generator\Populator;
 use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -20,9 +20,9 @@ class SnowPopulator implements Populator{
 		$source_z = $chunk_z << 4;
 
 		$block_factory = BlockFactory::getInstance();
-		$air = VanillaBlocks::AIR()->getFullId();
-		$grass = VanillaBlocks::GRASS()->getFullId();
-		$snow_layer = VanillaBlocks::SNOW_LAYER()->getFullId();
+		$air = VanillaBlocks::AIR()->getStateId();
+		$grass = VanillaBlocks::GRASS()->getStateId();
+		$snow_layer = VanillaBlocks::SNOW_LAYER()->getStateId();
 
 		$world_height = $world->getMaxY();
 
@@ -32,21 +32,19 @@ class SnowPopulator implements Populator{
 				if($highest_y > 0 && $highest_y < $world_height - 1){
 					$y = $highest_y - 1;
 					if(BiomeClimateManager::isSnowy($chunk->getBiomeId($x, $z), $source_x + $x, $y, $source_z + $z)){
-						switch($block_factory->fromFullBlock($chunk->getFullBlock($x, $y, $z))->getId()){
-							case BlockLegacyIds::FLOWING_WATER:
-							case BlockLegacyIds::STILL_WATER:
-							case BlockLegacyIds::SNOW:
-							case BlockLegacyIds::ICE:
-							case BlockLegacyIds::PACKED_ICE:
-							case BlockLegacyIds::YELLOW_FLOWER:
-							case BlockLegacyIds::RED_FLOWER:
-							case BlockLegacyIds::TALL_GRASS:
-							case BlockLegacyIds::DOUBLE_PLANT:
-							case BlockLegacyIds::SUGARCANE_BLOCK:
-							case BlockLegacyIds::FLOWING_LAVA:
-							case BlockLegacyIds::STILL_LAVA:
+						switch($block_factory->fromStateId($chunk->getFullBlock($x, $y, $z))->getTypeId()){
+							case BlockTypeIds::WATER:
+							case BlockTypeIds::SNOW:
+							case BlockTypeIds::ICE:
+							case BlockTypeIds::PACKED_ICE:
+							case BlockTypeIds::DANDELION:
+							case BlockTypeIds::POPPY:
+							case BlockTypeIds::TALL_GRASS:
+							case BlockTypeIds::DOUBLE_TALLGRASS:
+							case BlockTypeIds::SUGARCANE:
+							case BlockTypeIds::LAVA:
 								break;
-							case BlockLegacyIds::DIRT:
+							case BlockTypeIds::DIRT:
 								$chunk->setFullBlock($x, $y, $z, $grass);
 								if($chunk->getFullBlock($x, $y + 1, $z) === $air){
 									$chunk->setFullBlock($x, $y + 1, $z, $snow_layer);

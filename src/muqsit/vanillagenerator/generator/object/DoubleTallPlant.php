@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\DoublePlant;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -37,7 +37,7 @@ class DoubleTallPlant extends TerrainObject{
 
 			$block = $world->getBlockAt($x, $y, $z);
 			$top_block = $world->getBlockAt($x, $y + 1, $z);
-			if($y < $height && $block->getId() === BlockLegacyIds::AIR && $top_block->getId() === BlockLegacyIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getId() === BlockLegacyIds::GRASS){
+			if($y < $height && $block->getTypeId() === BlockTypeIds::AIR && $top_block->getTypeId() === BlockTypeIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getTypeId() === BlockTypeIds::GRASS){
 				$world->setBlockAt($x, $y, $z, $this->species->setTop(false));
 				$world->setBlockAt($x, $y + 1, $z, $this->species->setTop(true));
 				$placed = true;

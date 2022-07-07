@@ -7,9 +7,11 @@ namespace muqsit\vanillagenerator\generator\object;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Liquid;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\block\Water;
+use pocketmine\block\Wood;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -86,9 +88,8 @@ class Lake extends TerrainObject{
 					$type = $this->type;
 					$block = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z);
 					$block_above = $world->getBlockAt($source_x + $x, $source_y + $y + 1, $source_z + $z);
-					$block_type = $block->getId();
-					$block_above_type = $block_above->getId();
-					if(($block_type === BlockLegacyIds::DIRT && ($block_above_type === BlockLegacyIds::LOG || $block_above_type === BlockLegacyIds::LOG2)) || $block_type === BlockLegacyIds::LOG || $block_type === BlockLegacyIds::LOG2){
+					$block_type = $block->getTypeId();
+					if(($block_type === BlockTypeIds::DIRT && $block_above instanceof Wood) || $block instanceof Wood){
 						continue;
 					}
 
@@ -98,11 +99,11 @@ class Lake extends TerrainObject{
 							break;
 						}
 
-						if(($block_type === BlockLegacyIds::ICE || $block_type === BlockLegacyIds::PACKED_ICE) && $this->type->getId() === BlockLegacyIds::STILL_WATER){
+						if(($block_type === BlockTypeIds::ICE || $block_type === BlockTypeIds::PACKED_ICE) && $this->type instanceof Water && $this->type->isStill()){
 							$type = $block;
 						}
 					}elseif($y === (int) (self::MAX_HEIGHT / 2 - 1)){
-						if($type->getId() === BlockLegacyIds::STILL_WATER && BiomeClimateManager::isCold($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $source_x + $x, $y, $source_z + $z)){
+						if($type instanceof Water && $type->isStill() && BiomeClimateManager::isCold($chunk->getBiomeId($x & 0x0f, $z & 0x0f), $source_x + $x, $y, $source_z + $z)){
 							$type = VanillaBlocks::ICE();
 						}
 					}
@@ -120,7 +121,7 @@ class Lake extends TerrainObject{
 
 					$block = $world->getBlockAt($source_x + $x, $source_y + $y - 1, $source_z + $z);
 					$block_above = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z);
-					if($block->getId() === BlockLegacyIds::DIRT && $block_above->isTransparent() && $block_above->getLightLevel() > 0){
+					if($block->getTypeId() === BlockTypeIds::DIRT && $block_above->isTransparent() && $block_above->getLightLevel() > 0){
 						$world->setBlockAt($source_x + $x, $source_y + $y - 1, $source_z + $z, $mycel_biome ? VanillaBlocks::MYCELIUM() : VanillaBlocks::GRASS());
 					}
 				}
@@ -151,10 +152,10 @@ class Lake extends TerrainObject{
 						continue;
 					}
 					$block = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z);
-					if($y >= self::MAX_HEIGHT / 2 && (($block instanceof Liquid) || $block->getId() === BlockLegacyIds::ICE)){
+					if($y >= self::MAX_HEIGHT / 2 && (($block instanceof Liquid) || $block->getTypeId() === BlockTypeIds::ICE)){
 						return false; // there's already some liquids above
 					}
-					if($y < self::MAX_HEIGHT / 2 && !$block->isSolid() && $block->getId() !== $this->type->getId()){
+					if($y < self::MAX_HEIGHT / 2 && !$block->isSolid() && $block->getTypeId() !== $this->type->getTypeId()){
 						return false;
 						// bottom must be solid and do not overlap with another liquid type
 					}

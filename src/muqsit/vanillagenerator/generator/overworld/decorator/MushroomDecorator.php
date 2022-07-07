@@ -6,7 +6,7 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Dirt;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -57,16 +57,16 @@ class MushroomDecorator extends Decorator{
 
 				$block = $world->getBlockAt($x, $y, $z);
 				$below_below = $world->getBlockAt($x, $y - 1, $z);
-				if($y < $height && $block->getId() === BlockLegacyIds::AIR){
-					switch($below_below->getId()){
-						case BlockLegacyIds::MYCELIUM:
-						case BlockLegacyIds::PODZOL:
+				if($y < $height && $block->getTypeId() === BlockTypeIds::AIR){
+					switch($below_below->getTypeId()){
+						case BlockTypeIds::MYCELIUM:
+						case BlockTypeIds::PODZOL:
 							$can_place_shroom = true;
 							break;
-						case BlockLegacyIds::GRASS:
+						case BlockTypeIds::GRASS:
 							$can_place_shroom = ($block->getLightLevel() < 13);
 							break;
-						case BlockLegacyIds::DIRT:
+						case BlockTypeIds::DIRT:
 							assert($below_below instanceof Dirt);
 							if(!$below_below->isCoarse()){
 								$can_place_shroom = $block->getLightLevel() < 13;

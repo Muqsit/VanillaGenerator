@@ -80,7 +80,7 @@ class OreVein extends TerrainObject{
 					}
 					for($z = $min_z; $z <= $max_z; ++$z){
 						$squared_normalized_z = self::normalizedSquaredCoordinate($origin_z, $radius_h, $z);
-						if($squared_normalized_x + $squared_normalized_y + $squared_normalized_z < 1 && $world->getBlockAt($x, $y, $z)->getId() === $this->target_type){
+						if($squared_normalized_x + $squared_normalized_y + $squared_normalized_z < 1 && $world->getBlockAt($x, $y, $z)->getTypeId() === $this->target_type){
 							$world->setBlockAt($x, $y, $z, $this->type);
 							$succeeded = true;
 						}

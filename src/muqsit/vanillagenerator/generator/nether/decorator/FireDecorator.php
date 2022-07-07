@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\nether\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -33,8 +33,8 @@ class FireDecorator extends Decorator{
 				$block_below = $world->getBlockAt($x, $y - 1, $z);
 				if(
 					$y < $height &&
-					$block->getId() === BlockLegacyIds::AIR &&
-					$block_below->getId() === BlockLegacyIds::NETHERRACK
+					$block->getTypeId() === BlockTypeIds::AIR &&
+					$block_below->getTypeId() === BlockTypeIds::NETHERRACK
 				){
 					$world->setBlockAt($x, $y, $z, VanillaBlocks::FIRE());
 				}

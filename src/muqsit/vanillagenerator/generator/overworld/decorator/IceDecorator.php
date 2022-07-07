@@ -7,7 +7,7 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\BlockPatch;
 use muqsit\vanillagenerator\generator\object\IceSpike;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -20,10 +20,10 @@ class IceDecorator extends Decorator{
 
 	public static function init() : void{
 		self::$OVERRIDABLES = [
-			VanillaBlocks::DIRT()->getFullId(),
-			VanillaBlocks::GRASS()->getFullId(),
-			VanillaBlocks::SNOW()->getFullId(),
-			VanillaBlocks::ICE()->getFullId()
+			VanillaBlocks::DIRT()->getStateId(),
+			VanillaBlocks::GRASS()->getStateId(),
+			VanillaBlocks::SNOW()->getStateId(),
+			VanillaBlocks::ICE()->getStateId()
 		];
 	}
 
@@ -35,10 +35,10 @@ class IceDecorator extends Decorator{
 			$x = $source_x + $random->nextBoundedInt(16);
 			$z = $source_z + $random->nextBoundedInt(16);
 			$y = $chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) - 1;
-			while($y > 2 && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
+			while($y > 2 && $world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::AIR){
 				--$y;
 			}
-			if($world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::SNOW_BLOCK){
+			if($world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::SNOW){
 				(new BlockPatch(VanillaBlocks::PACKED_ICE(), 4, 1, ...self::$OVERRIDABLES))->generate($world, $random, $x, $y, $z);
 			}
 		}
@@ -47,10 +47,10 @@ class IceDecorator extends Decorator{
 			$x = $source_x + $random->nextBoundedInt(16);
 			$z = $source_z + $random->nextBoundedInt(16);
 			$y = $chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f);
-			while($y > 2 && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
+			while($y > 2 && $world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::AIR){
 				--$y;
 			}
-			if($world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::SNOW_BLOCK){
+			if($world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::SNOW){
 				(new IceSpike())->generate($world, $random, $x, $y, $z);
 			}
 		}

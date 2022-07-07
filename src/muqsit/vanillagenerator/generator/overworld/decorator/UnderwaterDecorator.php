@@ -7,7 +7,7 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\BlockPatch;
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\Water;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -45,7 +45,7 @@ class UnderwaterDecorator extends Decorator{
 
 	final public function setOverridableBlocks(Block ...$overridables) : UnderwaterDecorator{
 		foreach($overridables as $overridable){
-			$this->overridables[] = $overridable->getFullId();
+			$this->overridables[] = $overridable->getStateId();
 		}
 		return $this;
 	}
@@ -56,15 +56,12 @@ class UnderwaterDecorator extends Decorator{
 		$source_y = $chunk->getHighestBlockAt($source_x & 0x0f, $source_z & 0x0f) - 1;
 		while(
 			$source_y > 1 &&
-			(
-				($block_id = $world->getBlockAt($source_x, $source_y - 1, $source_z)->getId()) === BlockLegacyIds::STILL_WATER ||
-				$block_id === BlockLegacyIds::FLOWING_WATER
-			)
+			$world->getBlockAt($source_x, $source_y - 1, $source_z) instanceof Water
 		){
 			--$source_y;
 		}
-		$material = $world->getBlockAt($source_x, $source_y, $source_z)->getId();
-		if($material === BlockLegacyIds::STILL_WATER || $material === BlockLegacyIds::FLOWING_WATER){
+		$material = $world->getBlockAt($source_x, $source_y, $source_z);
+		if($material instanceof Water){
 			(new BlockPatch($this->type, $this->horiz_radius, $this->vert_radius, ...$this->overridables))->generate($world, $random, $source_x, $source_y, $source_z);
 		}
 	}

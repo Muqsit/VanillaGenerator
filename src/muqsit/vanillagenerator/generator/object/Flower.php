@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -26,7 +26,7 @@ class Flower extends TerrainObject{
 			$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
 			$block = $world->getBlockAt($x, $y, $z);
-			if($y < $height && $block->getId() === BlockLegacyIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getId() === BlockLegacyIds::GRASS){
+			if($y < $height && $block->getTypeId() === BlockTypeIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getTypeId() === BlockTypeIds::GRASS){
 				$world->setBlockAt($x, $y, $z, $this->block);
 				$succeeded = true;
 			}

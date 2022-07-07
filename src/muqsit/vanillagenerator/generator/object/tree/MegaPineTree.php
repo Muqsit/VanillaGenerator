@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object\tree;
 
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
@@ -53,15 +53,15 @@ class MegaPineTree extends MegaRedwoodTree{
 					continue;
 				}
 				for($y = 2; $y >= -3; --$y){
-					$block_id = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z)->getId();
-					if($block_id === BlockLegacyIds::GRASS || $block_id === BlockLegacyIds::DIRT){
+					$block_id = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z)->getTypeId();
+					if($block_id === BlockTypeIds::GRASS || $block_id === BlockTypeIds::DIRT){
 						if($world->getBlockAt($source_x + $x, $source_y + $y + 1, $source_z + $z)->isSolid()){
 							$dirt = VanillaBlocks::DIRT();
 						}else{
 							$dirt = VanillaBlocks::PODZOL();
 						}
 						$world->setBlockAt($source_x + $x, $source_y + $y, $source_z + $z, $dirt);
-					}elseif($block_id !== BlockLegacyIds::AIR && $source_y + $y < $source_y){
+					}elseif($block_id !== BlockTypeIds::AIR && $source_y + $y < $source_y){
 						break;
 					}
 				}

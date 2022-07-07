@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\ground;
 
 use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
-use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use function array_fill;
 
 class MesaGroundGenerator extends GroundGenerator{
 
@@ -20,7 +20,7 @@ class MesaGroundGenerator extends GroundGenerator{
 
 	private int $type;
 
-	/** @var int[] */
+	/** @var DyeColor[]|null[] */
 	private array $color_layer;
 
 	private ?SimplexOctaveGenerator $color_noise = null;
@@ -31,7 +31,6 @@ class MesaGroundGenerator extends GroundGenerator{
 	public function __construct(int $type = self::NORMAL){
 		parent::__construct(VanillaBlocks::RED_SAND(), VanillaBlocks::STAINED_CLAY()->setColor(DyeColor::ORANGE()));
 		$this->type = $type;
-		$this->color_layer = array_fill(0, 64, 0);
 	}
 
 	private function initialize(int $seed) : void{
@@ -84,16 +83,16 @@ class MesaGroundGenerator extends GroundGenerator{
 		$coarse_dirt = VanillaBlocks::DIRT()->setCoarse(true);
 
 		for($y = 255; $y >= 0; --$y){
-			if($y < (int) $bryce_canyon_height && $world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR){
+			if($y < (int) $bryce_canyon_height && $world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::AIR){
 				$world->setBlockAt($x, $y, $z, VanillaBlocks::STONE());
 			}
 			if($y <= $random->nextBoundedInt(5)){
 				$world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
 			}else{
-				$mat_id = $world->getBlockAt($x, $y, $z)->getId();
-				if($mat_id === BlockLegacyIds::AIR){
+				$mat_id = $world->getBlockAt($x, $y, $z)->getTypeId();
+				if($mat_id === BlockTypeIds::AIR){
 					$deep = -1;
-				}elseif($mat_id === BlockLegacyIds::STONE){
+				}elseif($mat_id === BlockTypeIds::STONE){
 					if($deep === -1){
 						$ground_set = false;
 						if($y >= $sea_level - 5 && $y <= $sea_level){
@@ -109,7 +108,7 @@ class MesaGroundGenerator extends GroundGenerator{
 								$color = $this->color_layer[($y + (int) round(
 										$this->color_noise->noise($chunk_x, $chunk_z, 0, 0.5, 2.0, false) * 2.0))
 								% count($this->color_layer)];
-								$this->setColoredGroundLayer($world, $x, $y, $z, $y < $sea_level || $y > 128 ? 1 : ($colored ? $color : -1));
+								$this->setColoredGroundLayer($world, $x, $y, $z, $y < $sea_level || $y > 128 ? DyeColor::ORANGE() : ($colored ? $color : null));
 							}else{
 								$world->setBlockAt($x, $y, $z, $this->top_material);
 								$ground_set = true;
@@ -133,11 +132,11 @@ class MesaGroundGenerator extends GroundGenerator{
 		}
 	}
 
-	private function setColoredGroundLayer(ChunkManager $world, int $x, int $y, int $z, int $color) : void{
-		$world->setBlockAt($x, $y, $z, $color >= 0 ? BlockFactory::getInstance()->get(BlockLegacyIds::STAINED_CLAY, $color) : VanillaBlocks::HARDENED_CLAY());
+	private function setColoredGroundLayer(ChunkManager $world, int $x, int $y, int $z, ?DyeColor $color) : void{
+		$world->setBlockAt($x, $y, $z, $color !== null ? VanillaBlocks::STAINED_CLAY()->setColor($color) : VanillaBlocks::HARDENED_CLAY());
 	}
 
-	private function setRandomLayerColor(Random $random, int $min_layer_count, int $min_layer_height, int $color) : void{
+	private function setRandomLayerColor(Random $random, int $min_layer_count, int $min_layer_height, ?DyeColor $color) : void{
 		for($i = 0; $i < $random->nextBoundedInt(4) + $min_layer_count; ++$i){
 			$j = $random->nextBoundedInt(count($this->color_layer));
 			$k = 0;
@@ -149,19 +148,17 @@ class MesaGroundGenerator extends GroundGenerator{
 	}
 
 	private function initializeColorLayers(Random $random) : void{
-		foreach($this->color_layer as $k => $_){
-			$this->color_layer[$k] = -1; // hard clay, other values are stained clay
-		}
+		$this->color_layer = array_fill(0, 64, null); // null = hard clay, other values are stained clay
 		$i = 0;
 		while($i < count($this->color_layer)){
 			$i += $random->nextBoundedInt(5) + 1;
 			if($i < count($this->color_layer)){
-				$this->color_layer[$i++] = 1; // orange
+				$this->color_layer[$i++] = DyeColor::ORANGE();
 			}
 		}
-		$this->setRandomLayerColor($random, 2, 1, 4); // yellow
-		$this->setRandomLayerColor($random, 2, 2, 12); // brown
-		$this->setRandomLayerColor($random, 2, 1, 14); // red
+		$this->setRandomLayerColor($random, 2, 1, DyeColor::YELLOW());
+		$this->setRandomLayerColor($random, 2, 2, DyeColor::BROWN());
+		$this->setRandomLayerColor($random, 2, 1, DyeColor::RED());
 		$j = 0;
 		for($i = 0; $i < $random->nextBoundedInt(3) + 3; ++$i){
 			$j += $random->nextBoundedInt(16) + 4;
@@ -169,9 +166,9 @@ class MesaGroundGenerator extends GroundGenerator{
 				break;
 			}
 			if(($random->nextBoundedInt(2) === 0) || (($j < count($this->color_layer) - 1) && ($random->nextBoundedInt(2) === 0))){
-				$this->color_layer[$j - 1] = 8; // light gray
+				$this->color_layer[$j - 1] = DyeColor::LIGHT_GRAY();
 			}else{
-				$this->color_layer[$j] = 0; // white
+				$this->color_layer[$j] = DyeColor::WHITE();
 			}
 		}
 	}

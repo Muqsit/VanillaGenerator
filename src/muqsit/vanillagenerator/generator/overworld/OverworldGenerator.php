@@ -203,9 +203,9 @@ class OverworldGenerator extends VanillaGenerator{
 		$sea_fill = self::DENSITY_FILL_SEA_MODE;
 		$density_offset = self::DENSITY_FILL_OFFSET;
 
-		$still_water = VanillaBlocks::WATER()->getStillForm()->getFullId();
-		$water = VanillaBlocks::WATER()->getFlowingForm()->getFullId();
-		$stone = VanillaBlocks::STONE()->getFullId();
+		$still_water = VanillaBlocks::WATER()->getStillForm()->getStateId();
+		$water = VanillaBlocks::WATER()->getFlowingForm()->getStateId();
+		$stone = VanillaBlocks::STONE()->getStateId();
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunk_x, $chunk_z);

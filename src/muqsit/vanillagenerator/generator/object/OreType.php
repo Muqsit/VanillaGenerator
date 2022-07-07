@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\utils\Random;
 
 class OreType{
@@ -27,7 +27,7 @@ class OreType{
 	 * @param int $amount the size of a vein
 	 * @param int $target_type the block this can replace
 	 */
-	public function __construct(Block $type, int $min_y, int $max_y, int $amount, int $target_type = BlockLegacyIds::STONE){
+	public function __construct(Block $type, int $min_y, int $max_y, int $amount, int $target_type = BlockTypeIds::STONE){
 		$this->type = $type;
 		$this->min_y = $min_y;
 		$this->max_y = $max_y;

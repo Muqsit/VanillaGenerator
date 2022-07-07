@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object\tree;
 
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
@@ -15,14 +15,28 @@ class TallRedwoodTree extends RedwoodTree{
 	public function __construct(Random $random, BlockTransaction $transaction){
 		parent::__construct($random, $transaction);
 		$this->setOverridables(
-			BlockLegacyIds::AIR,
-			BlockLegacyIds::LEAVES,
-			BlockLegacyIds::GRASS,
-			BlockLegacyIds::DIRT,
-			BlockLegacyIds::LOG,
-			BlockLegacyIds::LOG2,
-			BlockLegacyIds::SAPLING,
-			BlockLegacyIds::VINE
+			BlockTypeIds::AIR,
+			BlockTypeIds::ACACIA_LEAVES,
+			BlockTypeIds::BIRCH_LEAVES,
+			BlockTypeIds::DARK_OAK_LEAVES,
+			BlockTypeIds::JUNGLE_LEAVES,
+			BlockTypeIds::OAK_LEAVES,
+			BlockTypeIds::SPRUCE_LEAVES,
+			BlockTypeIds::GRASS,
+			BlockTypeIds::DIRT,
+			BlockTypeIds::ACACIA_WOOD,
+			BlockTypeIds::BIRCH_WOOD,
+			BlockTypeIds::DARK_OAK_WOOD,
+			BlockTypeIds::JUNGLE_WOOD,
+			BlockTypeIds::OAK_WOOD,
+			BlockTypeIds::SPRUCE_WOOD,
+			BlockTypeIds::ACACIA_SAPLING,
+			BlockTypeIds::BIRCH_SAPLING,
+			BlockTypeIds::DARK_OAK_SAPLING,
+			BlockTypeIds::JUNGLE_SAPLING,
+			BlockTypeIds::OAK_SAPLING,
+			BlockTypeIds::SPRUCE_SAPLING,
+			BlockTypeIds::VINES
 		);
 		$this->setHeight($random->nextBoundedInt(5) + 7);
 		$this->setLeavesHeight($this->height - $random->nextBoundedInt(2) - 3);
@@ -46,7 +60,7 @@ class TallRedwoodTree extends RedwoodTree{
 							abs($z - $source_z) !== $radius ||
 							$radius <= 0
 						) &&
-						$world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::AIR
+						$world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::AIR
 					){
 						$this->transaction->addBlockAt($x, $y, $z, $this->leaves_type);
 					}

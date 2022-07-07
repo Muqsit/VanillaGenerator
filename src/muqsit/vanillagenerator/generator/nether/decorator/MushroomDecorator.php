@@ -6,7 +6,7 @@ namespace muqsit\vanillagenerator\generator\nether\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -14,12 +14,16 @@ use function array_key_exists;
 
 class MushroomDecorator extends Decorator{
 
-	/** @var int[] */
+	/**
+	 * @var int[]
+	 *
+	 * @phpstan-var array<BlockTypeIds::*, BlockTypeIds::*>
+	 */
 	private static array $MATERIALS;
 
 	public static function init() : void{
 		self::$MATERIALS = [];
-		foreach([BlockLegacyIds::NETHERRACK, BlockLegacyIds::QUARTZ_ORE, BlockLegacyIds::SOUL_SAND, BlockLegacyIds::GRAVEL] as $block_id){
+		foreach([BlockTypeIds::NETHERRACK, BlockTypeIds::NETHER_QUARTZ_ORE, BlockTypeIds::SOUL_SAND, BlockTypeIds::GRAVEL] as $block_id){
 			self::$MATERIALS[$block_id] = $block_id;
 		}
 	}
@@ -46,8 +50,8 @@ class MushroomDecorator extends Decorator{
 			$block_below = $world->getBlockAt($x, $y - 1, $z);
 			if(
 				$y < $height &&
-				$block->getId() === BlockLegacyIds::AIR &&
-				array_key_exists($block_below->getId(), self::$MATERIALS)
+				$block->getTypeId() === BlockTypeIds::AIR &&
+				array_key_exists($block_below->getTypeId(), self::$MATERIALS)
 			){
 				$world->setBlockAt($x, $y, $z, $this->type);
 			}

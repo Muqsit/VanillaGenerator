@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Flowable;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -18,7 +18,7 @@ abstract class TerrainObject{
 
 	public static function init() : void{
 		self::$PLANT_TYPES = [];
-		foreach([BlockLegacyIds::TALL_GRASS, BlockLegacyIds::YELLOW_FLOWER, BlockLegacyIds::RED_FLOWER, BlockLegacyIds::DOUBLE_PLANT, BlockLegacyIds::BROWN_MUSHROOM, BlockLegacyIds::RED_MUSHROOM] as $block_id){
+		foreach([BlockTypeIds::TALL_GRASS, BlockTypeIds::DANDELION, BlockTypeIds::POPPY, BlockTypeIds::DOUBLE_TALLGRASS, BlockTypeIds::BROWN_MUSHROOM, BlockTypeIds::RED_MUSHROOM] as $block_id){
 			self::$PLANT_TYPES[$block_id] = $block_id;
 		}
 	}

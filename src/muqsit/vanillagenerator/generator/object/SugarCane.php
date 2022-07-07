@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Dirt;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\block\Water;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
@@ -17,7 +18,7 @@ class SugarCane extends TerrainObject{
 	private const FACES = [Facing::NORTH, Facing::EAST, Facing::SOUTH, Facing::WEST];
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
-		if($world->getBlockAt($source_x, $source_y, $source_z)->getId() !== BlockLegacyIds::AIR){
+		if($world->getBlockAt($source_x, $source_y, $source_z)->getTypeId() !== BlockTypeIds::AIR){
 			return false;
 		}
 
@@ -26,8 +27,8 @@ class SugarCane extends TerrainObject{
 		foreach(self::FACES as $face){
 			// needs a directly adjacent water block
 			$block_type_v = $vec->getSide($face);
-			$block_type = $world->getBlockAt($block_type_v->x, $block_type_v->y, $block_type_v->z)->getId();
-			if($block_type === BlockLegacyIds::STILL_WATER || $block_type === BlockLegacyIds::FLOWING_WATER){
+			$block_type = $world->getBlockAt($block_type_v->x, $block_type_v->y, $block_type_v->z);
+			if($block_type instanceof Water){
 				$adjacent_water = true;
 				break;
 			}
@@ -37,14 +38,14 @@ class SugarCane extends TerrainObject{
 		}
 		for($n = 0; $n <= $random->nextBoundedInt($random->nextBoundedInt(3) + 1) + 1; ++$n){
 			$block = $world->getBlockAt($source_x, $source_y + $n - 1, $source_z);
-			$block_id = $block->getId();
-			if($block_id === BlocKLegacyIds::SUGARCANE_BLOCK
-				|| $block_id === BlocKLegacyIds::GRASS
-				|| $block_id === BlocKLegacyIds::SAND
+			$block_id = $block->getTypeId();
+			if($block_id === BlockTypeIds::SUGARCANE
+				|| $block_id === BlockTypeIds::GRASS
+				|| $block_id === BlockTypeIds::SAND
 				|| ($block instanceof Dirt && !$block->isCoarse())
 			){
 				$cane_block = $world->getBlockAt($source_x, $source_y + $n, $source_z);
-				if($cane_block->getId() !== BlockLegacyIds::AIR && $world->getBlockAt($source_x, $source_y + $n + 1, $source_z)->getId() !== BlockLegacyIds::AIR){
+				if($cane_block->getTypeId() !== BlockTypeIds::AIR && $world->getBlockAt($source_x, $source_y + $n + 1, $source_z)->getTypeId() !== BlockTypeIds::AIR){
 					return $n > 0;
 				}
 

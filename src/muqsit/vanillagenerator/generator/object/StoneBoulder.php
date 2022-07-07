@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -17,7 +17,7 @@ class StoneBoulder extends TerrainObject{
 
 	public static function init() : void{
 		self::$GROUND_TYPES = [];
-		foreach([BlockLegacyIds::GRASS, BlockLegacyIds::DIRT, BlockLegacyIds::STONE] as $block_id){
+		foreach([BlockTypeIds::GRASS, BlockTypeIds::DIRT, BlockTypeIds::STONE] as $block_id){
 			self::$GROUND_TYPES[$block_id] = $block_id;
 		}
 	}
@@ -27,18 +27,18 @@ class StoneBoulder extends TerrainObject{
 		while($source_y > 3){
 			--$source_y;
 			$block = $world->getBlockAt($source_x, $source_y, $source_z);
-			if($block->getId() === BlockLegacyIds::AIR){
+			if($block->getTypeId() === BlockTypeIds::AIR){
 				continue;
 			}
 
-			if(array_key_exists($block->getId(), self::$GROUND_TYPES)){
+			if(array_key_exists($block->getTypeId(), self::$GROUND_TYPES)){
 				$ground_reached = true;
 				++$source_y;
 				break;
 			}
 		}
 
-		if(!$ground_reached || $world->getBlockAt($source_x, $source_y, $source_z)->getId() !== BlockLegacyIds::AIR){
+		if(!$ground_reached || $world->getBlockAt($source_x, $source_y, $source_z)->getTypeId() !== BlockTypeIds::AIR){
 			return false;
 		}
 

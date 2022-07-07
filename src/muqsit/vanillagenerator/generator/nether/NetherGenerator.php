@@ -128,8 +128,8 @@ class NetherGenerator extends VanillaGenerator{
 	private function generateRawTerrain(ChunkManager $world, int $chunk_x, int $chunk_z) : void{
 		$density = $this->generateTerrainDensity($chunk_x << 2, $chunk_z << 2);
 
-		$nether_rack = VanillaBlocks::NETHERRACK()->getFullId();
-		$still_lava = VanillaBlocks::LAVA()->getStillForm()->getFullId();
+		$nether_rack = VanillaBlocks::NETHERRACK()->getStateId();
+		$still_lava = VanillaBlocks::LAVA()->getStillForm()->getStateId();
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunk_x, $chunk_z);
@@ -261,11 +261,11 @@ class NetherGenerator extends VanillaGenerator{
 		$world_height = $this->getMaxY();
 		$world_height_m1 = $world_height - 1;
 
-		$block_bedrock = VanillaBlocks::BEDROCK()->getFullId();
-		$block_air = VanillaBlocks::AIR()->getFullId();
-		$block_nether_rack = VanillaBlocks::NETHERRACK()->getFullId();
-		$block_gravel = VanillaBlocks::GRAVEL()->getFullId();
-		$block_soul_sand = VanillaBlocks::SOUL_SAND()->getFullId();
+		$block_bedrock = VanillaBlocks::BEDROCK()->getStateId();
+		$block_air = VanillaBlocks::AIR()->getStateId();
+		$block_nether_rack = VanillaBlocks::NETHERRACK()->getStateId();
+		$block_gravel = VanillaBlocks::GRAVEL()->getStateId();
+		$block_soul_sand = VanillaBlocks::SOUL_SAND()->getStateId();
 
 		$top_mat = $block_nether_rack;
 		$ground_mat = $block_nether_rack;
