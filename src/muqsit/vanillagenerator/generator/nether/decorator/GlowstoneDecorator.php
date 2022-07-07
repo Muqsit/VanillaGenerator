@@ -17,7 +17,6 @@ class GlowstoneDecorator extends Decorator{
 
 	private const SIDES = [Facing::EAST, Facing::WEST, Facing::DOWN, Facing::UP, Facing::SOUTH, Facing::NORTH];
 
-	/** @var bool */
 	private bool $variable_amount;
 
 	public function __construct(bool $variable_amount = false){

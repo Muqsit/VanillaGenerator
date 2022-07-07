@@ -41,7 +41,6 @@ class ForestPopulator extends BiomePopulator{
 		];
 	}
 
-	/** @var int */
 	protected int $double_plant_lowering_amount = 3;
 
 	protected function initPopulators() : void{

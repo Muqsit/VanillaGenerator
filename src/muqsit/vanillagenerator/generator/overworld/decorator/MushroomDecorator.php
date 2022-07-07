@@ -14,13 +14,8 @@ use pocketmine\world\format\Chunk;
 
 class MushroomDecorator extends Decorator{
 
-	/** @var Block */
 	private Block $type;
-
-	/** @var bool */
 	private bool $fixed_height_range = false;
-
-	/** @var float */
 	private float $density = 0.0;
 
 	/**

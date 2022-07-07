@@ -14,13 +14,8 @@ use pocketmine\world\format\Chunk;
 
 class LakeDecorator extends Decorator{
 
-	/** @var Block */
 	private Block $type;
-
-	/** @var int */
 	private int $rarity;
-
-	/** @var int */
 	private int $base_offset;
 
 	/**

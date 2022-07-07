@@ -13,7 +13,6 @@ use pocketmine\world\format\Chunk;
 
 class TallGrassDecorator extends Decorator{
 
-	/** @var float */
 	private float $fern_density = 0.0;
 
 	final public function setFernDensity(float $fern_density) : void{

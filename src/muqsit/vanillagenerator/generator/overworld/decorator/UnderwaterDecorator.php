@@ -14,13 +14,8 @@ use pocketmine\world\format\Chunk;
 
 class UnderwaterDecorator extends Decorator{
 
-	/** @var Block */
 	private Block $type;
-
-	/** @var int */
 	private int $horiz_radius;
-
-	/** @var int */
 	private int $vert_radius;
 
 	/** @var int[] */

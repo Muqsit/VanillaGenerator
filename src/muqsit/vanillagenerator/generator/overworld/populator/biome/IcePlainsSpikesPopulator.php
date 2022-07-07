@@ -12,7 +12,6 @@ use pocketmine\world\format\Chunk;
 
 class IcePlainsSpikesPopulator extends IcePlainsPopulator{
 
-	/** @var IceDecorator */
 	protected IceDecorator $ice_decorator;
 
 	public function __construct(){

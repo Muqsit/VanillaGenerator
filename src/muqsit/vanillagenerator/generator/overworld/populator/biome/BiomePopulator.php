@@ -53,55 +53,22 @@ class BiomePopulator implements Populator{
 		];
 	}
 
-	/** @var LakeDecorator */
 	protected LakeDecorator $water_lake_decorator;
-
-	/** @var LakeDecorator */
 	protected LakeDecorator $lava_lake_decorator;
-
-	/** @var OrePopulator */
 	protected OrePopulator $ore_populator;
-
-	/** @var UnderwaterDecorator */
 	protected UnderwaterDecorator $sand_patch_decorator;
-
-	/** @var UnderwaterDecorator */
 	protected UnderwaterDecorator $clay_patch_decorator;
-
-	/** @var UnderwaterDecorator */
 	protected UnderwaterDecorator $gravel_patch_decorator;
-
-	/** @var DoublePlantDecorator */
 	protected DoublePlantDecorator $double_plant_decorator;
-
-	/** @var TreeDecorator */
 	protected TreeDecorator $tree_decorator;
-
-	/** @var FlowerDecorator */
 	protected FlowerDecorator $flower_decorator;
-
-	/** @var TallGrassDecorator */
 	protected TallGrassDecorator $tall_grass_decorator;
-
-	/** @var DeadBushDecorator */
 	protected DeadBushDecorator $dead_bush_decorator;
-
-	/** @var MushroomDecorator */
 	protected MushroomDecorator $brown_mushroom_decorator;
-
-	/** @var MushroomDecorator */
 	protected MushroomDecorator $red_mushroom_decorator;
-
-	/** @var SugarCaneDecorator */
 	protected SugarCaneDecorator $sugar_cane_decorator;
-
-	/** @var PumpkinDecorator */
 	protected PumpkinDecorator $pumpkin_decorator;
-
-	/** @var CactusDecorator */
 	protected CactusDecorator $cactus_decorator;
-
-	/** @var SurfaceCaveDecorator */
 	protected SurfaceCaveDecorator $surface_cave_decorator;
 
 	/** @var Populator[] */
