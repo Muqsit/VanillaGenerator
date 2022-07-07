@@ -7,47 +7,31 @@ namespace muqsit\vanillagenerator\generator\utils;
 use muqsit\vanillagenerator\generator\noise\bukkit\OctaveGenerator;
 
 /**
- * @phpstan-template T of OctaveGenerator
- * @phpstan-template U of OctaveGenerator
- * @phpstan-template V of OctaveGenerator
- * @phpstan-template W of OctaveGenerator
- * @phpstan-template X of OctaveGenerator
- * @phpstan-template Y of OctaveGenerator
+ * @template T of OctaveGenerator
+ * @template U of OctaveGenerator
+ * @template V of OctaveGenerator
+ * @template W of OctaveGenerator
+ * @template X of OctaveGenerator
+ * @template Y of OctaveGenerator
  *
- * @phpstan-extends WorldOctaves<T, U, V, W>
+ * @extends WorldOctaves<T, U, V, W>
  */
 class NetherWorldOctaves extends WorldOctaves{
 
-	/**
-	 * @var OctaveGenerator
-	 *
-	 * @phpstan-var X
-	 */
+	/** @var X */
 	public OctaveGenerator $soul_sand;
 
-	/**
-	 * @var OctaveGenerator
-	 *
-	 * @phpstan-var Y
-	 */
+	/** @var Y */
 	public OctaveGenerator $gravel;
 
 	/**
-	 * @param OctaveGenerator $height
-	 * @param OctaveGenerator $roughness
-	 * @param OctaveGenerator $roughness_2
-	 * @param OctaveGenerator $detail
-	 * @param OctaveGenerator $surface
-	 * @param OctaveGenerator $soul_sand
-	 * @param OctaveGenerator $gravel
-	 *
-	 * @phpstan-param T $height
-	 * @phpstan-param U $roughness
-	 * @phpstan-param U $roughness_2
-	 * @phpstan-param V $detail
-	 * @phpstan-param W $surface
-	 * @phpstan-param X $soul_sand
-	 * @phpstan-param Y $gravel
+	 * @param T $height
+	 * @param U $roughness
+	 * @param U $roughness_2
+	 * @param V $detail
+	 * @param W $surface
+	 * @param X $soul_sand
+	 * @param Y $gravel
 	 */
 	public function __construct(
 		OctaveGenerator $height,

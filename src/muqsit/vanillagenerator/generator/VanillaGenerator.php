@@ -15,11 +15,11 @@ use pocketmine\world\generator\Generator;
 use pocketmine\world\World;
 
 /**
- * @phpstan-template T of WorldOctaves
+ * @template T of WorldOctaves
  */
 abstract class VanillaGenerator extends Generator{
 
-	/** @phpstan-var T */
+	/** @var T */
 	private ?WorldOctaves $octave_cache = null;
 
 	/** @var Populator[] */
@@ -59,9 +59,7 @@ abstract class VanillaGenerator extends Generator{
 	}
 
 	/**
-	 * @return WorldOctaves
-	 *
-	 * @phpstan-return T
+	 * @return T
 	 */
 	abstract protected function createWorldOctaves() : WorldOctaves;
 
@@ -78,9 +76,7 @@ abstract class VanillaGenerator extends Generator{
 	abstract protected function generateChunkData(ChunkManager $world, int $chunk_x, int $chunk_z, VanillaBiomeGrid $biomes) : void;
 
 	/**
-	 * @return WorldOctaves
-	 *
-	 * @phpstan-return T
+	 * @return T
 	 */
 	final protected function getWorldOctaves() : WorldOctaves{
 		return $this->octave_cache ??= $this->createWorldOctaves();

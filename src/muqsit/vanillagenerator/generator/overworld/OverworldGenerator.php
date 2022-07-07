@@ -33,7 +33,7 @@ use pocketmine\world\format\Chunk;
 use function array_key_exists;
 
 /**
- * @phpstan-extends VanillaGenerator<WorldOctaves<PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, SimplexOctaveGenerator>>
+ * @extends VanillaGenerator<WorldOctaves<PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, SimplexOctaveGenerator>>
  */
 class OverworldGenerator extends VanillaGenerator{
 
