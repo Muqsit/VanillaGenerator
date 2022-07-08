@@ -75,13 +75,11 @@ class PlainsPopulator extends BiomePopulator{
 			}
 		}
 
-		if($this->noise_gen->noise($source_x + 8, $source_z + 8, 0, 0.5, 2.0, false) < -0.8){
-			$flower = self::$PLAINS_TULIPS[$random->nextBoundedInt(count(self::$PLAINS_TULIPS))];
-		}elseif($random->nextBoundedInt(3) > 0){
-			$flower = self::$PLAINS_FLOWERS[$random->nextBoundedInt(count(self::$PLAINS_FLOWERS))];
-		}else{
-			$flower = VanillaBlocks::DANDELION();
-		}
+		$flower = match(true){
+			$this->noise_gen->noise($source_x + 8, $source_z + 8, 0, 0.5, 2.0, false) < -0.8 => self::$PLAINS_TULIPS[$random->nextBoundedInt(count(self::$PLAINS_TULIPS))],
+			$random->nextBoundedInt(3) > 0 => self::$PLAINS_FLOWERS[$random->nextBoundedInt(count(self::$PLAINS_FLOWERS))],
+			default => VanillaBlocks::DANDELION()
+		};
 
 		for($i = 0; $i < $flower_amount; ++$i){
 			$x = $random->nextBoundedInt(16);

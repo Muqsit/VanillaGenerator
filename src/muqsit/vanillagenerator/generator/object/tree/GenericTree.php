@@ -118,12 +118,11 @@ class GenericTree extends TerrainObject{
 	public function canPlace(int $base_x, int $base_y, int $base_z, ChunkManager $world) : bool{
 		for($y = $base_y; $y <= $base_y + 1 + $this->height; ++$y){
 			// Space requirement
-			$radius = 1; // default radius if above first block
-			if($y === $base_y){
-				$radius = 0; // radius at source block y is 0 (only trunk)
-			}elseif($y >= $base_y + 1 + $this->height - 2){
-				$radius = 2; // max radius starting at leaves bottom
-			}
+			$radius = match(true){
+				$y === $base_y => 0, // radius at source block y is 0 (only trunk)
+				$y >= $base_y + 1 + $this->height - 2 => 2, // max radius starting at leaves bottom
+				default => 1 // default radius if above first block
+			};
 			// check for block collision on horizontal slices
 			$height = $world->getMaxY();
 			for($x = $base_x - $radius; $x <= $base_x + $radius; ++$x){

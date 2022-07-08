@@ -36,12 +36,11 @@ class MegaJungleTree extends GenericTree{
 	public function canPlace(int $base_x, int $base_y, int $base_z, ChunkManager $world) : bool{
 		for($y = $base_y; $y <= $base_y + 1 + $this->height; ++$y){
 			// Space requirement
-			$radius = 2; // default radius if above first block
-			if($y === $base_y){
-				$radius = 1; // radius at source block y is 1 (only trunk)
-			}elseif($y >= $base_y + 1 + $this->height - 2){
-				$radius = 2; // max radius starting at leaves bottom
-			}
+			$radius = match(true){
+				$y === $base_y => 1, // radius at source block y is 1 (only trunk)
+				$y >= $base_y + 1 + $this->height - 2 => 2, // max radius starting at leaves bottom
+				default => 2 // default radius if above first block
+			}; // TODO: check whether this is correct - 2nd branch and default branch have same values
 			// check for block collision on horizontal slices
 			for($x = $base_x - $radius; $x <= $base_x + $radius; ++$x){
 				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){

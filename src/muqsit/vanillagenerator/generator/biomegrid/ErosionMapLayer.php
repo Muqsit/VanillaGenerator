@@ -40,18 +40,12 @@ class ErosionMapLayer extends MapLayer{
 				$center_val = $values[$j + 1 + ($i + 1) * $grid_size_x];
 
 				$this->setCoordsSeed($x + $j, $z + $i);
-				if($center_val !== 0 && ($upper_left_val === 0 || $upper_right_val === 0 || $lower_left_val === 0 || $lower_right_val === 0)){
-					$final_values[$j + $i * $size_x] = $this->nextInt(5) === 0 ? 0 : $center_val;
-				}elseif($center_val === 0 && ($upper_left_val !== 0 || $upper_right_val !== 0
-						|| $lower_left_val !== 0 || $lower_right_val !== 0)){
-					if($this->nextInt(3) === 0){
-						$final_values[$j + $i * $size_x] = $upper_left_val;
-					}else{
-						$final_values[$j + $i * $size_x] = 0;
-					}
-				}else{
-					$final_values[$j + $i * $size_x] = $center_val;
-				}
+
+				$final_values[$j + $i * $size_x] = match(true){
+					$center_val !== 0 && ($upper_left_val === 0 || $upper_right_val === 0 || $lower_left_val === 0 || $lower_right_val === 0) => $this->nextInt(5) === 0 ? 0 : $center_val,
+					$center_val === 0 && ($upper_left_val !== 0 || $upper_right_val !== 0 || $lower_left_val !== 0 || $lower_right_val !== 0) => $this->nextInt(3) === 0 ? $upper_left_val : 0,
+					default => $center_val
+				};
 			}
 		}
 
