@@ -83,7 +83,7 @@ class BrownMushroomTree extends GenericTree{
 
 		$type_id = $this->getType()->getTypeId();
 		// generate the stem
-		$stem = $this->getType()->setMushroomBlockType(MushroomBlockType::ALL_CAP());
+		$stem = VanillaBlocks::MUSHROOM_STEM();
 		for($y = 0; $y < $this->height; ++$y){
 			$this->transaction->addBlockAt($source_x, $source_y + $y, $source_z, $stem); // stem texture
 		}
