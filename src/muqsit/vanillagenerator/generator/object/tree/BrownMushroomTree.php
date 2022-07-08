@@ -81,13 +81,13 @@ class BrownMushroomTree extends GenericTree{
 			return false;
 		}
 
-		$type_id = $this->getType()->getTypeId();
 		// generate the stem
 		$stem = VanillaBlocks::MUSHROOM_STEM();
 		for($y = 0; $y < $this->height; ++$y){
-			$this->transaction->addBlockAt($source_x, $source_y + $y, $source_z, $stem); // stem texture
+			$this->transaction->addBlockAt($source_x, $source_y + $y, $source_z, $stem);
 		}
 
+		$type_id = $this->getType()->getTypeId();
 		// get the mushroom's cap Y start
 		$cap_y = $source_y + $this->height; // for brown mushroom it starts on top directly
 		if($type_id === BlockTypeIds::RED_MUSHROOM_BLOCK){
