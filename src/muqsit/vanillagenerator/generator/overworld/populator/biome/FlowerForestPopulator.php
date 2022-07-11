@@ -52,8 +52,8 @@ class FlowerForestPopulator extends ForestPopulator{
 	public function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
 
-		$source_x = $chunk_x << 4;
-		$source_z = $chunk_z << 4;
+		$source_x = $chunk_x << Chunk::COORD_BIT_SIZE;
+		$source_z = $chunk_z << Chunk::COORD_BIT_SIZE;
 
 		for($i = 0; $i < 100; ++$i){
 			$x = $random->nextBoundedInt(16);

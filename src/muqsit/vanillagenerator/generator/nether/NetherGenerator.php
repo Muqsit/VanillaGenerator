@@ -68,8 +68,8 @@ class NetherGenerator extends VanillaGenerator{
 
 	protected function generateChunkData(ChunkManager $world, int $chunk_x, int $chunk_z, VanillaBiomeGrid $biomes) : void{
 		$this->generateRawTerrain($world, $chunk_x, $chunk_z);
-		$cx = $chunk_x << 4;
-		$cz = $chunk_z << 4;
+		$cx = $chunk_x << Chunk::COORD_BIT_SIZE;
+		$cz = $chunk_z << Chunk::COORD_BIT_SIZE;
 
 		$octaves = $this->getWorldOctaves();
 
@@ -83,7 +83,7 @@ class NetherGenerator extends VanillaGenerator{
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){
 				$chunk->setBiomeId($x, $z, $id = $biomes->getBiome($x, $z));
-				$this->generateTerrainColumn($world, $cx + $x, $cz + $z, $surface_noise[$x | $z << 4], $soul_sand_noise[$x | $z << 4], $grave_noise[$x | $z << 4]);
+				$this->generateTerrainColumn($world, $cx + $x, $cz + $z, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE], $soul_sand_noise[$x | $z << Chunk::COORD_BIT_SIZE], $grave_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 			}
 		}
 	}
@@ -151,7 +151,7 @@ class NetherGenerator extends VanillaGenerator{
 
 						$y_pos = $l + ($k << 3);
 						$y_block_pos = $y_pos & 0xf;
-						$sub_chunk = $chunk->getSubChunk($y_pos >> 4);
+						$sub_chunk = $chunk->getSubChunk($y_pos >> Chunk::COORD_BIT_SIZE);
 
                         for ($m = 0; $m < 4; ++$m) {
 							$dens = $d9;
@@ -270,9 +270,9 @@ class NetherGenerator extends VanillaGenerator{
 		$ground_mat = $block_nether_rack;
 
 		/** @var Chunk $chunk */
-		$chunk = $world->getChunk($x >> 4, $z >> 4);
-		$chunk_block_x = $x & 0x0f;
-		$chunk_block_z = $z & 0x0f;
+		$chunk = $world->getChunk($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE);
+		$chunk_block_x = $x & Chunk::COORD_MASK;
+		$chunk_block_z = $z & Chunk::COORD_MASK;
 
 		for($y = $world_height_m1; $y >= 0; --$y){
 			if($y <= $this->random->nextBoundedInt($this->bedrock_roughness) || $y >= $world_height_m1 - $this->random->nextBoundedInt($this->bedrock_roughness)){

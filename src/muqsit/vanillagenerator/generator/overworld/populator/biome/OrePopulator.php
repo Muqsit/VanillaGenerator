@@ -41,8 +41,8 @@ class OrePopulator implements Populator{
 	}
 
 	public function populate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
-		$cx = $chunk_x << 4;
-		$cz = $chunk_z << 4;
+		$cx = $chunk_x << Chunk::COORD_BIT_SIZE;
+		$cz = $chunk_z << Chunk::COORD_BIT_SIZE;
 
 		foreach($this->ores as $ore_type_holder){
 			for($n = 0; $n < $ore_type_holder->value; ++$n){

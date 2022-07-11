@@ -31,8 +31,8 @@ class MushroomDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$height = $world->getMaxY();
 
-		$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
-		$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
+		$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
+		$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 		$source_y = $random->nextBoundedInt($height);
 
 		for($i = 0; $i < 64; ++$i){

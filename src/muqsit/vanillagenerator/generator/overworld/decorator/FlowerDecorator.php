@@ -48,12 +48,12 @@ class FlowerDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
-		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f) + 32);
+		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & Chunk::COORD_MASK, $z & Chunk::COORD_MASK) + 32);
 
 		// the flower can change on each decoration pass
 		$flower = self::getRandomFlower($random, $this->flowers);
 		if($flower !== null){
-			(new Flower($flower))->generate($world, $random, ($chunk_x << 4) + $x, $source_y, ($chunk_z << 4) + $z);
+			(new Flower($flower))->generate($world, $random, ($chunk_x << Chunk::COORD_BIT_SIZE) + $x, $source_y, ($chunk_z << Chunk::COORD_BIT_SIZE) + $z);
 		}
 	}
 }

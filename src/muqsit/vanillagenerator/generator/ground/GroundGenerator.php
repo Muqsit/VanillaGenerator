@@ -73,9 +73,9 @@ class GroundGenerator{
 		$ice = VanillaBlocks::ICE()->getStateId();
 
 		/** @var Chunk $chunk */
-		$chunk = $world->getChunk($x >> 4, $z >> 4);
-		$block_x = $x & 0x0f;
-		$block_z = $z & 0x0f;
+		$chunk = $world->getChunk($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE);
+		$block_x = $x & Chunk::COORD_MASK;
+		$block_z = $z & Chunk::COORD_MASK;
 
 		for($y = 255; $y >= 0; --$y){
 			if($y <= $random->nextBoundedInt($this->bedrock_roughness)){

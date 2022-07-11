@@ -28,8 +28,8 @@ class GlowstoneDecorator extends Decorator{
 		$source_y_margin = 8 * ($height >> 7);
 
 		for($i = 0; $i < $amount; ++$i){
-			$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
-			$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
+			$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
+			$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 			$source_y = 4 + $random->nextBoundedInt($height - $source_y_margin);
 
 			$block = $world->getBlockAt($source_x, $source_y, $source_z);

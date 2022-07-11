@@ -34,6 +34,6 @@ class TallGrassDecorator extends Decorator{
 		(new TallGrass($this->fern_density > 0 && $random->nextFloat() < $this->fern_density ?
 			VanillaBlocks::FERN() :
 			VanillaBlocks::TALL_GRASS()
-		))->generate($world, $random, ($chunk_x << 4) + $x, $source_y, ($chunk_z << 4) + $z);
+		))->generate($world, $random, ($chunk_x << Chunk::COORD_BIT_SIZE) + $x, $source_y, ($chunk_z << Chunk::COORD_BIT_SIZE) + $z);
 	}
 }

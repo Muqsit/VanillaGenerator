@@ -135,8 +135,8 @@ class OverworldGenerator extends VanillaGenerator{
 	protected function generateChunkData(ChunkManager $world, int $chunk_x, int $chunk_z, VanillaBiomeGrid $grid) : void{
 		$this->generateRawTerrain($world, $chunk_x, $chunk_z);
 
-		$cx = $chunk_x << 4;
-		$cz = $chunk_z << 4;
+		$cx = $chunk_x << Chunk::COORD_BIT_SIZE;
+		$cz = $chunk_z << Chunk::COORD_BIT_SIZE;
 
 		/** @var SimplexOctaveGenerator $octave_generator */
 		$octave_generator = $this->getWorldOctaves()->surface;
@@ -152,9 +152,9 @@ class OverworldGenerator extends VanillaGenerator{
 			for($z = 0; $z < $size_z; ++$z){
 				$chunk->setBiomeId($x, $z, $id = $grid->getBiome($x, $z));
 				if($id !== null && array_key_exists($id, self::$GROUND_MAP)){
-					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << 4]);
+					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}else{
-					$this->ground_gen->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << 4]);
+					$this->ground_gen->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}
 			}
 		}
@@ -228,7 +228,7 @@ class OverworldGenerator extends VanillaGenerator{
 
 						$y_pos = $l + ($k << 3);
 						$y_block_pos = $y_pos & 0xf;
-						$sub_chunk = $chunk->getSubChunk($y_pos >> 4);
+						$sub_chunk = $chunk->getSubChunk($y_pos >> Chunk::COORD_BIT_SIZE);
 
 						for($m = 0; $m < 4; ++$m){
 							$dens = $d9;

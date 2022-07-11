@@ -51,8 +51,8 @@ class JunglePopulator extends BiomePopulator{
 	}
 
 	protected function populateOnGround(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
-		$source_x = $chunk_x << 4;
-		$source_z = $chunk_z << 4;
+		$source_x = $chunk_x << Chunk::COORD_BIT_SIZE;
+		$source_z = $chunk_z << Chunk::COORD_BIT_SIZE;
 
 		for($i = 0; $i < 7; ++$i){
 			$x = $random->nextBoundedInt(16);

@@ -71,7 +71,7 @@ class TreeDecorator extends Decorator{
 			}catch(Exception $ex){
 				$tree = new GenericTree($random, $txn);
 			}
-			if($tree->generate($world, $random, ($chunk_x << 4) + $x, $source_y, ($chunk_z << 4) + $z)){
+			if($tree->generate($world, $random, ($chunk_x << Chunk::COORD_BIT_SIZE) + $x, $source_y, ($chunk_z << Chunk::COORD_BIT_SIZE) + $z)){
 				$txn->apply();
 			}
 		}

@@ -74,9 +74,9 @@ class SwampTree extends CocoaTree{
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		/** @var Chunk $chunk */
-		$chunk = $world->getChunk($source_x >> 4, $source_z >> 4);
-		$chunk_block_x = $source_x & 0x0f;
-		$chunk_block_z = $source_z & 0x0f;
+		$chunk = $world->getChunk($source_x >> Chunk::COORD_BIT_SIZE, $source_z >> Chunk::COORD_BIT_SIZE);
+		$chunk_block_x = $source_x & Chunk::COORD_MASK;
+		$chunk_block_z = $source_z & Chunk::COORD_MASK;
 		$block_factory = BlockFactory::getInstance();
 		while($block_factory->fromStateId($chunk->getFullBlock($chunk_block_x, $source_y, $chunk_block_z))->getTypeId() === BlockTypeIds::WATER){
 			--$source_y;

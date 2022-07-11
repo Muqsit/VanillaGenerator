@@ -19,8 +19,8 @@ class SurfaceCaveDecorator extends Decorator{
 			return;
 		}
 
-		$cx = $chunk_x << 4;
-		$cz = $chunk_z << 4;
+		$cx = $chunk_x << Chunk::COORD_BIT_SIZE;
+		$cz = $chunk_z << Chunk::COORD_BIT_SIZE;
 
 		$start_cx = $random->nextBoundedInt(16);
 		$start_cz = $random->nextBoundedInt(16);

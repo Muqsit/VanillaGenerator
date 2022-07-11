@@ -20,8 +20,8 @@ class FireDecorator extends Decorator{
 		$source_y_margin = 8 * ($height >> 7);
 
 		for($j = 0; $j < $amount; ++$j){
-			$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
-			$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
+			$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
+			$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 			$source_y = 4 + $random->nextBoundedInt($source_y_margin);
 
 			for($i = 0; $i < 64; ++$i){

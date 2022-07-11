@@ -22,8 +22,8 @@ class LakeDecorator extends Decorator{
 
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		if($random->nextBoundedInt($this->rarity) === 0){
-			$source_x = ($chunk_x << 4) + $random->nextBoundedInt(16);
-			$source_z = ($chunk_z << 4) + $random->nextBoundedInt(16);
+			$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
+			$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 			$source_y = $random->nextBoundedInt($world->getMaxY() - $this->base_offset) + $this->base_offset;
 			if($this->type->getTypeId() === BlockTypeIds::LAVA && ($source_y >= 64 || $random->nextBoundedInt(10) > 0)){
 				return;
