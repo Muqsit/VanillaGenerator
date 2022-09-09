@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator\generator\ground;
 
 use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
 use pocketmine\block\BlockTypeIds;
+use pocketmine\block\utils\DirtType;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -80,7 +81,7 @@ class MesaGroundGenerator extends GroundGenerator{
 		$ground_set = false;
 
 		$grass = VanillaBlocks::GRASS();
-		$coarse_dirt = VanillaBlocks::DIRT()->setCoarse(true);
+		$coarse_dirt = VanillaBlocks::DIRT()->setDirtType(DirtType::COARSE());
 
 		for($y = 255; $y >= 0; --$y){
 			if($y < (int) $bryce_canyon_height && $world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::AIR){

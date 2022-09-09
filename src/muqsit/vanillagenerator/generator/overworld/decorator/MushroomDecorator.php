@@ -8,6 +8,7 @@ use muqsit\vanillagenerator\generator\Decorator;
 use pocketmine\block\Block;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Dirt;
+use pocketmine\block\utils\DirtType;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -57,7 +58,7 @@ class MushroomDecorator extends Decorator{
 							break;
 						case BlockTypeIds::DIRT:
 							assert($below_below instanceof Dirt);
-							if(!$below_below->isCoarse()){
+							if(!$below_below->getDirtType()->equals(DirtType::COARSE())){
 								$can_place_shroom = $block->getLightLevel() < 13;
 							}else{
 								$can_place_shroom = false;
