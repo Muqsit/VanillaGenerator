@@ -9,6 +9,7 @@ use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use function array_key_exists;
+use function intdiv;
 
 class IceSpike extends TerrainObject{
 
@@ -27,7 +28,7 @@ class IceSpike extends TerrainObject{
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
 		$tip_height = $random->nextBoundedInt(4) + 7;
-		$tip_radius = (int) ($tip_height / 4 + $random->nextBoundedInt(2));
+		$tip_radius = intdiv($tip_height, 4) + $random->nextBoundedInt(2);
 		$tip_offset = $random->nextBoundedInt(4);
 		if($tip_radius > 1 && $random->nextBoundedInt(60) === 0){
 			// sometimes generate a giant spike

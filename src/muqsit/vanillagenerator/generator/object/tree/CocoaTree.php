@@ -10,6 +10,7 @@ use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use function intdiv;
 
 class CocoaTree extends JungleTree{
 
@@ -39,23 +40,21 @@ class CocoaTree extends JungleTree{
 	protected function addVinesOnLeaves(int $base_x, int $base_y, int $base_z, ChunkManager $world, Random $random) : void{
 		for($y = $base_y - 3 + $this->height; $y <= $base_y + $this->height; ++$y){
 			$ny = $y - ($base_y + $this->height);
-			$radius = 2 - $ny / 2;
+			$radius = 2 - intdiv($ny, 2);
 			for($x = $base_x - $radius; $x <= $base_x + $radius; ++$x){
-				$ax = (int) $x;
 				for($z = $base_z - $radius; $z <= $base_z + $radius; ++$z){
-					$az = (int) $z;
-					if($world->getBlockAt($ax, $y, $az)->getId() === BlockLegacyIds::LEAVES){
-						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($ax - 1, $y, $az)->getId() === BlockLegacyIds::AIR){
-							$this->addHangingVine($ax - 1, $y, $az, Facing::EAST, $world);
+					if($world->getBlockAt($x, $y, $z)->getId() === BlockLegacyIds::LEAVES){
+						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($x - 1, $y, $z)->getId() === BlockLegacyIds::AIR){
+							$this->addHangingVine($x - 1, $y, $z, Facing::EAST, $world);
 						}
-						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($ax + 1, $y, $az)->getId() === BlockLegacyIds::AIR){
-							$this->addHangingVine($ax + 1, $y, $az, Facing::WEST, $world);
+						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($x + 1, $y, $z)->getId() === BlockLegacyIds::AIR){
+							$this->addHangingVine($x + 1, $y, $z, Facing::WEST, $world);
 						}
-						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($ax, $y, $az - 1)->getId() === BlockLegacyIds::AIR){
-							$this->addHangingVine($ax, $y, $az - 1, Facing::SOUTH, $world);
+						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($x, $y, $z - 1)->getId() === BlockLegacyIds::AIR){
+							$this->addHangingVine($x, $y, $z - 1, Facing::SOUTH, $world);
 						}
-						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($ax, $y, $az + 1)->getId() === BlockLegacyIds::AIR){
-							$this->addHangingVine($ax, $y, $az + 1, Facing::NORTH, $world);
+						if($random->nextBoundedInt(4) === 0 && $world->getBlockAt($x, $y, $z + 1)->getId() === BlockLegacyIds::AIR){
+							$this->addHangingVine($x, $y, $z + 1, Facing::NORTH, $world);
 						}
 					}
 				}
