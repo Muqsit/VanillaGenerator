@@ -14,6 +14,7 @@ use pocketmine\world\BlockTransaction;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\World;
 use function array_key_exists;
+use function intdiv;
 
 class MegaJungleTree extends GenericTree{
 
@@ -70,7 +71,8 @@ class MegaJungleTree extends GenericTree{
 
 		// generates the branches
 		$branch_height = $this->height - 2 - $random->nextBoundedInt(4);
-		while($branch_height > $this->height / 2){ // branching start at least at middle height
+		$height_half = intdiv($this->height, 2);
+		while($branch_height > $height_half){ // branching start at least at middle height
 			$x = 0;
 			$z = 0;
 			// generates a branch
@@ -79,7 +81,7 @@ class MegaJungleTree extends GenericTree{
 				// branches are always longer when facing south or east (positive X or positive Z)
 				$x = (int) (cos($d) * $i + 1.5);
 				$z = (int) (sin($d) * $i + 1.5);
-				$this->transaction->addBlockAt($source_x + $x, (int) ($source_y + $branch_height - 3 + $i / 2), $source_z + $z, $this->log_type);
+				$this->transaction->addBlockAt($source_x + $x, $source_y + $branch_height - 3 + intdiv($i, 2), $source_z + $z, $this->log_type);
 			}
 			// generates leaves for this branch
 			for($y = $branch_height - ($random->nextBoundedInt(2) + 1); $y <= $branch_height; ++$y){

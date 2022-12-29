@@ -15,6 +15,7 @@ use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\World;
 use function array_key_exists;
+use function intdiv;
 
 class SwampTree extends CocoaTree{
 
@@ -90,7 +91,7 @@ class SwampTree extends CocoaTree{
 		// generate the leaves
 		for($y = $source_y + $this->height - 3; $y <= $source_y + $this->height; ++$y){
 			$n = $y - ($source_y + $this->height);
-			$radius = (int) (2 - $n / 2);
+			$radius = 2 - intdiv($n, 2);
 			for($x = $source_x - $radius; $x <= $source_x + $radius; ++$x){
 				for($z = $source_z - $radius; $z <= $source_z + $radius; ++$z){
 					if(
