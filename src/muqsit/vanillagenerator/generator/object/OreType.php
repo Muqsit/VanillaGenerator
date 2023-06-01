@@ -10,7 +10,7 @@ use pocketmine\utils\Random;
 
 class OreType{
 
-	/** @readonly */ public int $amount;
+	readonly public int $amount;
 
 	/**
 	 * Creates an ore type. If {@code min_y} and {@code max_y} are equal, then the height range is
@@ -24,11 +24,11 @@ class OreType{
 	 * @param int $target_type the block this can replace
 	 */
 	public function __construct(
-		/** @readonly */ public Block $type,
-		/** @readonly */ public int $min_y,
-		/** @readonly */ public int $max_y,
+		readonly public Block $type,
+		readonly public int $min_y,
+		readonly public int $max_y,
 		int $amount,
-		/** @readonly */ public int $target_type = BlockTypeIds::STONE
+		readonly public int $target_type = BlockTypeIds::STONE
 	){
 		$this->amount = $amount + 1;
 	}

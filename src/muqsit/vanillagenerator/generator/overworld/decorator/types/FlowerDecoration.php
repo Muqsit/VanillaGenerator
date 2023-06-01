@@ -9,7 +9,7 @@ use pocketmine\block\Block;
 final class FlowerDecoration{
 
 	public function __construct(
-		/** @readonly */ public Block $block,
-		/** @readonly */ public int $weight
+		readonly public Block $block,
+		readonly public int $weight
 	){}
 }

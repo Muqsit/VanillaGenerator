@@ -9,7 +9,7 @@ use pocketmine\block\DoublePlant;
 final class DoublePlantDecoration{
 
 	public function __construct(
-		/** @readonly */ public DoublePlant $block,
-		/** @readonly */ public int $weight
+		readonly public DoublePlant $block,
+		readonly public int $weight
 	){}
 }

@@ -13,7 +13,7 @@ final class TreeDecoration{
 	 * @param int $weight
 	 */
 	public function __construct(
-		/** @readonly */ public string $class,
-		/** @readonly */ public int $weight
+		readonly public string $class,
+		readonly public int $weight
 	){}
 }
