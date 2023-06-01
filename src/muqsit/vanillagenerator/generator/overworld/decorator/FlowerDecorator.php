@@ -22,15 +22,15 @@ class FlowerDecorator extends Decorator{
 	private static function getRandomFlower(Random $random, array $decorations) : ?Block{
 		$total_weight = 0;
 		foreach($decorations as $decoration){
-			$total_weight += $decoration->getWeight();
+			$total_weight += $decoration->weight;
 		}
 
 		if($total_weight > 0){
 			$weight = $random->nextBoundedInt($total_weight);
 			foreach($decorations as $decoration){
-				$weight -= $decoration->getWeight();
+				$weight -= $decoration->weight;
 				if($weight < 0){
-					return $decoration->getBlock();
+					return $decoration->block;
 				}
 			}
 		}

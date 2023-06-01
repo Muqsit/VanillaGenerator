@@ -109,11 +109,11 @@ final class BiomeClimateManager{
 	}
 
 	public static function getBiomeTemperature(int $biome) : float{
-		return self::get($biome)->getTemperature();
+		return self::get($biome)->temperature;
 	}
 
 	public static function getBiomeHumidity(int $biome) : float{
-		return self::get($biome)->getHumidity();
+		return self::get($biome)->humidity;
 	}
 
 	public static function isWet(int $biome) : bool{
@@ -125,15 +125,15 @@ final class BiomeClimateManager{
 	}
 
 	public static function isRainy(int $biome, int $x, int $y, int $z) : bool{
-		return self::get($biome)->isRainy() && !self::isCold($biome, $x, $y, $z);
+		return self::get($biome)->rainy && !self::isCold($biome, $x, $y, $z);
 	}
 
 	public static function isSnowy(int $biome, int $x, int $y, int $z) : bool{
-		return self::get($biome)->isRainy() && self::isCold($biome, $x, $y, $z);
+		return self::get($biome)->rainy && self::isCold($biome, $x, $y, $z);
 	}
 
 	private static function getVariatedTemperature(int $biome, int $x, int $y, int $z) : float{
-		$temp = self::get($biome)->getTemperature();
+		$temp = self::get($biome)->temperature;
 		if($y > 64){
 			$variation = self::$noise_gen->noise($x, $z, 0, 0.5, 2.0, false) * 4.0;
 			return $temp - ($variation + (float) ($y - 64)) * 0.05 / 30.0;

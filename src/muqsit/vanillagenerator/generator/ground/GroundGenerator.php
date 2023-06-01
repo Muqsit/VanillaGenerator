@@ -6,8 +6,8 @@ namespace muqsit\vanillagenerator\generator\ground;
 
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeClimateManager;
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockTypeIds;
+use pocketmine\block\RuntimeBlockStateRegistry;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\block\Water;
 use pocketmine\utils\Random;
@@ -64,7 +64,7 @@ class GroundGenerator{
 		$surface_height = max((int) ($surface_noise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
 		$deep = -1;
 
-		$block_factory = BlockFactory::getInstance();
+		$block_state_registry = RuntimeBlockStateRegistry::getInstance();
 		$air = VanillaBlocks::AIR()->getStateId();
 		$stone = VanillaBlocks::STONE()->getStateId();
 		$sandstone = VanillaBlocks::SANDSTONE()->getStateId();
@@ -79,9 +79,9 @@ class GroundGenerator{
 
 		for($y = 255; $y >= 0; --$y){
 			if($y <= $random->nextBoundedInt($this->bedrock_roughness)){
-				$chunk->setFullBlock($block_x, $y, $block_z, $bedrock);
+				$chunk->setBlockStateId($block_x, $y, $block_z, $bedrock);
 			}else{
-				$mat = $block_factory->fromStateId($chunk->getFullBlock($block_x, $y, $block_z));
+				$mat = $block_state_registry->fromStateId($chunk->getBlockStateId($block_x, $y, $block_z));
 				$mat_id = $mat->getTypeId();
 				if($mat_id === BlockTypeIds::AIR){
 					$deep = -1;
@@ -95,18 +95,18 @@ class GroundGenerator{
 
 						$deep = $surface_height;
 						if($y >= $sea_level - 2){
-							$chunk->setFullBlock($block_x, $y, $block_z, $top_mat);
+							$chunk->setBlockStateId($block_x, $y, $block_z, $top_mat);
 						}elseif($y < $sea_level - 8 - $surface_height){
 							$top_mat = $air;
 							$ground_mat = $stone;
 							$ground_mat_id = BlockTypeIds::STONE;
-							$chunk->setFullBlock($block_x, $y, $block_z, $gravel);
+							$chunk->setBlockStateId($block_x, $y, $block_z, $gravel);
 						}else{
-							$chunk->setFullBlock($block_x, $y, $block_z, $ground_mat);
+							$chunk->setBlockStateId($block_x, $y, $block_z, $ground_mat);
 						}
 					}elseif($deep > 0){
 						--$deep;
-						$chunk->setFullBlock($block_x, $y, $block_z, $ground_mat);
+						$chunk->setBlockStateId($block_x, $y, $block_z, $ground_mat);
 
 						if($deep === 0 && $ground_mat_id === BlockTypeIds::SAND){
 							$deep = $random->nextBoundedInt(4) + max(0, $y - $sea_level - 1);
@@ -115,7 +115,7 @@ class GroundGenerator{
 						}
 					}
 				}elseif($mat instanceof Water && $mat->isStill() && $y === $sea_level - 2 && BiomeClimateManager::isCold($biome, $chunk_x, $y, $chunk_z)){
-					$chunk->setFullBlock($block_x, $y, $block_z, $ice);
+					$chunk->setBlockStateId($block_x, $y, $block_z, $ice);
 				}
 			}
 		}

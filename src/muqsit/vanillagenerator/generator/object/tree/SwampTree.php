@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object\tree;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Leaves;
+use pocketmine\block\RuntimeBlockStateRegistry;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\BlockTransaction;
@@ -15,7 +15,6 @@ use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\World;
 use function array_key_exists;
-use function intdiv;
 
 class SwampTree extends CocoaTree{
 
@@ -78,8 +77,8 @@ class SwampTree extends CocoaTree{
 		$chunk = $world->getChunk($source_x >> Chunk::COORD_BIT_SIZE, $source_z >> Chunk::COORD_BIT_SIZE);
 		$chunk_block_x = $source_x & Chunk::COORD_MASK;
 		$chunk_block_z = $source_z & Chunk::COORD_MASK;
-		$block_factory = BlockFactory::getInstance();
-		while($block_factory->fromStateId($chunk->getFullBlock($chunk_block_x, $source_y, $chunk_block_z))->getTypeId() === BlockTypeIds::WATER){
+		$block_state_registry = RuntimeBlockStateRegistry::getInstance();
+		while($block_state_registry->fromStateId($chunk->getBlockStateId($chunk_block_x, $source_y, $chunk_block_z))->getTypeId() === BlockTypeIds::WATER){
 			--$source_y;
 		}
 
@@ -91,7 +90,7 @@ class SwampTree extends CocoaTree{
 		// generate the leaves
 		for($y = $source_y + $this->height - 3; $y <= $source_y + $this->height; ++$y){
 			$n = $y - ($source_y + $this->height);
-			$radius = 2 - intdiv($n, 2);
+			$radius = (int) (2 - $n / 2);
 			for($x = $source_x - $radius; $x <= $source_x + $radius; ++$x){
 				for($z = $source_z - $radius; $z <= $source_z + $radius; ++$z){
 					if(
@@ -109,7 +108,7 @@ class SwampTree extends CocoaTree{
 		// generate the trunk
 		for($y = 0; $y < $this->height; ++$y){
 			if($source_y + $y < $world_height){
-				$material = $block_factory->fromStateId($chunk->getFullBlock($chunk_block_x, $source_y + $y, $chunk_block_z));
+				$material = $block_state_registry->fromStateId($chunk->getBlockStateId($chunk_block_x, $source_y + $y, $chunk_block_z));
 				if(
 					$material->getTypeId() === BlockTypeIds::AIR ||
 					$material->getTypeId() === BlockTypeIds::WATER ||

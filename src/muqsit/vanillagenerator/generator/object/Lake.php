@@ -72,7 +72,7 @@ class Lake extends TerrainObject{
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($source_x >> Chunk::COORD_BIT_SIZE, $source_z >> Chunk::COORD_BIT_SIZE);
-		$biome = $chunk->getBiomeId(($source_x + 8 + (int) self::MAX_DIAMETER / 2) & Chunk::COORD_MASK, ($source_z + 8 + (int) self::MAX_DIAMETER / 2) & Chunk::COORD_MASK);
+		$biome = $chunk->getBiomeId(($source_x + 8 + (int) self::MAX_DIAMETER / 2) & Chunk::COORD_MASK, $source_y, ($source_z + 8 + (int) self::MAX_DIAMETER / 2) & Chunk::COORD_MASK);
 		$mycel_biome = array_key_exists($biome, self::$MYCEL_BIOMES);
 
 		$max_diameter = (int) self::MAX_DIAMETER;
@@ -101,7 +101,7 @@ class Lake extends TerrainObject{
 							$type = $block;
 						}
 					}elseif($y === (int) (self::MAX_HEIGHT / 2 - 1)){
-						if($type instanceof Water && $type->isStill() && BiomeClimateManager::isCold($chunk->getBiomeId($x & Chunk::COORD_MASK, $z & Chunk::COORD_MASK), $source_x + $x, $y, $source_z + $z)){
+						if($type instanceof Water && $type->isStill() && BiomeClimateManager::isCold($chunk->getBiomeId($x & Chunk::COORD_MASK, $y, $z & Chunk::COORD_MASK), $source_x + $x, $y, $source_z + $z)){
 							$type = VanillaBlocks::ICE();
 						}
 					}

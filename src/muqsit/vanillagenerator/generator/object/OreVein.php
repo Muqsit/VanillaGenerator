@@ -36,9 +36,9 @@ class OreVein extends TerrainObject{
 	 * @param OreType $oreType the ore type
 	 */
 	public function __construct(OreType $oreType){
-		$this->type = $oreType->getType();
-		$this->amount = $oreType->getAmount();
-		$this->target_type = $oreType->getTargetType();
+		$this->type = $oreType->type;
+		$this->amount = $oreType->amount;
+		$this->target_type = $oreType->target_type;
 	}
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{

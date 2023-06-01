@@ -72,7 +72,7 @@ class OverworldPopulator implements Populator{
 	}
 
 	public function populate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
-		$biome = $chunk->getBiomeId(8, 8);
+		$biome = $chunk->getBiomeId(8, 8, 8);
 		if(array_key_exists($biome, $this->biome_populators)){
 			$this->biome_populators[$biome]->populate($world, $random, $chunk_x, $chunk_z, $chunk);
 		}

@@ -23,7 +23,7 @@ class SimplexOctaveGenerator extends BaseOctaveGenerator{
 		return $result;
 	}
 
-	private float $w_scale = 1.0;
+	public float $w_scale = 1.0;
 
 	/**
 	 * Creates a simplex octave generator for the given {@link Random}
@@ -37,24 +37,6 @@ class SimplexOctaveGenerator extends BaseOctaveGenerator{
 
 	public function setScale(float $scale) : void{
 		parent::setScale($scale);
-		$this->setWScale($scale);
-	}
-
-	/**
-	 * Gets the scale used for each W-coordinates passed
-	 *
-	 * @return float W scale
-	 */
-	public function getWScale() : float{
-		return $this->w_scale;
-	}
-
-	/**
-	 * Sets the scale used for each W-coordinates passed
-	 *
-	 * @param float $scale New W scale
-	 */
-	public function setWScale(float $scale) : void{
 		$this->w_scale = $scale;
 	}
 

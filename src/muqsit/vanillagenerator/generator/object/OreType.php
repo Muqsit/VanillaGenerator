@@ -10,6 +10,8 @@ use pocketmine\utils\Random;
 
 class OreType{
 
+	/** @readonly */ public int $amount;
+
 	/**
 	 * Creates an ore type. If {@code min_y} and {@code max_y} are equal, then the height range is
 	 * 0 to {@code min_y}*2, with greatest density around {@code min_y}. Otherwise, density is uniform
@@ -22,33 +24,13 @@ class OreType{
 	 * @param int $target_type the block this can replace
 	 */
 	public function __construct(
-		private Block $type,
-		private int $min_y,
-		private int $max_y,
-		private int $amount,
-		private int $target_type = BlockTypeIds::STONE
+		/** @readonly */ public Block $type,
+		/** @readonly */ public int $min_y,
+		/** @readonly */ public int $max_y,
+		int $amount,
+		/** @readonly */ public int $target_type = BlockTypeIds::STONE
 	){
-		$this->amount++;
-	}
-
-	public function getType() : Block{
-		return $this->type;
-	}
-
-	public function getMinY() : int{
-		return $this->min_y;
-	}
-
-	public function getMaxY() : int{
-		return $this->max_y;
-	}
-
-	public function getAmount() : int{
-		return $this->amount;
-	}
-
-	public function getTargetType() : int{
-		return $this->target_type;
+		$this->amount = $amount + 1;
 	}
 
 	/**

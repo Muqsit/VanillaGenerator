@@ -41,9 +41,9 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 		return new PerlinOctaveGenerator(self::createOctaves($random, $octaves), $size_x, $size_y, $size_z);
 	}
 
-	protected int $size_x;
-	protected int $size_y;
-	protected int $size_z;
+	public int $size_x;
+	public int $size_y;
+	public int $size_z;
 
 	/** @var float[] */
 	protected array $noise;
@@ -62,30 +62,6 @@ class PerlinOctaveGenerator extends OctaveGenerator{
 		$this->size_y = $size_y;
 		$this->size_z = $size_z;
 		$this->noise = array_fill(0, $size_x * $size_y * $size_z, 0.0);
-	}
-
-	public function getSizeX() : int{
-		return $this->size_x;
-	}
-
-	public function getSizeY() : int{
-		return $this->size_y;
-	}
-
-	public function getSizeZ() : int{
-		return $this->size_z;
-	}
-
-	public function setSizeX(int $size_x) : void{
-		$this->size_x = $size_x;
-	}
-
-	public function setSizeY(int $size_y) : void{
-		$this->size_y = $size_y;
-	}
-
-	public function setSizeZ(int $size_z) : void{
-		$this->size_z = $size_z;
 	}
 
 	/**

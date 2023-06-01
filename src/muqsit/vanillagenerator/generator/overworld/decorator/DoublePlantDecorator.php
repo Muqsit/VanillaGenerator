@@ -22,13 +22,13 @@ class DoublePlantDecorator extends Decorator{
 	private static function getRandomDoublePlant(Random $random, array $decorations) : ?DoublePlant{
 		$totalWeight = 0;
 		foreach($decorations as $decoration){
-			$totalWeight += $decoration->getWeight();
+			$totalWeight += $decoration->weight;
 		}
 		$weight = $random->nextBoundedInt($totalWeight);
 		foreach($decorations as $decoration){
-			$weight -= $decoration->getWeight();
+			$weight -= $decoration->weight;
 			if($weight < 0){
-				return $decoration->getBlock();
+				return $decoration->block;
 			}
 		}
 		return null;

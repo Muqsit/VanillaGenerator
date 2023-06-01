@@ -140,17 +140,22 @@ class OverworldGenerator extends VanillaGenerator{
 
 		/** @var SimplexOctaveGenerator $octave_generator */
 		$octave_generator = $this->getWorldOctaves()->surface;
-		$size_x = $octave_generator->getSizeX();
-		$size_z = $octave_generator->getSizeZ();
+		$size_x = $octave_generator->size_x;
+		$size_z = $octave_generator->size_z;
 
 		$surface_noise = $octave_generator->getFractalBrownianMotion($cx, 0.0, $cz, 0.5, 0.5);
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunk_x, $chunk_z);
 
+		$min_y = $world->getMinY();
+		$max_y = $world->getMaxY();
 		for($x = 0; $x < $size_x; ++$x){
 			for($z = 0; $z < $size_z; ++$z){
-				$chunk->setBiomeId($x, $z, $id = $grid->getBiome($x, $z));
+				$id = $grid->getBiome($x, $z);
+				for($y = $min_y; $y < $max_y; ++$y){
+					$chunk->setBiomeId($x, $y, $z, $id);
+				}
 				if($id !== null && array_key_exists($id, self::$GROUND_MAP)){
 					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}else{
@@ -164,23 +169,23 @@ class OverworldGenerator extends VanillaGenerator{
 		$seed = new Random($this->random->getSeed());
 
 		$height = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 1, 5);
-		$height->setXScale(self::HEIGHT_NOISE_SCALE_X);
-		$height->setZScale(self::HEIGHT_NOISE_SCALE_Z);
+		$height->x_scale = self::HEIGHT_NOISE_SCALE_X;
+		$height->z_scale = self::HEIGHT_NOISE_SCALE_Z;
 
 		$roughness = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
-		$roughness->setXScale(self::COORDINATE_SCALE);
-		$roughness->setYScale(self::HEIGHT_SCALE);
-		$roughness->setZScale(self::COORDINATE_SCALE);
+		$roughness->x_scale = self::COORDINATE_SCALE;
+		$roughness->y_scale = self::HEIGHT_SCALE;
+		$roughness->z_scale = self::COORDINATE_SCALE;
 
 		$roughness2 = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
-		$roughness2->setXScale(self::COORDINATE_SCALE);
-		$roughness2->setYScale(self::HEIGHT_SCALE);
-		$roughness2->setZScale(self::COORDINATE_SCALE);
+		$roughness2->x_scale = self::COORDINATE_SCALE;
+		$roughness2->y_scale = self::HEIGHT_SCALE;
+		$roughness2->z_scale = self::COORDINATE_SCALE;
 
 		$detail = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 33, 5);
-		$detail->setXScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_X);
-		$detail->setYScale(self::HEIGHT_SCALE / self::DETAIL_NOISE_SCALE_Y);
-		$detail->setZScale(self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_Z);
+		$detail->x_scale = self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_X;
+		$detail->y_scale = self::HEIGHT_SCALE / self::DETAIL_NOISE_SCALE_Y;
+		$detail->z_scale = self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_Z;
 
 		$surface = SimplexOctaveGenerator::fromRandomAndOctaves($seed, 4, 16, 1, 16);
 		$surface->setScale(self::SURFACE_SCALE);
@@ -244,22 +249,22 @@ class OverworldGenerator extends VanillaGenerator{
 								// the target is density_offset + 0, since the default target is
 								// 0, so don't get too confused by the naming :)
 								if($afill === 1 || $afill === 10 || $afill === 13 || $afill === 16){
-									$sub_chunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $water);
+									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $water);
 								}elseif($afill === 2 || $afill === 9 || $afill === 12 || $afill === 15){
-									$sub_chunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
+									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
 								}
 
 								if(($dens > $density_offset && $fill > -1) || ($dens <= $density_offset && $fill < 0)){
 									if($afill === 0 || $afill === 3 || $afill === 6 || $afill === 9 || $afill === 12){
-										$sub_chunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
+										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
 									}elseif($afill === 2 || $afill === 7 || $afill === 10 || $afill === 16){
-										$sub_chunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
+										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
 									}
 								}elseif(($y_pos < $sea_level - 1 && $sea_fill === 0) || ($y_pos >= $sea_level - 1 && $sea_fill === 1)){
 									if($afill === 0 || $afill === 3 || $afill === 7 || $afill === 10 || $afill === 13){
-										$sub_chunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
+										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
 									}elseif($afill === 1 || $afill === 6 || $afill === 9 || $afill === 15){
-										$sub_chunk->setFullBlock($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
+										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
 									}
 								}
 
@@ -345,15 +350,15 @@ class OverworldGenerator extends VanillaGenerator{
 					for($n = 0; $n < 5; ++$n){
 						$near_biome = $biomeGrid[$i + $m + ($j + $n) * 10];
 						$near_biome_height = BiomeHeightManager::get($near_biome);
-						$height_base = self::BIOME_HEIGHT_OFFSET + $near_biome_height->getHeight() * self::BIOME_HEIGHT_WEIGHT;
-						$height_scale = self::BIOME_SCALE_OFFSET + $near_biome_height->getScale() * self::BIOME_SCALE_WEIGHT;
+						$height_base = self::BIOME_HEIGHT_OFFSET + $near_biome_height->height * self::BIOME_HEIGHT_WEIGHT;
+						$height_scale = self::BIOME_SCALE_OFFSET + $near_biome_height->scale * self::BIOME_SCALE_WEIGHT;
 						if($this->type === WorldType::AMPLIFIED && $height_base > 0){
 							$height_base = 1.0 + $height_base * 2.0;
 							$height_scale = 1.0 + $height_scale * 4.0;
 						}
 
 						$weight = self::$ELEVATION_WEIGHT[self::elevationWeightHash($m, $n)] / ($height_base + 2.0);
-						if($near_biome_height->getHeight() > $biome_height->getHeight()){
+						if($near_biome_height->height > $biome_height->height){
 							$weight *= 0.5;
 						}
 
