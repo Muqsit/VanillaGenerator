@@ -43,7 +43,7 @@ class SugarCane extends TerrainObject{
 			if($block_id === BlockTypeIds::SUGARCANE
 				|| $block_id === BlockTypeIds::GRASS
 				|| $block_id === BlockTypeIds::SAND
-				|| ($block instanceof Dirt && $block->getDirtType()->equals(DirtType::NORMAL()))
+				|| ($block instanceof Dirt && $block->getDirtType()->equals(DirtType::NORMAL))
 			){
 				$cane_block = $world->getBlockAt($source_x, $source_y + $n, $source_z);
 				if($cane_block->getTypeId() !== BlockTypeIds::AIR && $world->getBlockAt($source_x, $source_y + $n + 1, $source_z)->getTypeId() !== BlockTypeIds::AIR){

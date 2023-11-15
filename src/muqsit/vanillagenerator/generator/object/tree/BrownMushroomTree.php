@@ -108,19 +108,19 @@ class BrownMushroomTree extends GenericTree{
 					// cap's borders/corners treatment
 					$data = match(true){
 						$x === $source_x - $radius => match(true){
-							$z === $source_z - $radius => MushroomBlockType::CAP_NORTHWEST(),
-							$z === $source_z + $radius => MushroomBlockType::CAP_SOUTHWEST(),
-							default => MushroomBlockType::CAP_WEST()
+							$z === $source_z - $radius => MushroomBlockType::CAP_NORTHWEST,
+							$z === $source_z + $radius => MushroomBlockType::CAP_SOUTHWEST,
+							default => MushroomBlockType::CAP_WEST
 						},
 						$x === $source_x + $radius => match(true){
-							$z === $source_z - $radius => MushroomBlockType::CAP_NORTHEAST(),
-							$z === $source_z + $radius => MushroomBlockType::CAP_SOUTHEAST(),
-							default => MushroomBlockType::CAP_EAST()
+							$z === $source_z - $radius => MushroomBlockType::CAP_NORTHEAST,
+							$z === $source_z + $radius => MushroomBlockType::CAP_SOUTHEAST,
+							default => MushroomBlockType::CAP_EAST
 						},
 						default => match(true){
-							$z === $source_z - $radius => MushroomBlockType::CAP_NORTH(),
-							$z === $source_z + $radius => MushroomBlockType::CAP_SOUTH(),
-							default => MushroomBlockType::CAP_MIDDLE()
+							$z === $source_z - $radius => MushroomBlockType::CAP_NORTH,
+							$z === $source_z + $radius => MushroomBlockType::CAP_SOUTH,
+							default => MushroomBlockType::CAP_MIDDLE
 						}
 					};
 
@@ -137,26 +137,26 @@ class BrownMushroomTree extends GenericTree{
 
 						// mushroom's cap corners treatment
 						if($x === $source_x - ($radius - 1) && $z === $source_z - $radius){
-							$data = MushroomBlockType::CAP_NORTHWEST();
+							$data = MushroomBlockType::CAP_NORTHWEST;
 						}elseif($x === $source_x - $radius && $z === $source_z - ($radius - 1)){
-							$data = MushroomBlockType::CAP_NORTHWEST();
+							$data = MushroomBlockType::CAP_NORTHWEST;
 						}elseif($x === $source_x + $radius - 1 && $z === $source_z - $radius){
-							$data = MushroomBlockType::CAP_NORTHEAST();
+							$data = MushroomBlockType::CAP_NORTHEAST;
 						}elseif($x === $source_x + $radius && $z === $source_z - ($radius - 1)){
-							$data = MushroomBlockType::CAP_NORTHEAST();
+							$data = MushroomBlockType::CAP_NORTHEAST;
 						}elseif($x === $source_x - ($radius - 1) && $z === $source_z + $radius){
-							$data = MushroomBlockType::CAP_SOUTHWEST();
+							$data = MushroomBlockType::CAP_SOUTHWEST;
 						}elseif($x === $source_x - $radius && $z === $source_z + $radius - 1){
-							$data = MushroomBlockType::CAP_SOUTHWEST();
+							$data = MushroomBlockType::CAP_SOUTHWEST;
 						}elseif($x === $source_x + $radius - 1 && $z === $source_z + $radius){
-							$data = MushroomBlockType::CAP_SOUTHEAST();
+							$data = MushroomBlockType::CAP_SOUTHEAST;
 						}elseif($x === $source_x + $radius && $z === $source_z + $radius - 1){
-							$data = MushroomBlockType::CAP_SOUTHEAST();
+							$data = MushroomBlockType::CAP_SOUTHEAST;
 						}
 					}
 
 					// a $data of CAP_MIDDLE below the top layer means air
-					if($data !== MushroomBlockType::CAP_MIDDLE() || $y >= $source_y + $this->height){
+					if($data !== MushroomBlockType::CAP_MIDDLE || $y >= $source_y + $this->height){
 						$this->transaction->addBlockAt($x, $y, $z, $this->getType()->setMushroomBlockType($data));
 					}
 				}

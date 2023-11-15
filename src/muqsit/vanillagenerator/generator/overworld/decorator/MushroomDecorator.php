@@ -58,7 +58,7 @@ class MushroomDecorator extends Decorator{
 							break;
 						case BlockTypeIds::DIRT:
 							assert($below_below instanceof Dirt);
-							if(!$below_below->getDirtType()->equals(DirtType::COARSE())){
+							if($below_below->getDirtType() !== DirtType::COARSE){
 								$can_place_shroom = $block->getLightLevel() < 13;
 							}else{
 								$can_place_shroom = false;
