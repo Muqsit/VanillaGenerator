@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Flowable;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -12,16 +11,6 @@ use pocketmine\world\ChunkManager;
 use pocketmine\world\World;
 
 abstract class TerrainObject{
-
-	/** @var int[] */
-	private static array $PLANT_TYPES;
-
-	public static function init() : void{
-		self::$PLANT_TYPES = [];
-		foreach([BlockTypeIds::TALL_GRASS, BlockTypeIds::DANDELION, BlockTypeIds::POPPY, BlockTypeIds::DOUBLE_TALLGRASS, BlockTypeIds::BROWN_MUSHROOM, BlockTypeIds::RED_MUSHROOM] as $block_id){
-			self::$PLANT_TYPES[$block_id] = $block_id;
-		}
-	}
 
 	/**
 	 * Removes weak blocks like grass, shrub, flower or mushroom directly above the given block, if present.
@@ -62,5 +51,3 @@ abstract class TerrainObject{
 	 */
 	abstract public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool;
 }
-
-TerrainObject::init();
