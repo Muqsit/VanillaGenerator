@@ -164,7 +164,7 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 						$x2 = self::lerp($fx, self::grad($this->perm[$ab], $dx, $dy - 1, $dz),
 							self::grad($this->perm[$bb], $dx - 1, $dy - 1, $dz));
 						$x3 = self::lerp($fx, self::grad($this->perm[$aa + 1], $dx, $dy, $dz - 1),
-							self::grad($this->perm[$ba + 1], $dx - 1, $y, $dz - 1));
+							self::grad($this->perm[$ba + 1], $dx - 1, $dy, $dz - 1));
 						$x4 = self::lerp($fx, self::grad($this->perm[$ab + 1], $dx, $dy - 1, $dz - 1),
 							self::grad($this->perm[$bb + 1], $dx - 1, $dy - 1, $dz - 1));
 					}
