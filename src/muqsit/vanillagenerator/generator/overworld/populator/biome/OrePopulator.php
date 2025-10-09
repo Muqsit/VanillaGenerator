@@ -20,20 +20,25 @@ class OrePopulator implements Populator{
 
 	/**
 	 * Creates a populator for dirt, gravel, andesite, diorite, granite; and coal, iron, gold,
-	 * redstone, diamond and lapis lazuli ores.
+	 * redstone, diamond and lapis lazuli ores with full 1.18+ distribution.
 	 */
 	public function __construct(){
-		$this->addOre(new OreType(VanillaBlocks::DIRT(), 0, 256, 32), 10);
-		$this->addOre(new OreType(VanillaBlocks::GRAVEL(), 0, 256, 32), 8);
-		$this->addOre(new OreType(VanillaBlocks::GRANITE(), 0, 80, 32), 10);
-		$this->addOre(new OreType(VanillaBlocks::DIORITE(), 0, 80, 32), 10);
-		$this->addOre(new OreType(VanillaBlocks::ANDESITE(), 0, 80, 32), 10);
-		$this->addOre(new OreType(VanillaBlocks::COAL_ORE(), 0, 128, 16), 20);
-		$this->addOre(new OreType(VanillaBlocks::IRON_ORE(), 0, 64, 8), 20);
-		$this->addOre(new OreType(VanillaBlocks::GOLD_ORE(), 0, 32, 8), 2);
-		$this->addOre(new OreType(VanillaBlocks::REDSTONE_ORE(), 0, 16, 7), 8);
-		$this->addOre(new OreType(VanillaBlocks::DIAMOND_ORE(), 0, 16, 7), 1);
-		$this->addOre(new OreType(VanillaBlocks::LAPIS_LAZULI_ORE(), 16, 16, 6), 1);
+		// Full 1.18+ ore distributions for world height Y=-64 to Y=319
+		
+		// Stone variants - distribute throughout most of the world
+		$this->addOre(new OreType(VanillaBlocks::DIRT(), -64, 319, 32), 10);
+		$this->addOre(new OreType(VanillaBlocks::GRAVEL(), -64, 319, 32), 8);
+		$this->addOre(new OreType(VanillaBlocks::GRANITE(), -64, 64, 32), 10);
+		$this->addOre(new OreType(VanillaBlocks::DIORITE(), -64, 64, 32), 10);
+		$this->addOre(new OreType(VanillaBlocks::ANDESITE(), -64, 64, 32), 10);
+		
+		// Ores with authentic 1.18+ distributions
+		$this->addOre(new OreType(VanillaBlocks::COAL_ORE(), 0, 190, 16), 20);      // Coal: Y=0 to Y=190
+		$this->addOre(new OreType(VanillaBlocks::IRON_ORE(), -63, 72, 8), 20);      // Iron: Y=-63 to Y=72  
+		$this->addOre(new OreType(VanillaBlocks::GOLD_ORE(), -64, -48, 8), 4);      // Gold: Deep underground Y=-64 to Y=-48
+		$this->addOre(new OreType(VanillaBlocks::REDSTONE_ORE(), -64, 15, 7), 8);   // Redstone: Y=-64 to Y=15
+		$this->addOre(new OreType(VanillaBlocks::DIAMOND_ORE(), -64, 16, 7), 1);    // Diamond: Y=-64 to Y=16 (peak at Y=-59)
+		$this->addOre(new OreType(VanillaBlocks::LAPIS_LAZULI_ORE(), -32, 32, 6), 1); // Lapis: Y=-32 to Y=32
 	}
 
 	protected function addOre(OreType $type, int $value) : void{

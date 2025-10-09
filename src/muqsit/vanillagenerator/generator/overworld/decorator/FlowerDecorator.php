@@ -7,6 +7,7 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\Flower;
 use muqsit\vanillagenerator\generator\overworld\decorator\types\FlowerDecoration;
+use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\block\Block;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -48,7 +49,7 @@ class FlowerDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
-		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($x & Chunk::COORD_MASK, $z & Chunk::COORD_MASK) + 32);
+		$source_y = DecoratorUtils::getSurfaceY($random, $chunk, $x, $z, 16, 120); // Limited to Y=120 for flowers
 
 		// the flower can change on each decoration pass
 		$flower = self::getRandomFlower($random, $this->flowers);

@@ -69,4 +69,18 @@ interface BiomeIds{
 	public const MESA_BRYCE = VanillaBiomeIds::MESA_BRYCE;
 	public const MESA_PLATEAU_STONE_MUTATED = VanillaBiomeIds::MESA_PLATEAU_STONE_MUTATED;
 	public const MESA_PLATEAU_MUTATED = VanillaBiomeIds::MESA_PLATEAU_MUTATED;
+	
+	// 1.18+ Underground Biomes
+	public const DEEP_DARK = VanillaBiomeIds::DEEP_DARK; // Deep Dark biome for Ancient Cities
+	public const DRIPSTONE_CAVES = VanillaBiomeIds::DRIPSTONE_CAVES; // Dripstone cave biome
+	public const LUSH_CAVES = VanillaBiomeIds::LUSH_CAVES; // Lush cave biome
+	
+	// 1.18+ Surface Biomes  
+	public const MANGROVE_SWAMP = VanillaBiomeIds::MANGROVE_SWAMP; // Mangrove swamp biome
+	public const MEADOW = VanillaBiomeIds::MEADOW; // Mountain meadow biome
+	public const GROVE = VanillaBiomeIds::GROVE; // Grove biome (snowy)
+	public const SNOWY_SLOPES = VanillaBiomeIds::SNOWY_SLOPES; // Snowy mountain slopes
+	public const FROZEN_PEAKS = VanillaBiomeIds::FROZEN_PEAKS; // Frozen mountain peaks
+	public const JAGGED_PEAKS = VanillaBiomeIds::JAGGED_PEAKS; // Jagged mountain peaks
+	public const STONY_PEAKS = VanillaBiomeIds::STONY_PEAKS; // Stony mountain peaks
 }

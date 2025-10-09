@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\TallGrass;
+use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
@@ -28,7 +29,7 @@ class TallGrassDecorator extends Decorator{
 			return;
 		}
 
-		$source_y = $random->nextBoundedInt(abs($top_block << 1));
+		$source_y = DecoratorUtils::getPlantY($random, $chunk, $x, $z); // Safe Y generation for plants
 
 		// the grass species can change on each decoration pass
 		(new TallGrass($this->fern_density > 0 && $random->nextFloat() < $this->fern_density ?

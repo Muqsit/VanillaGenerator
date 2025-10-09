@@ -56,15 +56,24 @@ class MegaPineTree extends MegaRedwoodTree{
 					continue;
 				}
 				for($y = 2; $y >= -3; --$y){
-					$block_id = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z)->getTypeId();
+					$check_y = $source_y + $y;
+					$check_y_above = $source_y + $y + 1;
+					
+					// Check bounds for both Y and Y+1
+					if($check_y < $world->getMinY() || $check_y > $world->getMaxY() || 
+					   $check_y_above > $world->getMaxY()) {
+						continue;
+					}
+					
+					$block_id = $world->getBlockAt($source_x + $x, $check_y, $source_z + $z)->getTypeId();
 					if($block_id === BlockTypeIds::GRASS || $block_id === BlockTypeIds::DIRT){
-						if($world->getBlockAt($source_x + $x, $source_y + $y + 1, $source_z + $z)->isSolid()){
+						if($world->getBlockAt($source_x + $x, $check_y_above, $source_z + $z)->isSolid()){
 							$dirt = VanillaBlocks::DIRT();
 						}else{
 							$dirt = VanillaBlocks::PODZOL();
 						}
-						$world->setBlockAt($source_x + $x, $source_y + $y, $source_z + $z, $dirt);
-					}elseif($block_id !== BlockTypeIds::AIR && $source_y + $y < $source_y){
+						$world->setBlockAt($source_x + $x, $check_y, $source_z + $z, $dirt);
+					}elseif($block_id !== BlockTypeIds::AIR && $check_y < $source_y){
 						break;
 					}
 				}

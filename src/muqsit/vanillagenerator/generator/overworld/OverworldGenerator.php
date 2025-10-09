@@ -19,17 +19,22 @@ use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
 use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeHeightManager;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
+use muqsit\vanillagenerator\generator\overworld\biome\Biome3DGenerator;
 use muqsit\vanillagenerator\generator\overworld\populator\OverworldPopulator;
 use muqsit\vanillagenerator\generator\overworld\populator\SnowPopulator;
 use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
+use muqsit\vanillagenerator\generator\cave\ModernCaveGenerator;
+use muqsit\vanillagenerator\generator\cave\CaveGenerator;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use function array_key_exists;
+use function max;
+use function min;
 
 /**
  * @extends VanillaGenerator<WorldOctaves<PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, SimplexOctaveGenerator>>
@@ -62,6 +67,7 @@ class OverworldGenerator extends VanillaGenerator{
 	}
 
 	public static function init() : void{
+		// Biome-specific ground generators
 		self::setBiomeSpecificGround(new SandyGroundGenerator(), BiomeIds::BEACH, BiomeIds::COLD_BEACH, BiomeIds::DESERT, BiomeIds::DESERT_HILLS, BiomeIds::DESERT_MUTATED);
 		self::setBiomeSpecificGround(new RockyGroundGenerator(), BiomeIds::STONE_BEACH);
 		self::setBiomeSpecificGround(new SnowyGroundGenerator(), BiomeIds::ICE_PLAINS_SPIKES);
@@ -103,7 +109,7 @@ class OverworldGenerator extends VanillaGenerator{
 	protected const DETAIL_NOISE_SCALE_Y = 160.0;
 	protected const DETAIL_NOISE_SCALE_Z = 80.0;
 	protected const SURFACE_SCALE = 0.0625;
-	protected const BASE_SIZE = 8.5;
+	protected const BASE_SIZE = 16.0; // Adjusted for 1.18+ height: sea level Y=64 maps to density level ~16
 	protected const STRETCH_Y = 12.0;
 	protected const BIOME_HEIGHT_OFFSET = 0.0;
 	protected const BIOME_HEIGHT_WEIGHT = 1.0;
@@ -115,6 +121,7 @@ class OverworldGenerator extends VanillaGenerator{
 
 	private GroundGenerator $ground_gen;
 	private string $type = WorldType::NORMAL;
+	private ?CaveGenerator $cave_generator = null;
 
 	public function __construct(int $seed, string $preset_string){
 		$preset = SimpleGeneratorPreset::parse($preset_string);
@@ -124,13 +131,22 @@ class OverworldGenerator extends VanillaGenerator{
 			$preset->exists("worldtype") ? WorldType::fromString($preset->getString("worldtype")) : null,
 			$preset
 		);
-		$this->ground_gen = new GroundGenerator();
-		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
+	// Ground generation
+	$this->ground_gen = new GroundGenerator();
+		
+	// Use legacy cave generator
+	$this->cave_generator = new CaveGenerator($seed);
+		
+	// Add populators
+	$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}
 
+
+	/*
 	public function getGroundGenerator() : GroundGenerator{
 		return $this->ground_gen;
 	}
+	*/
 
 	protected function generateChunkData(ChunkManager $world, int $chunk_x, int $chunk_z, VanillaBiomeGrid $grid) : void{
 		$this->generateRawTerrain($world, $chunk_x, $chunk_z);
@@ -150,18 +166,38 @@ class OverworldGenerator extends VanillaGenerator{
 
 		$min_y = $world->getMinY();
 		$max_y = $world->getMaxY();
+		
+		// Generate 3D biomes for this chunk
+		Biome3DGenerator::generate3DBiomes($grid, $this->random, $chunk_x, $chunk_z, $min_y, $max_y);
+		
 		for($x = 0; $x < $size_x; ++$x){
 			for($z = 0; $z < $size_z; ++$z){
-				$id = $grid->getBiome($x, $z);
+				$surface_biome_id = $grid->getBiome($x, $z);
+				
+				// Set biomes for all Y levels using 3D biome data
 				for($y = $min_y; $y < $max_y; ++$y){
-					$chunk->setBiomeId($x, $y, $z, $id);
+					$biome_3d = $grid->getBiome3D($x, $y, $z);
+					if($biome_3d !== null){
+						$chunk->setBiomeId($x, $y, $z, $biome_3d);
+					}else{
+						// Fallback to surface biome if no 3D biome is set
+						$chunk->setBiomeId($x, $y, $z, $surface_biome_id);
+					}
 				}
-				if($id !== null && array_key_exists($id, self::$GROUND_MAP)){
-					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
+				
+				// Surface terrain (top/ground materials)
+				if($surface_biome_id !== null && array_key_exists($surface_biome_id, self::$GROUND_MAP)){
+					self::$GROUND_MAP[$surface_biome_id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $surface_biome_id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}else{
-					$this->ground_gen->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
+					$this->ground_gen->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $surface_biome_id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}
 			}
+		}
+
+		// Caves: carve after base stone terrain and biome assignment (legacy)
+		if($this->cave_generator !== null){
+			$this->cave_generator->carveDirectly($world, $chunk_x, $chunk_z);
+			$this->cave_generator->applyAquifers($world, $chunk_x, $chunk_z);
 		}
 	}
 
@@ -172,17 +208,18 @@ class OverworldGenerator extends VanillaGenerator{
 		$height->x_scale = self::HEIGHT_NOISE_SCALE_X;
 		$height->z_scale = self::HEIGHT_NOISE_SCALE_Z;
 
-		$roughness = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
+		// 1.18+ height: 48 Y-levels for full height range (Y=-64 to Y=319)
+		$roughness = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 48, 5);
 		$roughness->x_scale = self::COORDINATE_SCALE;
 		$roughness->y_scale = self::HEIGHT_SCALE;
 		$roughness->z_scale = self::COORDINATE_SCALE;
 
-		$roughness2 = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 33, 5);
+		$roughness2 = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 48, 5);
 		$roughness2->x_scale = self::COORDINATE_SCALE;
 		$roughness2->y_scale = self::HEIGHT_SCALE;
 		$roughness2->z_scale = self::COORDINATE_SCALE;
 
-		$detail = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 33, 5);
+		$detail = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 8, 5, 48, 5);
 		$detail->x_scale = self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_X;
 		$detail->y_scale = self::HEIGHT_SCALE / self::DETAIL_NOISE_SCALE_Y;
 		$detail->z_scale = self::COORDINATE_SCALE / self::DETAIL_NOISE_SCALE_Z;
@@ -196,7 +233,7 @@ class OverworldGenerator extends VanillaGenerator{
 	protected function generateRawTerrain(ChunkManager $world, int $chunk_x, int $chunk_z) : void{
 		$density = $this->generateTerrainDensity($chunk_x, $chunk_z);
 
-		$sea_level = 64;
+		$sea_level = 63; // 1.18+ standard sea level
 
 		// Terrain densities are sampled at different resolutions (1/4x on x,z and 1/8x on y by
 		// default)
@@ -216,7 +253,8 @@ class OverworldGenerator extends VanillaGenerator{
 
 		for($i = 0; $i < 5 - 1; ++$i){
 			for($j = 0; $j < 5 - 1; ++$j){
-				for($k = 0; $k < 33 - 1; ++$k){
+				// 1.18+ height: 48 - 1 = 47 density interpolation steps
+				for($k = 0; $k < 48 - 1; ++$k){
 					// 2x2 grid
 					$d1 = $density[self::densityHash($i, $j, $k)];
 					$d2 = $density[self::densityHash($i + 1, $j, $k)];
@@ -231,9 +269,24 @@ class OverworldGenerator extends VanillaGenerator{
 						$d9 = $d1;
 						$d10 = $d3;
 
-						$y_pos = $l + ($k << 3);
+						// 1.18+ world height: Y=-64 to Y=319
+						$y_pos = $l + ($k << 3) - 64;
+						
+						// Clamp Y position to valid range as safety measure
+						$y_pos = max(-64, min(319, $y_pos));
+						
 						$y_block_pos = $y_pos & 0xf;
-						$sub_chunk = $chunk->getSubChunk($y_pos >> Chunk::COORD_BIT_SIZE);
+						// Calculate subchunk index: Y=-64 maps to subchunk -4, Y=319 maps to subchunk 19
+						$subchunk_index = $y_pos >> Chunk::COORD_BIT_SIZE;
+						
+						// Final safety check for subchunk index
+						if($subchunk_index < -4 || $subchunk_index > 19){
+							// This should never happen with proper clamping
+							error_log("CRITICAL: Invalid subchunk index: $subchunk_index for Y=$y_pos (k=$k, l=$l)");
+							continue;
+						}
+						
+						$sub_chunk = $chunk->getSubChunk($subchunk_index);
 
 						for($m = 0; $m < 4; ++$m){
 							$dens = $d9;
@@ -385,10 +438,13 @@ class OverworldGenerator extends VanillaGenerator{
 				}
 
 				$noise_h = ($noise_h * 0.2 + $avg_height_base) * self::BASE_SIZE / 8.0 * 4.0 + self::BASE_SIZE;
-				for($k = 0; $k < 33; ++$k){
+				
+				// 1.18+ height: 384 total height / 8 = 48 density steps (Y=-64 to Y=319)
+				for($k = 0; $k < 48; ++$k){
 					// density should be lower and lower as we climb up, this gets a height value to
 					// subtract from the noise.
-					$nh = ($k - $noise_h) * self::STRETCH_Y * 128.0 / 256.0 / $avg_height_scale;
+					// Updated calculation for 1.18+ height range (384 total height)
+					$nh = ($k - $noise_h) * self::STRETCH_Y * 128.0 / 384.0 / $avg_height_scale;
 					if($nh < 0.0){
 						$nh *= 4.0;
 					}
@@ -401,8 +457,9 @@ class OverworldGenerator extends VanillaGenerator{
 					$dens = $noise_d < 0 ? $noise_r : ($noise_d > 1 ? $noise_r_2 : $noise_r + ($noise_r_2 - $noise_r) * $noise_d);
 					$dens -= $nh;
 					++$index;
-					if($k > 29){
-						$lowering = ($k - 29) / 3.0;
+					// Adjusted for 1.18+ heights: start lowering at level 38 instead of 29 (48 * 0.8 ≈ 38)
+					if($k > 38){
+						$lowering = ($k - 38) / 9.0; // Spread over 9 levels instead of 3
 						// linear interpolation
 						$dens = $dens * (1.0 - $lowering) + -10.0 * $lowering;
 					}

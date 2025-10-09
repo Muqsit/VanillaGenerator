@@ -83,9 +83,19 @@ class Lake extends TerrainObject{
 						continue;
 					}
 
+					// Check if coordinates are within world bounds
+					$world_x = $source_x + $x;
+					$world_y = $source_y + $y;
+					$world_z = $source_z + $z;
+					
+					if($world_y < $world->getMinY() || $world_y > $world->getMaxY() || 
+					   $world_y + 1 > $world->getMaxY()) {
+						continue; // Skip if Y coordinate or Y+1 is outside world bounds
+					}
+					
 					$type = $this->type;
-					$block = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z);
-					$block_above = $world->getBlockAt($source_x + $x, $source_y + $y + 1, $source_z + $z);
+					$block = $world->getBlockAt($world_x, $world_y, $world_z);
+					$block_above = $world->getBlockAt($world_x, $world_y + 1, $world_z);
 					$block_type = $block->getTypeId();
 					if(($block_type === BlockTypeIds::DIRT && $block_above instanceof Wood) || $block instanceof Wood){
 						continue;
@@ -93,7 +103,7 @@ class Lake extends TerrainObject{
 
 					if($y >= (int) (self::MAX_HEIGHT / 2)){
 						$type = VanillaBlocks::AIR();
-						if(TerrainObject::killWeakBlocksAbove($world, $source_x + $x, $source_y + $y, $source_z + $z)){
+						if(TerrainObject::killWeakBlocksAbove($world, $world_x, $world_y, $world_z)){
 							break;
 						}
 
@@ -101,11 +111,11 @@ class Lake extends TerrainObject{
 							$type = $block;
 						}
 					}elseif($y === (int) (self::MAX_HEIGHT / 2 - 1)){
-						if($type instanceof Water && $type->isStill() && BiomeClimateManager::isCold($chunk->getBiomeId($x & Chunk::COORD_MASK, $y, $z & Chunk::COORD_MASK), $source_x + $x, $y, $source_z + $z)){
+						if($type instanceof Water && $type->isStill() && BiomeClimateManager::isCold($chunk->getBiomeId($x & Chunk::COORD_MASK, $y, $z & Chunk::COORD_MASK), $world_x, $y, $world_z)){
 							$type = VanillaBlocks::ICE();
 						}
 					}
-					$world->setBlockAt($source_x + $x, $source_y + $y, $source_z + $z, $type);
+					$world->setBlockAt($world_x, $world_y, $world_z, $type);
 				}
 			}
 		}
@@ -117,10 +127,21 @@ class Lake extends TerrainObject{
 						continue;
 					}
 
-					$block = $world->getBlockAt($source_x + $x, $source_y + $y - 1, $source_z + $z);
-					$block_above = $world->getBlockAt($source_x + $x, $source_y + $y, $source_z + $z);
+					// Check if coordinates are within world bounds
+					$world_x = $source_x + $x;
+					$world_y_below = $source_y + $y - 1;
+					$world_y = $source_y + $y;
+					$world_z = $source_z + $z;
+					
+					if($world_y_below < $world->getMinY() || $world_y_below > $world->getMaxY() ||
+					   $world_y < $world->getMinY() || $world_y > $world->getMaxY()) {
+						continue; // Skip if Y coordinates are outside world bounds
+					}
+
+					$block = $world->getBlockAt($world_x, $world_y_below, $world_z);
+					$block_above = $world->getBlockAt($world_x, $world_y, $world_z);
 					if($block->getTypeId() === BlockTypeIds::DIRT && $block_above->isTransparent() && $block_above->getLightLevel() > 0){
-						$world->setBlockAt($source_x + $x, $source_y + $y - 1, $source_z + $z, $mycel_biome ? VanillaBlocks::MYCELIUM() : VanillaBlocks::GRASS());
+						$world->setBlockAt($world_x, $world_y_below, $world_z, $mycel_biome ? VanillaBlocks::MYCELIUM() : VanillaBlocks::GRASS());
 					}
 				}
 			}
@@ -149,7 +170,14 @@ class Lake extends TerrainObject{
 							&& (($z <= 0) || !$this->isLakeBlock($lake_map, $x, $y - 1, $z)))){
 						continue;
 					}
-					$block = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z);
+					
+					// Check if coordinates are within world bounds
+					$world_y = $sourceY + $y;
+					if($world_y < $world->getMinY() || $world_y > $world->getMaxY()) {
+						continue; // Skip if Y coordinate is outside world bounds
+					}
+					
+					$block = $world->getBlockAt($sourceX + $x, $world_y, $sourceZ + $z);
 					if($y >= self::MAX_HEIGHT / 2 && (($block instanceof Liquid) || $block->getTypeId() === BlockTypeIds::ICE)){
 						return false; // there's already some liquids above
 					}

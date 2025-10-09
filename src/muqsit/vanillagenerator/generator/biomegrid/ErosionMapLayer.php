@@ -42,8 +42,10 @@ class ErosionMapLayer extends MapLayer{
 				$this->setCoordsSeed($x + $j, $z + $i);
 
 				$final_values[$j + $i * $size_x] = match(true){
-					$center_val !== 0 && ($upper_left_val === 0 || $upper_right_val === 0 || $lower_left_val === 0 || $lower_right_val === 0) => $this->nextInt(5) === 0 ? 0 : $center_val,
-					$center_val === 0 && ($upper_left_val !== 0 || $upper_right_val !== 0 || $lower_left_val !== 0 || $lower_right_val !== 0) => $this->nextInt(3) === 0 ? $upper_left_val : 0,
+					// Reduced erosion rate for 1.18+ style (1/8 instead of 4/5) to preserve more land
+					$center_val !== 0 && ($upper_left_val === 0 || $upper_right_val === 0 || $lower_left_val === 0 || $lower_right_val === 0) => $this->nextInt(8) === 0 ? 0 : $center_val,
+					// Increased land expansion rate (1/2 instead of 1/3) to create more land from ocean
+					$center_val === 0 && ($upper_left_val !== 0 || $upper_right_val !== 0 || $lower_left_val !== 0 || $lower_right_val !== 0) => $this->nextInt(2) === 0 ? $upper_left_val : 0,
 					default => $center_val
 				};
 			}

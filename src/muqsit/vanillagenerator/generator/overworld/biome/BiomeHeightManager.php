@@ -56,6 +56,18 @@ final class BiomeHeightManager{
 		self::register(new BiomeHeight(0.1, 0.4), BiomeIds::FLOWER_FOREST);
 		self::register(new BiomeHeight(0.4125, 1.325), BiomeIds::SAVANNA_MUTATED);
 		self::register(new BiomeHeight(1.1, 1.3125), BiomeIds::SAVANNA_PLATEAU_MUTATED);
+		
+		// 1.18+ Biome Heights
+		self::register(new BiomeHeight(-1.0, 0.1), BiomeIds::DEEP_DARK); // Deep underground
+		self::register(new BiomeHeight(-0.7, 0.4), BiomeIds::DRIPSTONE_CAVES); // Cave biome
+		self::register(new BiomeHeight(-0.5, 0.4), BiomeIds::LUSH_CAVES); // Cave biome
+		self::register(new BiomeHeight(-0.2, 0.1), BiomeIds::MANGROVE_SWAMP); // Swamp-like
+		self::register(new BiomeHeight(0.2, 0.8), BiomeIds::MEADOW); // Mountain meadow
+		self::register(new BiomeHeight(0.25, 0.8), BiomeIds::GROVE); // Mountain grove
+		self::register(new BiomeHeight(1.0, 0.3), BiomeIds::SNOWY_SLOPES); // Mountain slopes
+		self::register(new BiomeHeight(1.4, 0.8), BiomeIds::FROZEN_PEAKS); // High peaks
+		self::register(new BiomeHeight(1.4, 0.8), BiomeIds::JAGGED_PEAKS); // High peaks
+		self::register(new BiomeHeight(1.4, 0.8), BiomeIds::STONY_PEAKS); // High peaks
 	}
 
 	public static function register(BiomeHeight $height, int ...$biomes) : void{

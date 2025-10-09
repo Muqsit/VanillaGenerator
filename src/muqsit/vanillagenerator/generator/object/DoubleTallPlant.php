@@ -33,6 +33,11 @@ class DoubleTallPlant extends TerrainObject{
 			$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
 			$y = $source_y + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 
+			// Check bounds for both Y and Y+1
+			if($y < $world->getMinY() || $y + 1 > $world->getMaxY()) {
+				continue;
+			}
+
 			$block = $world->getBlockAt($x, $y, $z);
 			$top_block = $world->getBlockAt($x, $y + 1, $z);
 			if($y < $height && $block->getTypeId() === BlockTypeIds::AIR && $top_block->getTypeId() === BlockTypeIds::AIR && $world->getBlockAt($x, $y - 1, $z)->getTypeId() === BlockTypeIds::GRASS){

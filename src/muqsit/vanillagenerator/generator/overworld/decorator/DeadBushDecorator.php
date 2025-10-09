@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
+use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Leaves;
 use pocketmine\block\VanillaBlocks;
@@ -19,7 +20,7 @@ class DeadBushDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 		$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
-		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($source_x & Chunk::COORD_MASK, $source_z & Chunk::COORD_MASK) << 1);
+		$source_y = DecoratorUtils::getPlantY($random, $chunk, $source_x, $source_z); // Safe Y for dead bush
 		while($source_y > 0
 			&& ($world->getBlockAt($source_x, $source_y, $source_z)->getTypeId() === BlockTypeIds::AIR
 				|| $world->getBlockAt($source_x, $source_y, $source_z) instanceof Leaves)){

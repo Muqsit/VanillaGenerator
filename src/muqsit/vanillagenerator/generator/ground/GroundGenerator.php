@@ -52,7 +52,7 @@ class GroundGenerator{
 	 * @param float $surface_noise the amplitude of random variation in surface height
 	 */
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
-		$sea_level = 64;
+		$sea_level = 63; // 1.18+ sea level
 
 		$top_mat = $this->top_material->getStateId();
 		$ground_mat = $this->ground_material->getStateId();
@@ -77,8 +77,19 @@ class GroundGenerator{
 		$block_x = $x & Chunk::COORD_MASK;
 		$block_z = $z & Chunk::COORD_MASK;
 
-		for($y = 255; $y >= 0; --$y){
-			if($y <= $random->nextBoundedInt($this->bedrock_roughness)){
+		// Use actual world bounds but validate subchunk access
+		$world_max_y = $world->getMaxY();
+		$world_min_y = $world->getMinY();
+		
+		for($y = $world_max_y; $y >= $world_min_y; --$y){
+			// Validate subchunk index before accessing chunk
+			$subchunk_index = $y >> 4;
+			if($subchunk_index < -4 || $subchunk_index > 19) {
+				continue; // Skip invalid subchunk indices
+			}
+			
+			// Place bedrock at the bottom of the world
+			if($y <= $world_min_y + $random->nextBoundedInt($this->bedrock_roughness)){
 				$chunk->setBlockStateId($block_x, $y, $block_z, $bedrock);
 			}else{
 				$mat = $block_state_registry->fromStateId($chunk->getBlockStateId($block_x, $y, $block_z));
