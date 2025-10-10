@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\Cactus;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -18,7 +17,7 @@ class CactusDecorator extends Decorator{
 		$source_z = $chunk_z << Chunk::COORD_BIT_SIZE;
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
-		$sourceY = DecoratorUtils::getPlantY($random, $chunk, $x, $z); // Safe Y for cactus
+		$sourceY = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) << 1);
 
 		for($l = 0; $l < 10; ++$l){
 			$i = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);

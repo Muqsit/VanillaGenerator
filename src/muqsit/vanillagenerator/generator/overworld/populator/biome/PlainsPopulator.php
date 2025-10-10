@@ -10,7 +10,6 @@ use muqsit\vanillagenerator\generator\object\DoubleTallPlant;
 use muqsit\vanillagenerator\generator\object\Flower;
 use muqsit\vanillagenerator\generator\object\TallGrass;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\block\Block;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -71,7 +70,7 @@ class PlainsPopulator extends BiomePopulator{
 			for($i = 0; $i < 7; ++$i){
 				$x = $random->nextBoundedInt(16);
 				$z = $random->nextBoundedInt(16);
-				$y = DecoratorUtils::getSurfaceY($random, $chunk, $x, $z);
+				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 				(new DoubleTallPlant(VanillaBlocks::DOUBLE_TALLGRASS()))->generate($world, $random, $source_x + $x, $y, $source_z + $z);
 			}
 		}
@@ -85,14 +84,14 @@ class PlainsPopulator extends BiomePopulator{
 		for($i = 0; $i < $flower_amount; ++$i){
 			$x = $random->nextBoundedInt(16);
 			$z = $random->nextBoundedInt(16);
-			$y = DecoratorUtils::getPlantY($random, $chunk, $x, $z);
+			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 			(new Flower($flower))->generate($world, $random, $source_x + $x, $y, $source_z + $z);
 		}
 
 		for($i = 0; $i < $tall_grass_amount; ++$i){
 			$x = $random->nextBoundedInt(16);
 			$z = $random->nextBoundedInt(16);
-			$y = DecoratorUtils::getPlantY($random, $chunk, $x, $z);
+			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) << 1);
 			(new TallGrass(VanillaBlocks::TALL_GRASS()))->generate($world, $random, $source_x + $x, $y, $source_z + $z);
 		}
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\block\Block;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Dirt;
@@ -38,7 +37,7 @@ class MushroomDecorator extends Decorator{
 			$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 			$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 			$source_y = $chunk->getHighestBlockAt($source_x & Chunk::COORD_MASK, $source_z & Chunk::COORD_MASK);
-			$source_y = $this->fixed_height_range ? $source_y : DecoratorUtils::getPlantY($random, $chunk, $source_x, $source_z);
+			$source_y = $this->fixed_height_range ? $source_y : $random->nextBoundedInt($source_y << 1);
 
 			$height = $world->getMaxY();
 			for($i = 0; $i < 64; ++$i){

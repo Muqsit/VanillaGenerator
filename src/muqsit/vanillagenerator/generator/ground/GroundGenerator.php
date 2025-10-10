@@ -52,7 +52,7 @@ class GroundGenerator{
 	 * @param float $surface_noise the amplitude of random variation in surface height
 	 */
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
-		$sea_level = 63; // 1.18+ sea level
+		$sea_level = 63;
 
 		$top_mat = $this->top_material->getStateId();
 		$ground_mat = $this->ground_material->getStateId();
@@ -67,6 +67,7 @@ class GroundGenerator{
 		$block_state_registry = RuntimeBlockStateRegistry::getInstance();
 		$air = VanillaBlocks::AIR()->getStateId();
 		$stone = VanillaBlocks::STONE()->getStateId();
+		$deepslate = VanillaBlocks::DEEPSLATE()->getStateId();
 		$sandstone = VanillaBlocks::SANDSTONE()->getStateId();
 		$gravel = VanillaBlocks::GRAVEL()->getStateId();
 		$bedrock = VanillaBlocks::BEDROCK()->getStateId();
@@ -81,6 +82,22 @@ class GroundGenerator{
 		$world_max_y = $world->getMaxY();
 		$world_min_y = $world->getMinY();
 		
+		// Function to pick stone/deepslate by Y with a transition from Y=8 down to Y=0
+		$pickStoneId = static function(int $y, int $abs_x, int $abs_z) use ($stone, $deepslate) : int{
+			if($y <= 0){
+				return $deepslate;
+			}
+			if($y > 8){
+				return $stone;
+			}
+			$prob = (8 - $y) / 8.0;
+			$h = ($abs_x * 73428767) ^ ($abs_z * 912367) ^ ($y * 42331);
+			$h ^= ($h >> 13);
+			$h = ($h * 1274126177) & 0x7fffffff;
+			$rand01 = ($h % 100000) / 100000.0;
+			return ($rand01 < $prob) ? $deepslate : $stone;
+		};
+
 		for($y = $world_max_y; $y >= $world_min_y; --$y){
 			// Validate subchunk index before accessing chunk
 			$subchunk_index = $y >> 4;
@@ -109,15 +126,24 @@ class GroundGenerator{
 							$chunk->setBlockStateId($block_x, $y, $block_z, $top_mat);
 						}elseif($y < $sea_level - 8 - $surface_height){
 							$top_mat = $air;
-							$ground_mat = $stone;
+							$ground_mat = $pickStoneId($y, $chunk_x, $chunk_z);
 							$ground_mat_id = BlockTypeIds::STONE;
 							$chunk->setBlockStateId($block_x, $y, $block_z, $gravel);
 						}else{
-							$chunk->setBlockStateId($block_x, $y, $block_z, $ground_mat);
+							// If the current ground material is stone, swap to deepslate when appropriate
+							$mat_to_set = $ground_mat;
+							if($ground_mat_id === BlockTypeIds::STONE){
+								$mat_to_set = $pickStoneId($y, $chunk_x, $chunk_z);
+							}
+							$chunk->setBlockStateId($block_x, $y, $block_z, $mat_to_set);
 						}
 					}elseif($deep > 0){
 						--$deep;
-						$chunk->setBlockStateId($block_x, $y, $block_z, $ground_mat);
+						$mat_to_set = $ground_mat;
+						if($ground_mat_id === BlockTypeIds::STONE){
+							$mat_to_set = $pickStoneId($y, $chunk_x, $chunk_z);
+						}
+						$chunk->setBlockStateId($block_x, $y, $block_z, $mat_to_set);
 
 						if($deep === 0 && $ground_mat_id === BlockTypeIds::SAND){
 							$deep = $random->nextBoundedInt(4) + max(0, $y - $sea_level - 1);

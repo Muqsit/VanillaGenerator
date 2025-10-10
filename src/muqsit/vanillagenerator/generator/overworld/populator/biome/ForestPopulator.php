@@ -8,7 +8,6 @@ use muqsit\vanillagenerator\generator\object\DoubleTallPlant;
 use muqsit\vanillagenerator\generator\object\tree\BirchTree;
 use muqsit\vanillagenerator\generator\object\tree\GenericTree;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use muqsit\vanillagenerator\generator\overworld\decorator\types\TreeDecoration;
 use pocketmine\block\DoublePlant;
 use pocketmine\block\VanillaBlocks;
@@ -64,7 +63,7 @@ class ForestPopulator extends BiomePopulator{
 			for($j = 0; $j < 5; ++$j, ++$i){
 				$x = $random->nextBoundedInt(16);
 				$z = $random->nextBoundedInt(16);
-				$y = DecoratorUtils::getPlantY($random, $chunk, $x, $z);
+				$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 				$species = self::$DOUBLE_PLANTS[$random->nextBoundedInt(count(self::$DOUBLE_PLANTS))];
 				if((new DoubleTallPlant($species))->generate($world, $random, $source_x + $x, $y, $source_z + $z)){
 					++$i;

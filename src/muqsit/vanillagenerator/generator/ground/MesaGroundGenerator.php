@@ -51,7 +51,7 @@ class MesaGroundGenerator extends GroundGenerator{
 
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
 		$this->initialize($random->getSeed());
-		$sea_level = 63; // 1.18+ sea level
+		$sea_level = 63;
 
 		$top_mat = $this->top_material;
 		$ground_mat = $this->ground_material;

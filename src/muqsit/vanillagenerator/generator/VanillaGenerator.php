@@ -97,13 +97,11 @@ abstract class VanillaGenerator extends Generator{
 		}
 	}
 
-	public function getMaxY() : int{
-		// 1.18+ world height: Y=319 (subchunk 19 × 16 + 15)
+	public function getMaxY(): int {
 		return 319;
 	}
 
-	public function getMinY() : int{
-		// 1.18+ world height: Y=-64 (subchunk -4 × 16)
+	public function getMinY(): int {
 		return -64;
 	}
 }

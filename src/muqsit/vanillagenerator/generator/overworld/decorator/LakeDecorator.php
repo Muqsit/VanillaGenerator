@@ -24,12 +24,7 @@ class LakeDecorator extends Decorator{
 		if($random->nextBoundedInt($this->rarity) === 0){
 			$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 			$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
-			
-			// Limit lake generation to reasonable heights for 1.18+ (Y=0 to Y=120)
-			// This prevents lakes from generating at extreme heights like Y=300+
-			$max_lake_y = min(120, $world->getMaxY() - 20); // Cap at Y=120 or world max - 20
-			$source_y = $random->nextBoundedInt($max_lake_y - $this->base_offset) + $this->base_offset;
-			
+			$source_y = $random->nextBoundedInt($world->getMaxY() - $this->base_offset) + $this->base_offset;
 			if($this->type->getTypeId() === BlockTypeIds::LAVA && ($source_y >= 64 || $random->nextBoundedInt(10) > 0)){
 				return;
 			}

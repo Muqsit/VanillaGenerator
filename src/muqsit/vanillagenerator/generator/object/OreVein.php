@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object;
 
 use pocketmine\block\Block;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 
@@ -80,9 +81,13 @@ class OreVein extends TerrainObject{
 					}
 					for($z = $min_z; $z <= $max_z; ++$z){
 						$squared_normalized_z = self::normalizedSquaredCoordinate($origin_z, $radius_h, $z);
-						if($squared_normalized_x + $squared_normalized_y + $squared_normalized_z < 1 && $world->getBlockAt($x, $y, $z)->getTypeId() === $this->target_type){
-							$world->setBlockAt($x, $y, $z, $this->type);
-							$succeeded = true;
+						if($squared_normalized_x + $squared_normalized_y + $squared_normalized_z < 1){
+							$under_id = $world->getBlockAt($x, $y, $z)->getTypeId();
+							// Replace only the configured target type (STONE for stone ores, DEEPSLATE for deepslate ores)
+							if($under_id === $this->target_type){
+								$world->setBlockAt($x, $y, $z, $this->type);
+								$succeeded = true;
+							}
 						}
 					}
 				}

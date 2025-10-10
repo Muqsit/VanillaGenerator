@@ -26,7 +26,6 @@ use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
-use muqsit\vanillagenerator\generator\cave\ModernCaveGenerator;
 use muqsit\vanillagenerator\generator\cave\CaveGenerator;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -109,7 +108,7 @@ class OverworldGenerator extends VanillaGenerator{
 	protected const DETAIL_NOISE_SCALE_Y = 160.0;
 	protected const DETAIL_NOISE_SCALE_Z = 80.0;
 	protected const SURFACE_SCALE = 0.0625;
-	protected const BASE_SIZE = 16.0; // Adjusted for 1.18+ height: sea level Y=64 maps to density level ~16
+	protected const BASE_SIZE = 16.0;
 	protected const STRETCH_Y = 12.0;
 	protected const BIOME_HEIGHT_OFFSET = 0.0;
 	protected const BIOME_HEIGHT_WEIGHT = 1.0;
@@ -131,22 +130,15 @@ class OverworldGenerator extends VanillaGenerator{
 			$preset->exists("worldtype") ? WorldType::fromString($preset->getString("worldtype")) : null,
 			$preset
 		);
-	// Ground generation
-	$this->ground_gen = new GroundGenerator();
-		
-	// Use legacy cave generator
-	$this->cave_generator = new CaveGenerator($seed);
-		
-	// Add populators
-	$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
+		// Ground generation
+		$this->ground_gen = new GroundGenerator();
+			
+		// Use legacy cave generator
+		$this->cave_generator = new CaveGenerator($seed);
+			
+		// Add populators
+		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}
-
-
-	/*
-	public function getGroundGenerator() : GroundGenerator{
-		return $this->ground_gen;
-	}
-	*/
 
 	protected function generateChunkData(ChunkManager $world, int $chunk_x, int $chunk_z, VanillaBiomeGrid $grid) : void{
 		$this->generateRawTerrain($world, $chunk_x, $chunk_z);
@@ -208,7 +200,6 @@ class OverworldGenerator extends VanillaGenerator{
 		$height->x_scale = self::HEIGHT_NOISE_SCALE_X;
 		$height->z_scale = self::HEIGHT_NOISE_SCALE_Z;
 
-		// 1.18+ height: 48 Y-levels for full height range (Y=-64 to Y=319)
 		$roughness = PerlinOctaveGenerator::fromRandomAndOctaves($seed, 16, 5, 48, 5);
 		$roughness->x_scale = self::COORDINATE_SCALE;
 		$roughness->y_scale = self::HEIGHT_SCALE;
@@ -233,7 +224,7 @@ class OverworldGenerator extends VanillaGenerator{
 	protected function generateRawTerrain(ChunkManager $world, int $chunk_x, int $chunk_z) : void{
 		$density = $this->generateTerrainDensity($chunk_x, $chunk_z);
 
-		$sea_level = 63; // 1.18+ standard sea level
+		$sea_level = 63;
 
 		// Terrain densities are sampled at different resolutions (1/4x on x,z and 1/8x on y by
 		// default)
@@ -247,13 +238,35 @@ class OverworldGenerator extends VanillaGenerator{
 		$still_water = VanillaBlocks::WATER()->getStillForm()->getStateId();
 		$water = VanillaBlocks::WATER()->getFlowingForm()->getStateId();
 		$stone = VanillaBlocks::STONE()->getStateId();
+		$deepslate = VanillaBlocks::DEEPSLATE()->getStateId();
+
+		// Decide whether a block placement at a given Y should be stone or deepslate.
+		// Policy:
+		// - Y <= 0: always deepslate
+		// - 0 < Y <= 8: gradual transition, deepslate probability increases linearly from 0 at Y=8 to 1 at Y=0
+		// - Y > 8: always stone
+		$pickStoneId = static function(int $y, int $abs_x, int $abs_z) use ($stone, $deepslate) : int{
+			if($y <= 0){
+				return $deepslate;
+			}
+			if($y > 8){
+				return $stone;
+			}
+			// Linear probability for deepslate in (0,8]
+			$prob = (8 - $y) / 8.0; // at y=8 => 0, y=0 => 1
+			// Deterministic hash-based noise per-block to avoid affecting PRNG streams
+			$h = ($abs_x * 73428767) ^ ($abs_z * 912367) ^ ($y * 42331);
+			$h ^= ($h >> 13);
+			$h = ($h * 1274126177) & 0x7fffffff;
+			$rand01 = ($h % 100000) / 100000.0; // [0,1)
+			return ($rand01 < $prob) ? $deepslate : $stone;
+		};
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunk_x, $chunk_z);
 
 		for($i = 0; $i < 5 - 1; ++$i){
 			for($j = 0; $j < 5 - 1; ++$j){
-				// 1.18+ height: 48 - 1 = 47 density interpolation steps
 				for($k = 0; $k < 48 - 1; ++$k){
 					// 2x2 grid
 					$d1 = $density[self::densityHash($i, $j, $k)];
@@ -269,7 +282,6 @@ class OverworldGenerator extends VanillaGenerator{
 						$d9 = $d1;
 						$d10 = $d3;
 
-						// 1.18+ world height: Y=-64 to Y=319
 						$y_pos = $l + ($k << 3) - 64;
 						
 						// Clamp Y position to valid range as safety measure
@@ -281,8 +293,6 @@ class OverworldGenerator extends VanillaGenerator{
 						
 						// Final safety check for subchunk index
 						if($subchunk_index < -4 || $subchunk_index > 19){
-							// This should never happen with proper clamping
-							error_log("CRITICAL: Invalid subchunk index: $subchunk_index for Y=$y_pos (k=$k, l=$l)");
 							continue;
 						}
 						
@@ -291,6 +301,10 @@ class OverworldGenerator extends VanillaGenerator{
 						for($m = 0; $m < 4; ++$m){
 							$dens = $d9;
 							for($n = 0; $n < 4; ++$n){
+								$block_x = $m + ($i << 2);
+								$block_z = $n + ($j << 2);
+								$abs_x = ($chunk_x << 4) + $block_x;
+								$abs_z = ($chunk_z << 4) + $block_z;
 								// any density higher than density offset is ground, any density
 								// lower or equal to the density offset is air
 								// (or water if under the sea level).
@@ -304,12 +318,12 @@ class OverworldGenerator extends VanillaGenerator{
 								if($afill === 1 || $afill === 10 || $afill === 13 || $afill === 16){
 									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $water);
 								}elseif($afill === 2 || $afill === 9 || $afill === 12 || $afill === 15){
-									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
+									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $pickStoneId($y_pos, $abs_x, $abs_z));
 								}
 
 								if(($dens > $density_offset && $fill > -1) || ($dens <= $density_offset && $fill < 0)){
 									if($afill === 0 || $afill === 3 || $afill === 6 || $afill === 9 || $afill === 12){
-										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
+										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $pickStoneId($y_pos, $abs_x, $abs_z));
 									}elseif($afill === 2 || $afill === 7 || $afill === 10 || $afill === 16){
 										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
 									}
@@ -317,7 +331,7 @@ class OverworldGenerator extends VanillaGenerator{
 									if($afill === 0 || $afill === 3 || $afill === 7 || $afill === 10 || $afill === 13){
 										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
 									}elseif($afill === 1 || $afill === 6 || $afill === 9 || $afill === 15){
-										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
+										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $pickStoneId($y_pos, $abs_x, $abs_z));
 									}
 								}
 
@@ -439,11 +453,9 @@ class OverworldGenerator extends VanillaGenerator{
 
 				$noise_h = ($noise_h * 0.2 + $avg_height_base) * self::BASE_SIZE / 8.0 * 4.0 + self::BASE_SIZE;
 				
-				// 1.18+ height: 384 total height / 8 = 48 density steps (Y=-64 to Y=319)
 				for($k = 0; $k < 48; ++$k){
 					// density should be lower and lower as we climb up, this gets a height value to
 					// subtract from the noise.
-					// Updated calculation for 1.18+ height range (384 total height)
 					$nh = ($k - $noise_h) * self::STRETCH_Y * 128.0 / 384.0 / $avg_height_scale;
 					if($nh < 0.0){
 						$nh *= 4.0;
@@ -457,7 +469,6 @@ class OverworldGenerator extends VanillaGenerator{
 					$dens = $noise_d < 0 ? $noise_r : ($noise_d > 1 ? $noise_r_2 : $noise_r + ($noise_r_2 - $noise_r) * $noise_d);
 					$dens -= $nh;
 					++$index;
-					// Adjusted for 1.18+ heights: start lowering at level 38 instead of 29 (48 * 0.8 ≈ 38)
 					if($k > 38){
 						$lowering = ($k - 38) / 9.0; // Spread over 9 levels instead of 3
 						// linear interpolation

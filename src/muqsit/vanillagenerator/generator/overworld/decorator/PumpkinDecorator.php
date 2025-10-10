@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Facing;
@@ -21,7 +20,7 @@ class PumpkinDecorator extends Decorator{
 		if($random->nextBoundedInt(32) === 0){
 			$source_x = ($chunk_x << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
 			$source_z = ($chunk_z << Chunk::COORD_BIT_SIZE) + $random->nextBoundedInt(16);
-			$source_y = DecoratorUtils::getPlantY($random, $chunk, $source_x, $source_z); // Safe Y for pumpkins
+			$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($source_x & Chunk::COORD_MASK, $source_z & Chunk::COORD_MASK) << 1);
 			for($i = 0; $i < 64; ++$i){
 				$x = $source_x + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);
 				$z = $source_z + $random->nextBoundedInt(8) - $random->nextBoundedInt(8);

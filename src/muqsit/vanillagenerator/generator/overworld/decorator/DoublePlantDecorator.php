@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\DoubleTallPlant;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use muqsit\vanillagenerator\generator\overworld\decorator\types\DoublePlantDecoration;
 use pocketmine\block\DoublePlant;
 use pocketmine\utils\Random;
@@ -45,7 +44,7 @@ class DoublePlantDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 		$x = $random->nextBoundedInt(16);
 		$z = $random->nextBoundedInt(16);
-		$source_y = DecoratorUtils::getPlantY($random, $chunk, $x, $z); // Safe Y for double plants
+		$source_y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 
 		$species = self::getRandomDoublePlant($random, $this->doublePlants);
 		(new DoubleTallPlant($species))->generate($world, $random, ($chunk_x << Chunk::COORD_BIT_SIZE) + $x, $source_y, ($chunk_z << Chunk::COORD_BIT_SIZE) + $z);

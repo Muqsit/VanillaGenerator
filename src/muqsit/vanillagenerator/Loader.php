@@ -6,6 +6,7 @@ namespace muqsit\vanillagenerator;
 
 use muqsit\vanillagenerator\generator\nether\NetherGenerator;
 use muqsit\vanillagenerator\generator\overworld\OverworldGenerator;
+use muqsit\vanillagenerator\generator\test\TestGenerator;
 use pocketmine\plugin\PluginBase;
 use pocketmine\world\generator\GeneratorManager;
 
@@ -15,5 +16,6 @@ final class Loader extends PluginBase{
 		$generator_manager = GeneratorManager::getInstance();
 		$generator_manager->addGenerator(NetherGenerator::class, "vanilla_nether", fn() => null);
 		$generator_manager->addGenerator(OverworldGenerator::class, "vanilla_overworld", fn() => null);
+		$generator_manager->addGenerator(TestGenerator::class, "test", fn() => null);
 	}
 }

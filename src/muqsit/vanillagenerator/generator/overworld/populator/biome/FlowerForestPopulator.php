@@ -8,7 +8,6 @@ use muqsit\vanillagenerator\generator\noise\bukkit\OctaveGenerator;
 use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
 use muqsit\vanillagenerator\generator\object\Flower;
 use muqsit\vanillagenerator\generator\overworld\biome\BiomeIds;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\block\Block;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
@@ -59,7 +58,7 @@ class FlowerForestPopulator extends ForestPopulator{
 		for($i = 0; $i < 100; ++$i){
 			$x = $random->nextBoundedInt(16);
 			$z = $random->nextBoundedInt(16);
-			$y = DecoratorUtils::getPlantY($random, $chunk, $x, $z);
+			$y = $random->nextBoundedInt($chunk->getHighestBlockAt($x, $z) + 32);
 			$noise = ($this->noise_gen->noise($x, $z, 0.5, 0, 2.0, false) + 1.0) / 2.0;
 			$noise = $noise < 0 ? 0 : ($noise > 0.9999 ? 0.9999 : $noise);
 			$flower = self::$FOREST_FLOWERS[(int) ($noise * count(self::$FOREST_FLOWERS))];

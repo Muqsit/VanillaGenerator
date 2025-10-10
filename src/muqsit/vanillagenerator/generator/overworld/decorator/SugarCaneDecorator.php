@@ -6,7 +6,6 @@ namespace muqsit\vanillagenerator\generator\overworld\decorator;
 
 use muqsit\vanillagenerator\generator\Decorator;
 use muqsit\vanillagenerator\generator\object\SugarCane;
-use muqsit\vanillagenerator\generator\overworld\decorator\DecoratorUtils;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
@@ -20,7 +19,7 @@ class SugarCaneDecorator extends Decorator{
 		if($max_y <= 0){
 			return;
 		}
-		$source_y = DecoratorUtils::getPlantY($random, $chunk, $source_x, $source_z); // Safe Y for sugar cane
+		$source_y = $random->nextBoundedInt($max_y << 1);
 		for($j = 0; $j < 20; ++$j){
 			$x = $source_x + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
 			$z = $source_z + $random->nextBoundedInt(4) - $random->nextBoundedInt(4);
