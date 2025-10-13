@@ -83,11 +83,22 @@ class MesaGroundGenerator extends GroundGenerator{
 		$grass = VanillaBlocks::GRASS();
 		$coarse_dirt = VanillaBlocks::DIRT()->setDirtType(DirtType::COARSE);
 
-		for($y = 255; $y >= 0; --$y){
+		// Use actual world bounds but validate subchunk access
+		$world_max_y = $world->getMaxY();
+		$world_min_y = $world->getMinY();
+		
+		for($y = $world_max_y; $y >= $world_min_y; --$y){
+			// Validate subchunk index before accessing world
+			$subchunk_index = $y >> 4;
+			if($subchunk_index < -4 || $subchunk_index > 19) {
+				continue; // Skip invalid subchunk indices
+			}
+			
 			if($y < (int) $bryce_canyon_height && $world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::AIR){
 				$world->setBlockAt($x, $y, $z, VanillaBlocks::STONE());
 			}
-			if($y <= $random->nextBoundedInt(5)){
+			// Place bedrock at the bottom of the world
+			if($y <= $world_min_y + $random->nextBoundedInt(5)){
 				$world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
 			}else{
 				$mat_id = $world->getBlockAt($x, $y, $z)->getTypeId();

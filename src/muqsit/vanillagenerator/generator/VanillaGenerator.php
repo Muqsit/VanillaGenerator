@@ -12,7 +12,6 @@ use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\generator\Generator;
-use pocketmine\world\World;
 
 /**
  * @template T of WorldOctaves
@@ -97,7 +96,11 @@ abstract class VanillaGenerator extends Generator{
 		}
 	}
 
-	public function getMaxY() : int{
-		return World::Y_MAX;
+	public function getMaxY(): int {
+		return 319;
+	}
+
+	public function getMinY(): int {
+		return -64;
 	}
 }
