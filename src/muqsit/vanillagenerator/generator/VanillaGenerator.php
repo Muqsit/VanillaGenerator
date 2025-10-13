@@ -12,7 +12,6 @@ use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\generator\Generator;
-use pocketmine\world\World;
 
 /**
  * @template T of WorldOctaves

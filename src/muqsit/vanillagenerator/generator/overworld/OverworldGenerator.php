@@ -130,13 +130,8 @@ class OverworldGenerator extends VanillaGenerator{
 			$preset->exists("worldtype") ? WorldType::fromString($preset->getString("worldtype")) : null,
 			$preset
 		);
-		// Ground generation
 		$this->ground_gen = new GroundGenerator();
-			
-		// Use legacy cave generator
 		$this->cave_generator = new CaveGenerator($seed);
-			
-		// Add populators
 		$this->addPopulators(new OverworldPopulator(), new SnowPopulator());
 	}
 
@@ -191,6 +186,7 @@ class OverworldGenerator extends VanillaGenerator{
 			$this->cave_generator->carveDirectly($world, $chunk_x, $chunk_z);
 			$this->cave_generator->applyAquifers($world, $chunk_x, $chunk_z);
 		}
+
 	}
 
 	protected function createWorldOctaves() : WorldOctaves{
@@ -221,10 +217,13 @@ class OverworldGenerator extends VanillaGenerator{
 		return new WorldOctaves($height, $roughness, $roughness2, $detail, $surface);
 	}
 
+	/**
+	 * Generates raw terrain for a chunk at chunk coordinates x,z (does not accept block coords).
+	 */
 	protected function generateRawTerrain(ChunkManager $world, int $chunk_x, int $chunk_z) : void{
 		$density = $this->generateTerrainDensity($chunk_x, $chunk_z);
 
-		$sea_level = 63;
+		$sea_level = 64;
 
 		// Terrain densities are sampled at different resolutions (1/4x on x,z and 1/8x on y by
 		// default)
@@ -240,26 +239,18 @@ class OverworldGenerator extends VanillaGenerator{
 		$stone = VanillaBlocks::STONE()->getStateId();
 		$deepslate = VanillaBlocks::DEEPSLATE()->getStateId();
 
-		// Decide whether a block placement at a given Y should be stone or deepslate.
-		// Policy:
-		// - Y <= 0: always deepslate
-		// - 0 < Y <= 8: gradual transition, deepslate probability increases linearly from 0 at Y=8 to 1 at Y=0
-		// - Y > 8: always stone
-		$pickStoneId = static function(int $y, int $abs_x, int $abs_z) use ($stone, $deepslate) : int{
+		$rng = $this->random; 
+		$pickStoneId = static function(int $y) use ($stone, $deepslate, $rng) : int{
 			if($y <= 0){
 				return $deepslate;
 			}
 			if($y > 8){
 				return $stone;
 			}
-			// Linear probability for deepslate in (0,8]
-			$prob = (8 - $y) / 8.0; // at y=8 => 0, y=0 => 1
-			// Deterministic hash-based noise per-block to avoid affecting PRNG streams
-			$h = ($abs_x * 73428767) ^ ($abs_z * 912367) ^ ($y * 42331);
-			$h ^= ($h >> 13);
-			$h = ($h * 1274126177) & 0x7fffffff;
-			$rand01 = ($h % 100000) / 100000.0; // [0,1)
-			return ($rand01 < $prob) ? $deepslate : $stone;
+			$p = (8 - $y) / 8.0;
+			$p = $p * $p; 
+			$rand01 = $rng->nextFloat();
+			return ($rand01 < $p) ? $deepslate : $stone;
 		};
 
 		/** @var Chunk $chunk */
@@ -358,6 +349,10 @@ class OverworldGenerator extends VanillaGenerator{
 	}
 
 	/**
+	 * Generates terrain density for a chunk at chunk coordinates x,z (does not accept block coords).
+	 * The returned array contains 5x5x33 = 825 density values, sampled at every 4 blocks on x and z
+	 * axis, and every 8 blocks on y axis. The values are used later to generate raw terrain by
+	 * re-scaling it to 16x16x256 (or other height if world height is different) using linear interpolation.
 	 * @param int $x
 	 * @param int $z
 	 * @return float[]
@@ -468,9 +463,17 @@ class OverworldGenerator extends VanillaGenerator{
 					// linear interpolation
 					$dens = $noise_d < 0 ? $noise_r : ($noise_d > 1 ? $noise_r_2 : $noise_r + ($noise_r_2 - $noise_r) * $noise_d);
 					$dens -= $nh;
+
+					$targetSeabedY = 40;
+					$bandMidY = ($k << 3) + 3 - 64;
+					if($bandMidY < $targetSeabedY){
+						$bias = ($targetSeabedY - $bandMidY) * 0.09;
+						$dens += $bias;
+					}
 					++$index;
-					if($k > 38){
-						$lowering = ($k - 38) / 9.0; // Spread over 9 levels instead of 3
+					// Allow mountains up to Y=255 (k=39 => y 248..255), start tapering above that
+					if($k >= 40){
+						$lowering = ($k - 40) / 9.0; // Spread over 9 levels instead of 3
 						// linear interpolation
 						$dens = $dens * (1.0 - $lowering) + -10.0 * $lowering;
 					}

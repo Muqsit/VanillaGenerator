@@ -25,7 +25,7 @@ final class TestGenerator extends OverworldGenerator{
 
     private int $centerChunkX = 0;
     private int $centerChunkZ = 0;
-    private int $radius = 1; // radius in chunks; 1 => 3x3 area
+    private int $radius = 5; // radius in chunks; 1 => 3x3 area
 
     public function __construct(int $seed, string $preset_string){
         parent::__construct($seed, $preset_string);

@@ -52,7 +52,7 @@ class GroundGenerator{
 	 * @param float $surface_noise the amplitude of random variation in surface height
 	 */
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
-		$sea_level = 63;
+		$sea_level = 64;
 
 		$top_mat = $this->top_material->getStateId();
 		$ground_mat = $this->ground_material->getStateId();
@@ -82,20 +82,18 @@ class GroundGenerator{
 		$world_max_y = $world->getMaxY();
 		$world_min_y = $world->getMinY();
 		
-		// Function to pick stone/deepslate by Y with a transition from Y=8 down to Y=0
-		$pickStoneId = static function(int $y, int $abs_x, int $abs_z) use ($stone, $deepslate) : int{
+		$rng = $random;
+		$pickStoneId = static function(int $y) use ($stone, $deepslate, $rng) : int{
 			if($y <= 0){
 				return $deepslate;
 			}
 			if($y > 8){
 				return $stone;
 			}
-			$prob = (8 - $y) / 8.0;
-			$h = ($abs_x * 73428767) ^ ($abs_z * 912367) ^ ($y * 42331);
-			$h ^= ($h >> 13);
-			$h = ($h * 1274126177) & 0x7fffffff;
-			$rand01 = ($h % 100000) / 100000.0;
-			return ($rand01 < $prob) ? $deepslate : $stone;
+			$p = (8 - $y) / 8.0;
+			$p = $p * $p;
+			$rand01 = $rng->nextFloat();
+			return ($rand01 < $p) ? $deepslate : $stone;
 		};
 
 		for($y = $world_max_y; $y >= $world_min_y; --$y){
