@@ -135,7 +135,7 @@ class BigOakTree extends GenericTree{
 		$trunk_top_y = $block_y + $this->trunk_height;
 		$leaf_nodes[] = new LeafNode($block_x, $y, $block_z, $trunk_top_y);
 
-		$node_count = (int) (1.382 + ((static::LEAF_DENSITY * (double) ($this->height / 13.0)) ** 2.0));
+		$node_count = (int) (1.382 + ((static::LEAF_DENSITY * (float) ($this->height / 13.0)) ** 2.0));
 		$node_count = $node_count < 1 ? 1 : $node_count;
 
 		for($l = --$y - $block_y; $l >= 0; --$l, --$y){
