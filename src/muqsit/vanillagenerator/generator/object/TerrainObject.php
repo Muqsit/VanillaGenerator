@@ -25,8 +25,9 @@ abstract class TerrainObject{
 	public static function killWeakBlocksAbove(ChunkManager $world, int $x, int $y, int $z) : bool{
 		$cur_y = $y + 1;
 		$changed = false;
+		$max_y = $world->getMaxY();
 
-		while($cur_y < World::Y_MAX){
+		while($cur_y < $max_y){ // Use < instead of <= to prevent accessing Y=320
 			$block = $world->getBlockAt($x, $cur_y, $z);
 			if(!($block instanceof Flowable)){
 				break;

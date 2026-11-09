@@ -69,4 +69,16 @@ interface BiomeIds{
 	public const MESA_BRYCE = VanillaBiomeIds::MESA_BRYCE;
 	public const MESA_PLATEAU_STONE_MUTATED = VanillaBiomeIds::MESA_PLATEAU_STONE_MUTATED;
 	public const MESA_PLATEAU_MUTATED = VanillaBiomeIds::MESA_PLATEAU_MUTATED;
+	
+	public const DEEP_DARK = VanillaBiomeIds::DEEP_DARK;
+	public const DRIPSTONE_CAVES = VanillaBiomeIds::DRIPSTONE_CAVES;
+	public const LUSH_CAVES = VanillaBiomeIds::LUSH_CAVES;
+	
+	public const MANGROVE_SWAMP = VanillaBiomeIds::MANGROVE_SWAMP;
+	public const MEADOW = VanillaBiomeIds::MEADOW;
+	public const GROVE = VanillaBiomeIds::GROVE;
+	public const SNOWY_SLOPES = VanillaBiomeIds::SNOWY_SLOPES;
+	public const FROZEN_PEAKS = VanillaBiomeIds::FROZEN_PEAKS;
+	public const JAGGED_PEAKS = VanillaBiomeIds::JAGGED_PEAKS;
+	public const STONY_PEAKS = VanillaBiomeIds::STONY_PEAKS;
 }
