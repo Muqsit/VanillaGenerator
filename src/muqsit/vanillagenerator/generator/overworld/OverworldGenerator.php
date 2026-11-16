@@ -29,6 +29,8 @@ use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
+use pocketmine\world\format\SubChunk;
+use ReflectionProperty;
 use function array_key_exists;
 
 /**
@@ -148,15 +150,15 @@ class OverworldGenerator extends VanillaGenerator{
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($chunk_x, $chunk_z);
 
-		$min_y = $world->getMinY();
-		$max_y = $world->getMaxY();
+		static $_biomes = new ReflectionProperty(SubChunk::class, "biomes");
+		foreach($chunk->getSubChunks() as $sub_chunk){
+			$_biomes->setValue($sub_chunk, clone $grid->palette);
+		}
+		$chunk->setTerrainDirtyFlag(Chunk::DIRTY_FLAG_BIOMES, true);
 		for($x = 0; $x < $size_x; ++$x){
 			for($z = 0; $z < $size_z; ++$z){
 				$id = $grid->getBiome($x, $z);
-				for($y = $min_y; $y < $max_y; ++$y){
-					$chunk->setBiomeId($x, $y, $z, $id);
-				}
-				if($id !== null && array_key_exists($id, self::$GROUND_MAP)){
+				if(array_key_exists($id, self::$GROUND_MAP)){
 					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}else{
 					$this->ground_gen->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);

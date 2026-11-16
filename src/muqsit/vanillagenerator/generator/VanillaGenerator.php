@@ -66,8 +66,8 @@ abstract class VanillaGenerator extends Generator{
 	public function generateChunk(ChunkManager $world, int $chunkX, int $chunkZ) : void{
 		$biomes = new VanillaBiomeGrid();
 		$biome_values = $this->biome_grid->high_resolution->generateValues($chunkX * 16, $chunkZ * 16, 16, 16);
-		for($i = 0, $biome_values_c = count($biome_values); $i < $biome_values_c; ++$i){
-			$biomes->biomes[$i] = $biome_values[$i];
+		foreach($biome_values as $i => $id){
+			$biomes->setBiome($i & 15, $i >> 4, $id);
 		}
 
 		$this->generateChunkData($world, $chunkX, $chunkZ, $biomes);
