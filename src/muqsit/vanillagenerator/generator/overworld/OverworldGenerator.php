@@ -116,8 +116,6 @@ class OverworldGenerator extends VanillaGenerator{
 	protected const BIOME_HEIGHT_WEIGHT = 1.0;
 	protected const BIOME_SCALE_OFFSET = 0.0;
 	protected const BIOME_SCALE_WEIGHT = 1.0;
-	protected const DENSITY_FILL_MODE = 0;
-	protected const DENSITY_FILL_SEA_MODE = 0;
 	protected const DENSITY_FILL_OFFSET = 0.0;
 
 	private GroundGenerator $ground_gen;
@@ -210,13 +208,9 @@ class OverworldGenerator extends VanillaGenerator{
 		// default)
 		// so it's needed to re-scale it. Linear interpolation is used to fill in the gaps.
 
-		$fill = self::DENSITY_FILL_MODE;
-		$afill = abs($fill);
-		$sea_fill = self::DENSITY_FILL_SEA_MODE;
 		$density_offset = self::DENSITY_FILL_OFFSET;
 
 		$still_water = VanillaBlocks::WATER()->getStillForm()->getStateId();
-		$water = VanillaBlocks::WATER()->getFlowingForm()->getStateId();
 		$stone = VanillaBlocks::STONE()->getStateId();
 
 		/** @var Chunk $chunk */
@@ -242,38 +236,16 @@ class OverworldGenerator extends VanillaGenerator{
 						$y_pos = $l + ($k << 3);
 						$y_block_pos = $y_pos & 0xf;
 						$sub_chunk = $chunk->getSubChunk($y_pos >> Chunk::COORD_BIT_SIZE);
+						$still_water_flag = $y_pos < $sea_level - 1;
 
 						for($m = 0; $m < 4; ++$m){
 							$dens = $d9;
 							for($n = 0; $n < 4; ++$n){
-								// any density higher than density offset is ground, any density
-								// lower or equal to the density offset is air
-								// (or water if under the sea level).
-								// this can be flipped if the mode is negative, so lower or equal
-								// to is ground, and higher is air/water
-								// and, then data can be shifted by afill the order is air by
-								// default, ground, then water. they can shift places
-								// within each if statement
-								// the target is density_offset + 0, since the default target is
-								// 0, so don't get too confused by the naming :)
-								if($afill === 1 || $afill === 10 || $afill === 13 || $afill === 16){
-									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $water);
-								}elseif($afill === 2 || $afill === 9 || $afill === 12 || $afill === 15){
+								// density above the offset is ground. anything else is air (or water below sea level)
+								if($dens > $density_offset){
 									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
-								}
-
-								if(($dens > $density_offset && $fill > -1) || ($dens <= $density_offset && $fill < 0)){
-									if($afill === 0 || $afill === 3 || $afill === 6 || $afill === 9 || $afill === 12){
-										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
-									}elseif($afill === 2 || $afill === 7 || $afill === 10 || $afill === 16){
-										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
-									}
-								}elseif(($y_pos < $sea_level - 1 && $sea_fill === 0) || ($y_pos >= $sea_level - 1 && $sea_fill === 1)){
-									if($afill === 0 || $afill === 3 || $afill === 7 || $afill === 10 || $afill === 13){
-										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
-									}elseif($afill === 1 || $afill === 6 || $afill === 9 || $afill === 15){
-										$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $stone);
-									}
+								}elseif($still_water_flag){
+									$sub_chunk->setBlockStateId($m + ($i << 2), $y_block_pos, $n + ($j << 2), $still_water);
 								}
 
 								// interpolation along z
