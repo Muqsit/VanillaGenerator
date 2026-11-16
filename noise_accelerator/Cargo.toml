@@ -1,0 +1,10 @@
+[package]
+name = "noise-accelerator"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\overworld;
 
+use GlobalLogger;
 use muqsit\vanillagenerator\generator\Environment;
 use muqsit\vanillagenerator\generator\ground\DirtAndStonePatchGroundGenerator;
 use muqsit\vanillagenerator\generator\ground\DirtPatchGroundGenerator;
@@ -25,13 +26,17 @@ use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
+use muqsit\vanillagenerator\NoiseAccelerator;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\format\SubChunk;
+use PrefixedLogger;
 use ReflectionProperty;
+use RuntimeException;
 use function array_key_exists;
+use function assert;
 
 /**
  * @extends VanillaGenerator<WorldOctaves<PerlinOctaveGenerator, PerlinOctaveGenerator, PerlinOctaveGenerator, SimplexOctaveGenerator>>
@@ -117,6 +122,7 @@ class OverworldGenerator extends VanillaGenerator{
 
 	private GroundGenerator $ground_gen;
 	private string $type = WorldType::NORMAL;
+	private ?NoiseAccelerator $noise_accelerator = null;
 
 	public function __construct(int $seed, string $preset_string){
 		$preset = SimpleGeneratorPreset::parse($preset_string);
@@ -319,9 +325,22 @@ class OverworldGenerator extends VanillaGenerator{
 
 		$octaves = $this->getWorldOctaves();
 		$height_noise = $octaves->height->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$roughness_noise = $octaves->roughness->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$roughness_noise_2 = $octaves->roughness_2->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
-		$detail_noise = $octaves->detail->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		$use_accel = NoiseAccelerator::$endpoint !== null;
+		if($use_accel){
+			try{
+				$client = $this->noise_accelerator ??= new NoiseAccelerator($octaves->roughness, $octaves->roughness_2, $octaves->detail);
+				[$roughness_noise, $roughness_noise_2, $detail_noise] = $client->sample($x, $z);
+			}catch(RuntimeException $e){
+				(new PrefixedLogger(GlobalLogger::get(), "VanillaGenerator"))->warning("Noise accelerator failed, falling back to native implementation: {$e->getMessage()}");
+				$use_accel = false;
+			}
+		}
+		if(!$use_accel){
+			$roughness_noise = $octaves->roughness->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+			$roughness_noise_2 = $octaves->roughness_2->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+			$detail_noise = $octaves->detail->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+		}
+		assert(isset($roughness_noise, $roughness_noise_2, $detail_noise));
 
 		$index = 0;
 		$index_height = 0;

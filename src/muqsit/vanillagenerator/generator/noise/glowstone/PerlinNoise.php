@@ -175,7 +175,6 @@ class PerlinNoise extends BasePerlinNoiseGenerator{
 				}
 			}
 		}
-
 		return $noise;
 	}
 }

@@ -14,7 +14,7 @@ abstract class BaseOctaveGenerator{
 	 * @param NoiseGenerator[] $octaves
 	 */
 	protected function __construct(
-		protected array $octaves
+		public array $octaves
 	){}
 
 	/**
