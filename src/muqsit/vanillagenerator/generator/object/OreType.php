@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\object;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockTypeIds;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 
 class OreType{
 
+	readonly public Block $target_type;
 	readonly public int $amount;
 
 	/**
@@ -21,16 +22,17 @@ class OreType{
 	 * @param int $min_y the minimum height
 	 * @param int $max_y the maximum height
 	 * @param int $amount the size of a vein
-	 * @param int $target_type the block this can replace
+	 * @param Block|null $target_type the block this can replace
 	 */
 	public function __construct(
 		readonly public Block $type,
 		readonly public int $min_y,
 		readonly public int $max_y,
 		int $amount,
-		readonly public int $target_type = BlockTypeIds::STONE
+		?Block $target_type = null
 	){
 		$this->amount = $amount + 1;
+		$this->target_type = $target_type ?? VanillaBlocks::STONE();
 	}
 
 	/**

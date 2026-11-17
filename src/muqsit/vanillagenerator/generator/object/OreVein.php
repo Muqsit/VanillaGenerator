@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\object;
 
-use pocketmine\block\Block;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\format\Chunk;
 
 class OreVein extends TerrainObject{
 
@@ -26,7 +26,7 @@ class OreVein extends TerrainObject{
 		return $squared_normalized_x;
 	}
 
-	private Block $type;
+	private int $type;
 	private int $amount;
 	private int $target_type;
 
@@ -36,9 +36,9 @@ class OreVein extends TerrainObject{
 	 * @param OreType $oreType the ore type
 	 */
 	public function __construct(OreType $oreType){
-		$this->type = $oreType->type;
+		$this->type = $oreType->type->getStateId();
 		$this->amount = $oreType->amount;
-		$this->target_type = $oreType->target_type;
+		$this->target_type = $oreType->target_type->getStateId();
 	}
 
 	public function generate(ChunkManager $world, Random $random, int $source_x, int $source_y, int $source_z) : bool{
@@ -73,15 +73,24 @@ class OreVein extends TerrainObject{
 				if($squared_normalized_x >= 1){
 					continue;
 				}
-				for($y = $min_y; $y <= $max_y; ++$y){
-					$squared_normalized_y = self::normalizedSquaredCoordinate($origin_y, $radius_v, $y);
-					if($squared_normalized_x + $squared_normalized_y >= 1){
+				for($z = $min_z; $z <= $max_z; ++$z){
+					$squared_normalized_z = self::normalizedSquaredCoordinate($origin_z, $radius_h, $z);
+					if($squared_normalized_x + $squared_normalized_z >= 1){
 						continue;
 					}
-					for($z = $min_z; $z <= $max_z; ++$z){
-						$squared_normalized_z = self::normalizedSquaredCoordinate($origin_z, $radius_h, $z);
-						if($squared_normalized_x + $squared_normalized_y + $squared_normalized_z < 1 && $world->getBlockAt($x, $y, $z)->getTypeId() === $this->target_type){
-							$world->setBlockAt($x, $y, $z, $this->type);
+					$chunk = $world->getChunk($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE);
+					if($chunk === null){
+						continue;
+					}
+					$block_x = $x & Chunk::COORD_MASK;
+					$block_z = $z & Chunk::COORD_MASK;
+					for($y = $min_y; $y <= $max_y; ++$y){
+						$squared_normalized_y = self::normalizedSquaredCoordinate($origin_y, $radius_v, $y);
+						if($squared_normalized_x + $squared_normalized_y + $squared_normalized_z >= 1){
+							continue;
+						}
+						if($chunk->getBlockStateId($block_x, $y, $block_z) === $this->target_type){
+							$chunk->setBlockStateId($block_x, $y, $block_z, $this->type);
 							$succeeded = true;
 						}
 					}

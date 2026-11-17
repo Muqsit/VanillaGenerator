@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator\overworld;
 
-use GlobalLogger;
 use muqsit\vanillagenerator\generator\Environment;
 use muqsit\vanillagenerator\generator\ground\DirtAndStonePatchGroundGenerator;
 use muqsit\vanillagenerator\generator\ground\DirtPatchGroundGenerator;

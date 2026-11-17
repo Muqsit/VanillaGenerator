@@ -45,11 +45,12 @@ class OrePopulator implements Populator{
 		$cz = $chunk_z << Chunk::COORD_BIT_SIZE;
 
 		foreach($this->ores as $ore_type_holder){
+			$vein = new OreVein($ore_type_holder->type);
 			for($n = 0; $n < $ore_type_holder->value; ++$n){
 				$source_x = $cx + $random->nextBoundedInt(16);
 				$source_z = $cz + $random->nextBoundedInt(16);
 				$source_y = $ore_type_holder->type->getRandomHeight($random);
-				(new OreVein($ore_type_holder->type))->generate($world, $random, $source_x, $source_y, $source_z);
+				$vein->generate($world, $random, $source_x, $source_y, $source_z);
 			}
 		}
 	}
