@@ -1,4 +1,4 @@
-const PROTOCOL_VERSION: u32 = 1;
+const PROTOCOL_VERSION: u32 = 10002;
 
 use std::io::{self, Read, Write};
 use std::net::TcpListener;
@@ -247,7 +247,6 @@ fn announce(endpoint: &str) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-	io::stdout().write_all(&PROTOCOL_VERSION.to_le_bytes())?;
     #[cfg(unix)]
     {
         use std::os::unix::net::UnixListener;

@@ -164,6 +164,7 @@ class OverworldGenerator extends VanillaGenerator{
 				$random = new BufferedRandom($random->getSeed(), $this->noise_accelerator->randomWords($random, 131_328));
 			}catch(RuntimeException $e){
 				VanillaGenerator::logger()->warning("Noise accelerator failed, falling back to native implementation: {$e->getMessage()}");
+				$this->noise_accelerator = null;
 			}
 		}
 		for($x = 0; $x < $size_x; ++$x){
@@ -314,6 +315,7 @@ class OverworldGenerator extends VanillaGenerator{
 				[$roughness_noise, $roughness_noise_2, $detail_noise] = $client->sample($x, $z);
 			}catch(RuntimeException $e){
 				VanillaGenerator::logger()->warning("Noise accelerator failed, falling back to native implementation: {$e->getMessage()}");
+				$this->noise_accelerator = null;
 				$use_accel = false;
 			}
 		}

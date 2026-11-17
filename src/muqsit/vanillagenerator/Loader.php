@@ -4,35 +4,43 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator;
 
+use Generator;
 use muqsit\vanillagenerator\generator\nether\NetherGenerator;
 use muqsit\vanillagenerator\generator\overworld\OverworldGenerator;
 use pocketmine\plugin\PluginBase;
+use pocketmine\promise\PromiseResolver;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\utils\Utils;
 use pocketmine\world\generator\GeneratorManager;
 use RuntimeException;
 use Symfony\Component\Filesystem\Path;
+use function chmod;
+use function copy;
 use function fclose;
 use function file_exists;
 use function is_resource;
+use function php_uname;
 use function proc_close;
 use function proc_open;
 use function proc_terminate;
 use function rtrim;
 use function stream_get_contents;
-use function stream_set_timeout;
 use function strlen;
+use function strtolower;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
 use function unpack;
 
+/**
+ * @phpstan-type TProcessLifespan Generator<null, string, null, void>
+ */
 final class Loader extends PluginBase{
 
-	public const int ACCELERATOR_PROTOCOL = 1;
+	public const int ACCELERATOR_PROTOCOL = 10002;
 
-	/** @var resource|null */
-	private $accelerator = null;
-
-	/** @var resource|null */
-	private $accelerator_stdin = null;
+	/** @var TProcessLifespan|null */
+	private ?Generator $accelerator = null;
 
 	public function onLoad() : void{
 		$generator_manager = GeneratorManager::getInstance();
@@ -41,14 +49,65 @@ final class Loader extends PluginBase{
 	}
 
 	protected function onEnable() : void{
-		$executable_path = Path::join($this->getDataFolder(), Utils::getOS() === Utils::OS_WINDOWS ? "noise-accelerator.exe" : "noise-accelerator");
-		if(!file_exists($executable_path)){
-			$this->getLogger()->warning("Executable not found at: {$executable_path}");
+		$resolver = new PromiseResolver();
+		$this->deduceAcceleratorExecutable($resolver);
+		$resolver->getPromise()->onCompletion(function(string $executable_path) : void{
+			$accelerator = $this->setupAccelerator($executable_path);
+			try{
+				$accelerator->current();
+				$this->accelerator = $accelerator;
+			}catch(RuntimeException $e){
+				$this->getLogger()->warning("Failed to setup noise accelerator: {$e->getMessage()}");
+				$this->getLogger()->warning("The plugin will compute noise in native PHP, which is several times slower.");
+			}
+		}, function() : void{
+			$this->getLogger()->warning("A noise accelerator executable was not found.");
 			$this->getLogger()->warning("The plugin will compute noise in native PHP, which is several times slower.");
+		});
+	}
+
+	public function deduceAcceleratorExecutable(PromiseResolver $resolver) : void{
+		$os = Utils::getOS();
+		$filename = $os === Utils::OS_WINDOWS ? "noise-accelerator.exe" : "noise-accelerator";
+		$local_path = Path::join($this->getDataFolder(), $filename);
+		if(file_exists($local_path)){
+			$this->getLogger()->debug("Using executable in local path: {$local_path}");
+			$resolver->resolve($local_path);
 			return;
 		}
+		$arch = match(strtolower(php_uname("m"))){
+			"x86_64", "amd64" => "x86_64",
+			"aarch64", "arm64" => "aarch64",
+			default => null
+		};
+		$target = match($os){
+			Utils::OS_LINUX => $arch !== null ? "{$arch}-unknown-linux-musl" : null,
+			Utils::OS_MACOS => $arch !== null ? "{$arch}-apple-darwin" : null,
+			Utils::OS_WINDOWS => $arch === "x86_64" ? "x86_64-pc-windows-msvc" : null,
+			default => null
+		};
+		$stored_filename = Path::getFilenameWithoutExtension($filename) . "-{$target}" . Path::getExtension($filename);
+		$stored_path = $this->getResourcePath($stored_filename);
+		if($target !== null && file_exists($stored_path)){
+			$this->getLogger()->debug("Using executable provided by plugin: {$stored_filename}");
+			$resolver->resolve($stored_path);
+			return;
+		}
+		$resolver->reject();
+	}
 
-		$process = proc_open([$executable_path], [0 => ["pipe", "r"], 1 => ["pipe", "w"]], $pipes);
+	/**
+	 * @param string $executable_path
+	 * @return TProcessLifespan
+	 */
+	public function setupAccelerator(string $executable_path) : Generator /* its a php generator - not vanilla generator :3 */{
+		// compiled phar files cannot be executed right away so we have to perform gymnastics...
+		$path = tempnam(sys_get_temp_dir(), "vg-noise-exec-");
+		$path !== false || throw new RuntimeException("Failed to create temporary file");
+		copy($executable_path, $path) || throw new RuntimeException("Failed to copy {$executable_path} to {$path}");
+		chmod($path, 0755) || throw new RuntimeException("Failed to make {$path} executable");
+
+		$process = proc_open([$path], [0 => ["pipe", "r"], 1 => ["pipe", "w"]], $pipes);
 		is_resource($process) || throw new RuntimeException("Cannot start noise accelerator");
 		try{
 			$header = stream_get_contents($pipes[1], 6);
@@ -68,33 +127,45 @@ final class Loader extends PluginBase{
 				fclose($pipes[1]);
 			}
 			proc_close($process);
+			unlink($path);
 			throw $e;
 		}
 		fclose($pipes[1]);
 
-		$this->accelerator = $process;
-		$this->accelerator_stdin = $pipes[0];
 		$endpoint = rtrim($endpoint, "\r\n");
-		NoiseAccelerator::$endpoint = $endpoint;
 		$pool = $this->getServer()->getAsyncPool();
-		$pool->addWorkerStartHook(function(int $worker) use($pool, $endpoint) : void{
+		$worker_hook = static function(int $worker) use(&$endpoint, $pool) : void{
 			$pool->submitTaskToWorker(new class($endpoint) extends AsyncTask{
-				public function __construct(private string $endpoint){}
+				public function __construct(private ?string $endpoint){}
 				public function onRun() : void{ NoiseAccelerator::$endpoint = $this->endpoint; }
 			}, $worker);
-		});
+		};
+		$this->getServer()->getAsyncPool()->addWorkerStartHook($worker_hook);
+		NoiseAccelerator::$endpoint = $endpoint;
 		$this->getLogger()->debug("Noise accelerator is running on {$endpoint}");
+		try{
+			yield $endpoint;
+		}finally{
+			if(is_resource($pipes[0])){
+				fclose($pipes[0]);
+			}
+			$pipes[0] = null;
+			proc_terminate($process);
+			proc_close($process);
+			$process = null;
+
+			$endpoint = null;
+			NoiseAccelerator::$endpoint = null;
+			$pool->removeWorkerStartHook($worker_hook);
+			foreach($pool->getRunningWorkers() as $id){
+				$worker_hook($id);
+			}
+			unlink($path);
+		}
 	}
 
 	protected function onDisable() : void{
-		if(is_resource($this->accelerator_stdin)){
-			fclose($this->accelerator_stdin);
-		}
-		$this->accelerator_stdin = null;
-		if(is_resource($this->accelerator)){
-			proc_terminate($this->accelerator);
-			proc_close($this->accelerator);
-		}
+		$this->accelerator?->next();
 		$this->accelerator = null;
 	}
 }
