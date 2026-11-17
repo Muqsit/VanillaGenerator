@@ -13,18 +13,26 @@ use pocketmine\world\generator\GeneratorManager;
 use RuntimeException;
 use Symfony\Component\Filesystem\Path;
 use function fclose;
-use function fgets;
 use function file_exists;
 use function is_resource;
 use function proc_close;
 use function proc_open;
 use function proc_terminate;
 use function rtrim;
+use function stream_get_contents;
+use function stream_set_timeout;
+use function strlen;
+use function unpack;
 
 final class Loader extends PluginBase{
 
+	public const int ACCELERATOR_PROTOCOL = 1;
+
 	/** @var resource|null */
 	private $accelerator = null;
+
+	/** @var resource|null */
+	private $accelerator_stdin = null;
 
 	public function onLoad() : void{
 		$generator_manager = GeneratorManager::getInstance();
@@ -40,16 +48,32 @@ final class Loader extends PluginBase{
 			return;
 		}
 
-		$process = proc_open([$executable_path], [1 => ["pipe", "w"]], $pipes);
+		$process = proc_open([$executable_path], [0 => ["pipe", "r"], 1 => ["pipe", "w"]], $pipes);
 		is_resource($process) || throw new RuntimeException("Cannot start noise accelerator");
-		$endpoint = fgets($pipes[1]);
-		fclose($pipes[1]);
-		if($endpoint === false){
+		try{
+			$header = stream_get_contents($pipes[1], 6);
+			$header !== false || throw new RuntimeException("Failed to read noise accelerator header");
+			strlen($header) === 6 || throw new RuntimeException("Failed to read noise accelerator header (" . strlen($header) . " != 6)");
+			["version" => $version, "len" => $len] = (array) unpack("Vversion/vlen", $header);
+			$version === self::ACCELERATOR_PROTOCOL || throw new RuntimeException("Refusing connection due to version mismatch: {$version} (acc) != " . self::ACCELERATOR_PROTOCOL . " (php)");
+			$endpoint = stream_get_contents($pipes[1], $len);
+			$endpoint !== false || throw new RuntimeException("Failed to read noise accelerator endpoint");
+			strlen($endpoint) === $len || throw new RuntimeException("Failed to read noise accelerator endpoint (" . strlen($endpoint) . " != {$len}");
+		}catch(RuntimeException $e){
+			proc_terminate($process);
+			if(is_resource($pipes[0])){
+				fclose($pipes[0]);
+			}
+			if(is_resource($pipes[1])){
+				fclose($pipes[1]);
+			}
 			proc_close($process);
-			throw new RuntimeException("Noise accelerator failed to start");
+			throw $e;
 		}
+		fclose($pipes[1]);
 
 		$this->accelerator = $process;
+		$this->accelerator_stdin = $pipes[0];
 		$endpoint = rtrim($endpoint, "\r\n");
 		NoiseAccelerator::$endpoint = $endpoint;
 		$pool = $this->getServer()->getAsyncPool();
@@ -63,9 +87,14 @@ final class Loader extends PluginBase{
 	}
 
 	protected function onDisable() : void{
+		if(is_resource($this->accelerator_stdin)){
+			fclose($this->accelerator_stdin);
+		}
+		$this->accelerator_stdin = null;
 		if(is_resource($this->accelerator)){
 			proc_terminate($this->accelerator);
 			proc_close($this->accelerator);
 		}
+		$this->accelerator = null;
 	}
 }

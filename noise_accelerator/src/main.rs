@@ -1,6 +1,10 @@
+const PROTOCOL_VERSION: u32 = 1;
+
 use std::io::{self, Read, Write};
 use std::net::TcpListener;
+use std::path::PathBuf;
 use std::thread;
+use std::time::Duration;
 
 struct YSample {
     iy: usize,
@@ -223,25 +227,50 @@ fn spawn(socket: impl Read + Write + Send + 'static) {
     });
 }
 
+/// exit (and remove socket file) when parent closes stdin
+fn watch_parent(socket_path: Option<PathBuf>) {
+    thread::spawn(move || {
+        let _ = io::copy(&mut io::stdin(), &mut io::sink());
+        if let Some(path) = socket_path {
+            let _ = std::fs::remove_file(path);
+        }
+        std::process::exit(0);
+    });
+}
+
+fn announce(endpoint: &str) -> io::Result<()> {
+    let mut out = io::stdout().lock();
+    out.write_all(&PROTOCOL_VERSION.to_le_bytes())?;
+    out.write_all(&(endpoint.len() as u16).to_le_bytes())?;
+    out.write_all(endpoint.as_bytes())?;
+    out.flush()
+}
+
 fn main() -> io::Result<()> {
+	io::stdout().write_all(&PROTOCOL_VERSION.to_le_bytes())?;
     #[cfg(unix)]
     {
         use std::os::unix::net::UnixListener;
 
         let path = std::env::temp_dir().join(format!("vg-noise-accel-{}.sock", std::process::id()));
         if let Ok(listener) = UnixListener::bind(&path) {
-            println!("unix://{}", path.display());
-            io::stdout().flush()?;
+			announce(&format!("unix://{}", path.display()))?;
+            watch_parent(Some(path));
             for connection in listener.incoming() {
-                spawn(connection?);
+                match connection {
+                    Ok(socket) => spawn(socket),
+                    Err(error) => {
+                        eprintln!("accept failed: {error}");
+                        thread::sleep(Duration::from_millis(50)); // avoid a hot loop on EMFILE
+                    }
+                }
             }
-            std::fs::remove_file(path)?;
             return Ok(());
         }
     }
 
     let listener = TcpListener::bind("127.0.0.1:0")?;
-    println!("tcp://{}", listener.local_addr()?);
+	announce(&format!("tcp://{}", listener.local_addr()?))?;
     io::stdout().flush()?;
     for connection in listener.incoming() {
         let socket = connection?;
