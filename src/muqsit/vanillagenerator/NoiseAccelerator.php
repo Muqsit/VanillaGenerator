@@ -27,16 +27,6 @@ final class NoiseAccelerator{
 
 	public static ?string $endpoint = null;
 
-	private static function encodeGroup(PerlinOctaveGenerator $group) : string{
-		$octaves = $group->octaves;
-		$payload = pack("v3e3C", $group->size_x, $group->size_y, $group->size_z, $group->x_scale, $group->y_scale, $group->z_scale, count($octaves));
-		foreach($octaves as $octave){
-			$payload .= pack("e3", $octave->offset_x, $octave->offset_y, $octave->offset_z);
-			$payload .= pack("C*", ...$octave->perm);
-		}
-		return $payload;
-	}
-
 	/** @var resource|null */
 	private $socket;
 	private int $sample_count;
@@ -52,10 +42,15 @@ final class NoiseAccelerator{
 		stream_set_blocking($socket, true);
 		stream_set_write_buffer($socket, 0);
 
-		$payload = "";
+		$payload = [];
 		foreach($groups as $group){
-			$payload .= self::encodeGroup($group);
+			$octaves = $group->octaves;
+			$payload[] = pack("v3e3C", $group->size_x, $group->size_y, $group->size_z, $group->x_scale, $group->y_scale, $group->z_scale, count($octaves));
+			foreach($octaves as $octave){
+				$payload[] = pack("e3C*", $octave->offset_x, $octave->offset_y, $octave->offset_z, ...$octave->perm);
+			}
 		}
+		$payload = implode($payload);
 		$this->send(pack("V", strlen($payload)) . $payload);
 	}
 
