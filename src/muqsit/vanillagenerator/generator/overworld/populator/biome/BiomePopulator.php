@@ -182,5 +182,3 @@ class BiomePopulator implements Populator{
 		}
 	}
 }
-
-BiomePopulator::init();

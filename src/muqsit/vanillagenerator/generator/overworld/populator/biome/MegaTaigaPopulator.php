@@ -53,5 +53,3 @@ class MegaTaigaPopulator extends TaigaPopulator{
 		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
-
-MegaTaigaPopulator::init();

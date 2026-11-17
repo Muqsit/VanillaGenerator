@@ -105,5 +105,3 @@ class BiomeEdgeMapLayer extends MapLayer{
 		return $final_values;
 	}
 }
-
-BiomeEdgeMapLayer::init();

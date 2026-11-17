@@ -86,5 +86,3 @@ class IceSpike extends TerrainObject{
 		return $succeeded;
 	}
 }
-
-IceSpike::init();

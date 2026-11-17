@@ -29,5 +29,3 @@ class IcePlainsPopulator extends BiomePopulator{
 		$this->flower_decorator->setAmount(0);
     }
 }
-
-IcePlainsPopulator::init();

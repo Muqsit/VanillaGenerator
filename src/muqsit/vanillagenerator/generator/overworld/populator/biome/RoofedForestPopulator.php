@@ -39,5 +39,3 @@ class RoofedForestPopulator extends ForestPopulator{
 		return self::BIOMES;
 	}
 }
-
-RoofedForestPopulator::init();

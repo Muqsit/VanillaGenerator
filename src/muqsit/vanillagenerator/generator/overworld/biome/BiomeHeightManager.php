@@ -68,5 +68,3 @@ final class BiomeHeightManager{
 		return self::$heights[$biome] ?? self::$default;
 	}
 }
-
-BiomeHeightManager::init();

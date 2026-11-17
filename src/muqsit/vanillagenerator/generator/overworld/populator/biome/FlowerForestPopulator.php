@@ -66,5 +66,3 @@ class FlowerForestPopulator extends ForestPopulator{
 		}
 	}
 }
-
-FlowerForestPopulator::init();

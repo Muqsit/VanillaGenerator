@@ -72,5 +72,3 @@ class SwamplandPopulator extends BiomePopulator{
 		$this->waterlily_decorator->populate($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
-
-SwamplandPopulator::init();

@@ -59,5 +59,3 @@ class IceDecorator extends Decorator{
 	public function decorate(ChunkManager $world, Random $random, int $chunk_x, int $chunk_z, Chunk $chunk) : void{
 	}
 }
-
-IceDecorator::init();

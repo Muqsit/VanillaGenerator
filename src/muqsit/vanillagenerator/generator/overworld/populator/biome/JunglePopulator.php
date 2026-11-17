@@ -69,5 +69,3 @@ class JunglePopulator extends BiomePopulator{
 		$this->melon_decorator->populate($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
-
-JunglePopulator::init();

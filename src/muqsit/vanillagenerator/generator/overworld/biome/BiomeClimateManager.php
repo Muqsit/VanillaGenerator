@@ -142,5 +142,3 @@ final class BiomeClimateManager{
 		return $temp;
 	}
 }
-
-BiomeClimateManager::init();

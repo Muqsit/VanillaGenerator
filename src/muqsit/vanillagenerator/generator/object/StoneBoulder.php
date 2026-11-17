@@ -69,4 +69,3 @@ class StoneBoulder extends TerrainObject{
 		return true;
 	}
 }
-StoneBoulder::init();

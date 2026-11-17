@@ -29,5 +29,3 @@ class SunflowerPlainsPopulator extends PlainsPopulator{
 		return [BiomeIds::SUNFLOWER_PLAINS];
 	}
 }
-
-SunflowerPlainsPopulator::init();

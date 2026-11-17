@@ -184,4 +184,3 @@ class Lake extends TerrainObject{
 		$lake_map[($x * (int) self::MAX_DIAMETER + $z) * (int) self::MAX_HEIGHT + $y] = 1;
 	}
 }
-Lake::init();

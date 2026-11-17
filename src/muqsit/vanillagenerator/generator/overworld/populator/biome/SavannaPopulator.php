@@ -46,4 +46,3 @@ class SavannaPopulator extends BiomePopulator{
 		return [BiomeIds::SAVANNA, BiomeIds::SAVANNA_PLATEAU];
 	}
 }
-SavannaPopulator::init();

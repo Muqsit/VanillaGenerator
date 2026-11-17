@@ -31,5 +31,3 @@ class MegaSpruceTaigaPopulator extends MegaTaigaPopulator{
 		$this->tree_decorator->setTrees(...self::$TREES);
     }
 }
-
-MegaSpruceTaigaPopulator::init();

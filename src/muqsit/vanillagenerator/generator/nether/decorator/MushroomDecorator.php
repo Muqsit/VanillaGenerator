@@ -52,5 +52,3 @@ class MushroomDecorator extends Decorator{
 		}
 	}
 }
-
-MushroomDecorator::init();

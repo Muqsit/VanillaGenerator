@@ -30,4 +30,3 @@ class JungleEdgePopulator extends JunglePopulator{
 		return [BiomeIds::JUNGLE_EDGE, BiomeIds::JUNGLE_EDGE_MUTATED];
 	}
 }
-JungleEdgePopulator::init();

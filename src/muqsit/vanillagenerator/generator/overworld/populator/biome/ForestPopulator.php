@@ -75,5 +75,3 @@ class ForestPopulator extends BiomePopulator{
 		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
-
-ForestPopulator::init();

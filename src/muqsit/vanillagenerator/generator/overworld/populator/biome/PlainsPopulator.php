@@ -98,5 +98,3 @@ class PlainsPopulator extends BiomePopulator{
 		parent::populateOnGround($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
-
-PlainsPopulator::init();

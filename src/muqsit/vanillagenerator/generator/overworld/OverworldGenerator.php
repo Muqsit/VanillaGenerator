@@ -418,5 +418,3 @@ class OverworldGenerator extends VanillaGenerator{
 		return $density;
 	}
 }
-
-OverworldGenerator::init();

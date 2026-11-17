@@ -70,4 +70,3 @@ class TaigaPopulator extends BiomePopulator{
 		$this->taiga_red_mushroom_decorator->populate($world, $random, $chunk_x, $chunk_z, $chunk);
 	}
 }
-TaigaPopulator::init();

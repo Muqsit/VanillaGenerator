@@ -151,5 +151,3 @@ class BiomeVariationMapLayer extends MapLayer{
 		return $final_values;
 	}
 }
-
-BiomeVariationMapLayer::init();

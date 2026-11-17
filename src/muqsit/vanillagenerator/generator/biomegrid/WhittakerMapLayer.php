@@ -114,5 +114,3 @@ class Climate{
 		public int $final_value
 	){}
 }
-
-WhittakerMapLayer::init();

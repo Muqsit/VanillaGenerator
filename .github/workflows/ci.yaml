@@ -1,0 +1,131 @@
+name: Compile PHAR
+
+on:
+    push:
+    pull_request:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    rust:
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - target: x86_64-unknown-linux-musl
+                      runner: ubuntu-24.04
+                    - target: aarch64-unknown-linux-musl
+                      runner: ubuntu-24.04-arm
+                    - target: x86_64-pc-windows-msvc
+                      runner: windows-2022
+                    - target: x86_64-apple-darwin
+                      runner: macos-15-intel
+                    - target: aarch64-apple-darwin
+                      runner: macos-15
+        runs-on: ${{ matrix.runner }}
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install musl toolchain
+              if: runner.os == 'Linux'
+              run: sudo apt-get update && sudo apt-get install -y musl-tools
+            - name: Compile Rust
+              env:
+                  TARGET: ${{ matrix.target }}
+              shell: bash
+              run: |
+                  rustup target add "$TARGET"
+                  cargo build --release --locked --manifest-path noise_accelerator/Cargo.toml --target "$TARGET"
+            - name: Stage executable
+              env:
+                  TARGET: ${{ matrix.target }}
+              shell: bash
+              run: |
+                  extension=''
+                  if [[ "$TARGET" == *windows* ]]; then extension='.exe'; fi
+                  source="noise_accelerator/target/$TARGET/release/noise-accelerator$extension"
+                  test -f "$source"
+                  mkdir -p binaries
+                  cp "$source" "binaries/noise-accelerator-$TARGET$extension"
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: rust-${{ matrix.target }}
+                  path: binaries/
+                  if-no-files-found: error
+
+    phar:
+        uses: axolotl-pm/pmmp-plugin-actions/.github/workflows/build-phar.yml@4b8ffbd22423857c0e62062937b14580a94d8818
+        with:
+            php-version: '8.4'
+            composer: 'false'
+        permissions:
+            contents: read
+
+    package:
+        needs: [rust, phar]
+        runs-on: ubuntu-24.04
+        permissions:
+            contents: read
+            actions: write
+        steps:
+            - uses: actions/download-artifact@v4
+              with:
+                  name: ${{ needs.phar.outputs.artifact-name }}
+                  path: base
+            - uses: actions/download-artifact@v4
+              with:
+                  pattern: rust-*
+                  path: binaries
+                  merge-multiple: true
+            - uses: axolotl-pm/setup-php-action@b8c3f9add4f2ad4a5e2624a1112aba899ee8db0e # 1.0.0
+              with:
+                  php-version: '8.4'
+                  install-path: ../bin
+                  pm-version-major: '5'
+            - name: Package PHARs
+              env:
+                  PLUGIN_NAME: ${{ needs.phar.outputs.plugin-name }}
+                  PLUGIN_VERSION: ${{ needs.phar.outputs.plugin-version }}
+              run: |
+                  shopt -s nullglob
+                  files=(binaries/noise-accelerator-*)
+                  ((${#files[@]}))
+                  mkdir -p dist
+                  prefix="dist/${PLUGIN_NAME}-v${PLUGIN_VERSION}"
+                  cp base/${PLUGIN_NAME}.phar "$prefix.phar"
+                  cp "${files[@]}" dist/
+                  for file in "${files[@]}"; do
+                    target=${file##*noise-accelerator-}
+                    cp base/${PLUGIN_NAME}.phar "$prefix-${target%.exe}.phar"
+                  done
+                  php -d phar.readonly=0 <<'PHP'
+                  <?php
+                  $prefix = 'dist/' . getenv('PLUGIN_NAME') . '-v' . getenv('PLUGIN_VERSION');
+                  $agnostic = new Phar("$prefix.phar");
+                  $agnostic->setAlias(basename("$prefix.phar"));
+                  foreach (glob('binaries/noise-accelerator-*') as $file) {
+                      $target = substr(basename($file, '.exe'), strlen('noise-accelerator-'));
+                      $entry = 'resources/' . basename($file);
+                      $agnostic->addFile($file, $entry);
+                      $phar = new Phar("$prefix-$target.phar");
+                      $phar->setAlias(basename("$prefix-$target.phar"));
+                      $phar->addFile($file, $entry);
+                  }
+                  PHP
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ needs.phar.outputs.plugin-name }}-bundle
+                  path: dist/
+                  if-no-files-found: error
+            - name: Remove intermediate artifacts
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  BASE_ARTIFACT: ${{ needs.phar.outputs.artifact-name }}
+              run: |
+                  gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" \
+                    | jq -r --arg base "$BASE_ARTIFACT" '.artifacts[] | select(.name == $base or (.name | startswith("rust-"))) | .id' \
+                    | while read -r id; do
+                        gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$id"
+                      done

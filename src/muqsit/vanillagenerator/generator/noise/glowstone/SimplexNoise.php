@@ -340,5 +340,3 @@ final class Grad{
 		public float $z
 	){}
 }
-
-SimplexNoise::init();

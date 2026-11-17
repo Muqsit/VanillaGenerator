@@ -7,6 +7,7 @@ namespace muqsit\vanillagenerator;
 use Generator;
 use muqsit\vanillagenerator\generator\nether\NetherGenerator;
 use muqsit\vanillagenerator\generator\overworld\OverworldGenerator;
+use pocketmine\plugin\PharPluginLoader;
 use pocketmine\plugin\PluginBase;
 use pocketmine\promise\PromiseResolver;
 use pocketmine\scheduler\AsyncTask;
@@ -76,7 +77,7 @@ final class Loader extends PluginBase{
 			$resolver->resolve($local_path);
 			return;
 		}
-		$arch = match(strtolower(php_uname("m"))){
+		$arch = match(strtolower($uname = php_uname("m"))){
 			"x86_64", "amd64" => "x86_64",
 			"aarch64", "arm64" => "aarch64",
 			default => null
@@ -87,9 +88,17 @@ final class Loader extends PluginBase{
 			Utils::OS_WINDOWS => $arch === "x86_64" ? "x86_64-pc-windows-msvc" : null,
 			default => null
 		};
-		$stored_filename = Path::getFilenameWithoutExtension($filename) . "-{$target}" . Path::getExtension($filename);
+		$stored_ext = Path::getExtension($filename);
+		$stored_filename = Path::getFilenameWithoutExtension($filename) . "-{$target}" . ($stored_ext !== "" ? ".{$stored_ext}" : "");
 		$stored_path = $this->getResourcePath($stored_filename);
-		if($target !== null && file_exists($stored_path)){
+		if($target === null){
+			$this->getLogger()->debug("Noise acceleration is not supported on your machine (uname={$uname}, os={$os}, arch={$arch})");
+		}elseif(!file_exists($stored_path)){
+			if($this->getPluginLoader() instanceof PharPluginLoader){
+				$this->getLogger()->warning("Noise acceleration builds are supported for your machine, did you pick the wrong PHAR?");
+				$this->getLogger()->warning("Either use the cross-platform PHAR build (it is the PHAR with the largest size), or select the one tagged '{$target}'.");
+			}
+		}else{
 			$this->getLogger()->debug("Using executable provided by plugin: {$stored_filename}");
 			$resolver->resolve($stored_path);
 			return;

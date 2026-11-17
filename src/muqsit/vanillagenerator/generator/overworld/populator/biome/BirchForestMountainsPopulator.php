@@ -31,5 +31,3 @@ class BirchForestMountainsPopulator extends ForestPopulator{
 		return self::BIOMES;
 	}
 }
-
-BirchForestMountainsPopulator::init();
