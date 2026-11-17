@@ -16,6 +16,7 @@ use RuntimeException;
 use Symfony\Component\Filesystem\Path;
 use function chmod;
 use function copy;
+use function explode;
 use function fclose;
 use function file_exists;
 use function is_resource;
@@ -146,6 +147,12 @@ final class Loader extends PluginBase{
 		try{
 			yield $endpoint;
 		}finally{
+			// TODO: let executable handle cleaning up unix sock
+			[$transport, $target] = explode("://", $endpoint, 2);
+			if($transport === "unix"){
+				unlink($target);
+			}
+
 			if(is_resource($pipes[0])){
 				fclose($pipes[0]);
 			}
