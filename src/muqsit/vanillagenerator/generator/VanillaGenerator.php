@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace muqsit\vanillagenerator\generator;
 
+use GlobalLogger;
+use Logger;
 use muqsit\vanillagenerator\generator\biomegrid\MapLayer;
 use muqsit\vanillagenerator\generator\biomegrid\utils\MapLayerPair;
 use muqsit\vanillagenerator\generator\overworld\WorldType;
@@ -13,11 +15,17 @@ use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\generator\Generator;
 use pocketmine\world\World;
+use PrefixedLogger;
 
 /**
  * @template T of WorldOctaves
  */
 abstract class VanillaGenerator extends Generator{
+
+	public static function logger() : Logger{
+		static $logger = new PrefixedLogger(GlobalLogger::get(), "VanillaGenerator");
+		return $logger;
+	}
 
 	/** @var T */
 	private ?WorldOctaves $octave_cache = null;

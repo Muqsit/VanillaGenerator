@@ -26,13 +26,13 @@ use muqsit\vanillagenerator\generator\utils\preset\SimpleGeneratorPreset;
 use muqsit\vanillagenerator\generator\utils\WorldOctaves;
 use muqsit\vanillagenerator\generator\VanillaBiomeGrid;
 use muqsit\vanillagenerator\generator\VanillaGenerator;
+use muqsit\vanillagenerator\BufferedRandom;
 use muqsit\vanillagenerator\NoiseAccelerator;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\format\SubChunk;
-use PrefixedLogger;
 use ReflectionProperty;
 use RuntimeException;
 use function array_key_exists;
@@ -159,15 +159,26 @@ class OverworldGenerator extends VanillaGenerator{
 			$_biomes->setValue($sub_chunk, clone $grid->palette);
 		}
 		$chunk->setTerrainDirtyFlag(Chunk::DIRTY_FLAG_BIOMES, true);
+		$random = $this->random;
+		if($this->noise_accelerator !== null){
+			try{
+				$random = new BufferedRandom($random->getSeed(), $this->noise_accelerator->randomWords($random, 131_328));
+			}catch(RuntimeException $e){
+				VanillaGenerator::logger()->warning("Noise accelerator failed, falling back to native implementation: {$e->getMessage()}");
+			}
+		}
 		for($x = 0; $x < $size_x; ++$x){
 			for($z = 0; $z < $size_z; ++$z){
 				$id = $grid->getBiome($x, $z);
 				if(array_key_exists($id, self::$GROUND_MAP)){
-					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
+					self::$GROUND_MAP[$id]->generateTerrainColumn($world, $random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}else{
-					$this->ground_gen->generateTerrainColumn($world, $this->random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
+					$this->ground_gen->generateTerrainColumn($world, $random, $cx + $x, $cz + $z, $id, $surface_noise[$x | $z << Chunk::COORD_BIT_SIZE]);
 				}
 			}
+		}
+		if($random instanceof BufferedRandom){
+			$random->sync($this->random);
 		}
 	}
 
@@ -303,7 +314,7 @@ class OverworldGenerator extends VanillaGenerator{
 				$client = $this->noise_accelerator ??= new NoiseAccelerator($octaves->roughness, $octaves->roughness_2, $octaves->detail);
 				[$roughness_noise, $roughness_noise_2, $detail_noise] = $client->sample($x, $z);
 			}catch(RuntimeException $e){
-				(new PrefixedLogger(GlobalLogger::get(), "VanillaGenerator"))->warning("Noise accelerator failed, falling back to native implementation: {$e->getMessage()}");
+				VanillaGenerator::logger()->warning("Noise accelerator failed, falling back to native implementation: {$e->getMessage()}");
 				$use_accel = false;
 			}
 		}

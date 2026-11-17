@@ -13,6 +13,8 @@ use pocketmine\block\Water;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\format\Chunk;
+use function hrtime;
+use function number_format;
 
 class GroundGenerator{
 
@@ -54,9 +56,9 @@ class GroundGenerator{
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
 		$sea_level = 64;
 
-		$top_mat = $this->top_material->getStateId();
-		$ground_mat = $this->ground_material->getStateId();
-		$ground_mat_id = $this->ground_material->getTypeId();
+		$top_mat_initial = $top_mat = $this->top_material->getStateId();
+		$ground_mat_initial = $ground_mat = $this->ground_material->getStateId();
+		$ground_mat_id_initial = $ground_mat_id = $this->ground_material->getTypeId();
 
 		$chunk_x = $x;
 		$chunk_z = $z;
@@ -64,12 +66,12 @@ class GroundGenerator{
 		$surface_height = max((int) ($surface_noise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
 		$deep = -1;
 
-		$air = VanillaBlocks::AIR()->getStateId();
-		$stone = VanillaBlocks::STONE()->getStateId();
-		$sandstone = VanillaBlocks::SANDSTONE()->getStateId();
-		$gravel = VanillaBlocks::GRAVEL()->getStateId();
-		$bedrock = VanillaBlocks::BEDROCK()->getStateId();
-		$ice = VanillaBlocks::ICE()->getStateId();
+		static $air = VanillaBlocks::AIR()->getStateId();
+		static $stone = VanillaBlocks::STONE()->getStateId();
+		static $sandstone = VanillaBlocks::SANDSTONE()->getStateId();
+		static $gravel = VanillaBlocks::GRAVEL()->getStateId();
+		static $bedrock = VanillaBlocks::BEDROCK()->getStateId();
+		static $ice = VanillaBlocks::ICE()->getStateId();
 
 		/** @var Chunk $chunk */
 		$chunk = $world->getChunk($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE);
@@ -96,9 +98,9 @@ class GroundGenerator{
 				}elseif($mat_state === $stone){
 					if($deep === -1){
 						if($y >= $sea_level - 5 && $y <= $sea_level){
-							$top_mat = $this->top_material->getStateId();
-							$ground_mat = $this->ground_material->getStateId();
-							$ground_mat_id = $this->ground_material->getTypeId();
+							$top_mat = $top_mat_initial;
+							$ground_mat = $ground_mat_initial;
+							$ground_mat_id = $ground_mat_id_initial;
 						}
 
 						$deep = $surface_height;

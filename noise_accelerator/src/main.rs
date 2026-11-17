@@ -159,28 +159,58 @@ fn handle(mut socket: impl Read + Write) -> io::Result<()> {
 
     let mut values = vec![0.0f64; groups.iter().map(|g| g.sx * g.sy * g.sz).sum()];
     let mut response = vec![0u8; values.len() * 8];
+    let mut opcode = [0; 1];
     let mut request = [0; 16];
+    let mut random_request = [0; 36];
+    let mut random_response = Vec::new();
 
     loop {
-        match socket.read_exact(&mut request) {
+        match socket.read_exact(&mut opcode) {
             Ok(()) => {},
             Err(error) if error.kind() == io::ErrorKind::UnexpectedEof => break,
             Err(error) => return Err(error),
         }
-        let x = f64::from_le_bytes(request[..8].try_into().unwrap());
-        let z = f64::from_le_bytes(request[8..].try_into().unwrap());
+        match opcode[0] {
+            0 => {
+                socket.read_exact(&mut request)?;
+                let x = f64::from_le_bytes(request[..8].try_into().unwrap());
+                let z = f64::from_le_bytes(request[8..].try_into().unwrap());
 
-        let mut remaining = values.as_mut_slice();
-        for group in &groups {
-            let (samples, rest) = remaining.split_at_mut(group.sx * group.sy * group.sz);
-            group.sample(x, z, samples);
-            remaining = rest;
-        }
+                let mut remaining = values.as_mut_slice();
+                for group in &groups {
+                    let (samples, rest) = remaining.split_at_mut(group.sx * group.sy * group.sz);
+                    group.sample(x, z, samples);
+                    remaining = rest;
+                }
 
-        for (bytes, value) in response.chunks_exact_mut(8).zip(&values) {
-            bytes.copy_from_slice(&value.to_le_bytes());
+                for (bytes, value) in response.chunks_exact_mut(8).zip(&values) {
+                    bytes.copy_from_slice(&value.to_le_bytes());
+                }
+                socket.write_all(&response)?;
+            }
+            1 => {
+                socket.read_exact(&mut random_request)?;
+                let mut x = i64::from_le_bytes(random_request[..8].try_into().unwrap());
+                let mut y = i64::from_le_bytes(random_request[8..16].try_into().unwrap());
+                let mut z = i64::from_le_bytes(random_request[16..24].try_into().unwrap());
+                let mut w = i64::from_le_bytes(random_request[24..32].try_into().unwrap());
+                let count = u32::from_le_bytes(random_request[32..].try_into().unwrap()) as usize;
+                if count > 131_328 {
+                    return Err(io::Error::new(io::ErrorKind::InvalidData, "RNG batch too large"));
+                }
+                random_response.resize(count * 4, 0);
+                for bytes in random_response.chunks_exact_mut(4) {
+                    let t = ((x as u64) ^ ((x as u64) << 11)) & 0xffffffff;
+                    x = y;
+                    y = z;
+                    z = w;
+                    w = ((w as u64 ^ (((w >> 19) as u64) & 0x7fffffff) ^ (t ^ ((t >> 8) & 0x7fffffff))) & 0xffffffff) as i64;
+                    bytes.copy_from_slice(&(w as u32).to_le_bytes());
+                }
+                socket.write_all(&random_response)?;
+            }
+            _ => return Err(io::Error::new(io::ErrorKind::InvalidData, "Unknown command")),
         }
-        socket.write_all(&response)?;
     }
     Ok(())
 }

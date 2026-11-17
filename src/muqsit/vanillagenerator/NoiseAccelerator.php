@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator;
 
 use muqsit\vanillagenerator\generator\noise\glowstone\PerlinOctaveGenerator;
+use pocketmine\utils\Random;
 use RuntimeException;
 use function array_slice;
 use function array_values;
@@ -60,10 +61,18 @@ final class NoiseAccelerator{
 
 	/** @return array{list<float>, list<float>, list<float>} */
 	public function sample(float $x, float $z) : array{
-		$this->send(pack("e2", $x, $z));
+		$this->send("\x00" . pack("e2", $x, $z));
 		$values = array_values(unpack("e*", $this->readExact(3 * $this->sample_count * 8)));
 		$n = $this->sample_count;
 		return [array_slice($values, 0, $n), array_slice($values, $n, $n), array_slice($values, 2 * $n, $n)];
+	}
+
+	/** @return array<int, int> */
+	public function randomWords(Random $random, int $count) : array{
+		static $_sync = fn() => [$this->x, $this->y, $this->z, $this->w];
+		[$x, $y, $z, $w] = $_sync->call($random);
+		$this->send("\x01" . pack("P4V", $x, $y, $z, $w, $count));
+		return unpack("V*", $this->readExact($count * 4));
 	}
 
 	private function send(string $payload) : void{
