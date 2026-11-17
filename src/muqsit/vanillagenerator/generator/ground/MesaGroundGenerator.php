@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace muqsit\vanillagenerator\generator\ground;
 
 use muqsit\vanillagenerator\generator\noise\glowstone\SimplexOctaveGenerator;
-use pocketmine\block\BlockTypeIds;
 use pocketmine\block\utils\DirtType;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\Random;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\format\Chunk;
 use function array_fill;
+use function round;
 
 class MesaGroundGenerator extends GroundGenerator{
 
@@ -50,11 +51,16 @@ class MesaGroundGenerator extends GroundGenerator{
 	}
 
 	public function generateTerrainColumn(ChunkManager $world, Random $random, int $x, int $z, int $biome, float $surface_noise) : void{
+		$chunk = $world->getChunk($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE);
+		if($chunk === null){
+			return;
+		}
+
 		$this->initialize($random->getSeed());
 		$sea_level = 64;
 
-		$top_mat = $this->top_material;
-		$ground_mat = $this->ground_material;
+		$top_mat = $top_mat_initial = $this->top_material->getStateId();
+		$ground_mat = $ground_mat_initial = $this->ground_material->getStateId();
 
 		$surface_height = max((int) ($surface_noise / 3.0 + 3.0 + $random->nextFloat() * 0.25), 1);
 		$colored = cos($surface_noise / 3.0 * M_PI) <= 0;
@@ -74,67 +80,73 @@ class MesaGroundGenerator extends GroundGenerator{
 			}
 		}
 
-		$chunk_x = $x;
-		$chunk_z = $z;
-
 		$deep = -1;
 		$ground_set = false;
 
-		$grass = VanillaBlocks::GRASS();
-		$coarse_dirt = VanillaBlocks::DIRT()->setDirtType(DirtType::COARSE);
+		static $air = VanillaBlocks::AIR()->getStateId();
+		static $stone = VanillaBlocks::STONE()->getStateId();
+		static $bedrock = VanillaBlocks::BEDROCK()->getStateId();
+		static $grass = VanillaBlocks::GRASS()->getStateId();
+		static $coarse_dirt = VanillaBlocks::DIRT()->setDirtType(DirtType::COARSE)->getStateId();
+		static $hardened_clay = VanillaBlocks::HARDENED_CLAY()->getStateId();
+
+		static $color_states = null;
+		if($color_states === null){
+			$color_states = [];
+			foreach(DyeColor::cases() as $color){
+				$color_states[$color->name] = VanillaBlocks::STAINED_CLAY()->setColor($color)->getStateId();
+			}
+		}
+
+		$color_offset = (int) round($this->color_noise->noise($x, $z, 0, 0.5, 2.0, false) * 2.0);
+
+		$x &= Chunk::COORD_MASK;
+		$z &= Chunk::COORD_MASK;
 
 		for($y = 255; $y >= 0; --$y){
-			if($y < (int) $bryce_canyon_height && $world->getBlockAt($x, $y, $z)->getTypeId() === BlockTypeIds::AIR){
-				$world->setBlockAt($x, $y, $z, VanillaBlocks::STONE());
+			$mat_id = $chunk->getBlockStateId($x, $y, $z);
+			if($y < (int) $bryce_canyon_height && $mat_id === $air){
+				$chunk->setBlockStateId($x, $y, $z, $stone);
+				$mat_id = $stone;
 			}
 			if($y <= $random->nextBoundedInt(5)){
-				$world->setBlockAt($x, $y, $z, VanillaBlocks::BEDROCK());
-			}else{
-				$mat_id = $world->getBlockAt($x, $y, $z)->getTypeId();
-				if($mat_id === BlockTypeIds::AIR){
-					$deep = -1;
-				}elseif($mat_id === BlockTypeIds::STONE){
-					if($deep === -1){
-						$ground_set = false;
-						if($y >= $sea_level - 5 && $y <= $sea_level){
-							$ground_mat = $this->ground_material;
-						}
+				$chunk->setBlockStateId($x, $y, $z, $bedrock);
+			}elseif($mat_id === $air){
+				$deep = -1;
+			}elseif($mat_id === $stone){
+				if($deep === -1){
+					$ground_set = false;
+					if($y >= $sea_level - 5 && $y <= $sea_level){
+						$ground_mat = $ground_mat_initial;
+					}
 
-						$deep = $surface_height + max(0, $y - $sea_level - 1);
-						if($y >= $sea_level - 2){
-							if($this->type === self::FOREST && $y > $sea_level + 22 + ($surface_height << 1)){
-								$top_mat = $colored ? $grass : $coarse_dirt;
-								$world->setBlockAt($x, $y, $z, $top_mat);
-							}elseif($y > $sea_level + 2 + $surface_height){
-								$color = $this->color_layer[($y + (int) round(
-										$this->color_noise->noise($chunk_x, $chunk_z, 0, 0.5, 2.0, false) * 2.0))
-								% count($this->color_layer)];
-								$this->setColoredGroundLayer($world, $x, $y, $z, $y < $sea_level || $y > 128 ? DyeColor::ORANGE : ($colored ? $color : null));
-							}else{
-								$world->setBlockAt($x, $y, $z, $this->top_material);
-								$ground_set = true;
-							}
+					$deep = $surface_height + max(0, $y - $sea_level - 1);
+					if($y >= $sea_level - 2){
+						if($this->type === self::FOREST && $y > $sea_level + 22 + ($surface_height << 1)){
+							$top_mat = $colored ? $grass : $coarse_dirt;
+							$chunk->setBlockStateId($x, $y, $z, $top_mat);
+						}elseif($y > $sea_level + 2 + $surface_height){
+							$color = $this->color_layer[($y + $color_offset) % count($this->color_layer)];
+							$color = $y < $sea_level || $y > 128 ? DyeColor::ORANGE : ($colored ? $color : null);
+							$chunk->setBlockStateId($x, $y, $z, $color === null ? $hardened_clay : $color_states[$color->name]);
 						}else{
-							$world->setBlockAt($x, $y, $z, $ground_mat);
+							$chunk->setBlockStateId($x, $y, $z, $top_mat_initial);
+							$ground_set = true;
 						}
-					}elseif($deep > 0){
-						--$deep;
-						if($ground_set){
-							$world->setBlockAt($x, $y, $z, $this->ground_material);
-						}else{
-							$color = $this->color_layer[($y + (int) round(
-									$this->color_noise->noise($chunk_x, $chunk_z, 0, 0.5, 2.0, false) * 2.0))
-							% count($this->color_layer)];
-							$this->setColoredGroundLayer($world, $x, $y, $z, $color);
-						}
+					}else{
+						$chunk->setBlockStateId($x, $y, $z, $ground_mat);
+					}
+				}elseif($deep > 0){
+					--$deep;
+					if($ground_set){
+						$chunk->setBlockStateId($x, $y, $z, $ground_mat_initial);
+					}else{
+						$color = $this->color_layer[($y + $color_offset) % count($this->color_layer)];
+						$chunk->setBlockStateId($x, $y, $z, $color === null ? $hardened_clay : $color_states[$color->name]);
 					}
 				}
 			}
 		}
-	}
-
-	private function setColoredGroundLayer(ChunkManager $world, int $x, int $y, int $z, ?DyeColor $color) : void{
-		$world->setBlockAt($x, $y, $z, $color !== null ? VanillaBlocks::STAINED_CLAY()->setColor($color) : VanillaBlocks::HARDENED_CLAY());
 	}
 
 	private function setRandomLayerColor(Random $random, int $min_layer_count, int $min_layer_height, ?DyeColor $color) : void{
